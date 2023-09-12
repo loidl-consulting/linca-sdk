@@ -22,7 +22,7 @@ internal static class FhirDataExchange<T> where T : Resource, new()
     /// REST entity location from the response, and returns the
     /// new resource obtained from there
     /// </summary>
-    public static (T created, bool canCue) CreateResource(LicaConnection connection, T resource)
+    public static (T created, bool canCue) CreateResource(LincaConnection connection, T resource)
     {
         using var http = connection.GetAuthenticatedClient();
         var request = new HttpRequestMessage

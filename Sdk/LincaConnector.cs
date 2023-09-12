@@ -17,11 +17,11 @@ using System.Security.Cryptography.X509Certificates;
 
 namespace Lc.Linca.Sdk;
 
-internal static class LicaConnector
+internal static class LincaConnector
 {
-    public static LicaConnection Connect(string licaUrl)
+    public static LincaConnection Connect(string lincaUrl)
     {
-        licaUrl = licaUrl.TrimEnd('/');
+        lincaUrl = lincaUrl.TrimEnd('/');
 
         /* 1.  initiate a connection to the Linked Care FHIR server 
          * 1a. select a client certificate for authentication
@@ -73,7 +73,7 @@ internal static class LicaConnector
 
         /* 2. use FHIR SMART to present our client certificate and
          *    ask for the token endpoint that we should contact */
-        var smartRequest = new HttpRequestMessage(HttpMethod.Get, $"{licaUrl}/{Constants.FhirSmartPath}");
+        var smartRequest = new HttpRequestMessage(HttpMethod.Get, $"{lincaUrl}/{Constants.FhirSmartPath}");
         smartRequest.Headers.Accept.Add(Constants.FhirJson);
         using var smartResponse = certHttp.Send(smartRequest);
         var smartRaw = new StreamReader(smartResponse.Content.ReadAsStream()).ReadToEnd();
@@ -85,10 +85,10 @@ internal static class LicaConnector
         using var tokenResponse = certHttp.Send(tokenRequest);
         var tokenRaw = new StreamReader(tokenResponse.Content.ReadAsStream()).ReadToEnd();
 
-        return new(tokenRaw, licaUrl);
+        return new(tokenRaw, lincaUrl);
     }
 
-    public static bool NegotiateCapabilities(LicaConnection connection)
+    public static bool NegotiateCapabilities(LincaConnection connection)
     {
         if(!connection.Succeeded)
         {

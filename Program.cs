@@ -10,6 +10,7 @@
  ***********************************************************************************/
 
 using Hl7.Fhir.Model;
+using Hl7.Fhir.Support;
 
 namespace Lc.Linca.Sdk.Client;
 
@@ -58,8 +59,11 @@ internal class Program
          * 3a. prepare and create one patient resource */
         var patient = new Patient { };
 
-        patient.Name.Add(new() { Family = "Wurst", Given = new[] { "Conchita" } });
-        (var createdPatient, var canCue) = LicaDataExchange.CreatePatient(connection, patient);
+        patient.Name.Add(new() { Family = "Rüssel-Olifant", Given = new[] { "Renate" } });
+        patient.Identifier.Add(new Identifier(value: "1238100866", system: "urn:oid:1.2.40.0.10.1.4.3.1"));
+        patient.BirthDate = new DateTime(1966, 8, 10).ToFhirDate();
+
+        (var createdPatient, var canCue) = LincaDataExchange.CreatePatient(connection, patient);
         if(canCue)
         {
 
@@ -73,13 +77,13 @@ internal class Program
         return exitCode;
     }
 
-    private static LicaConnection Blurb()
+    private static LincaConnection Blurb()
     {
         Console.WriteLine("Linked Care Software Development Kit");
         Console.WriteLine("Verbindung mit FHIR Server wird initiiert...");
 
-        var connection = LicaConnector.Connect(FhirServerBaseUrl);
-        if (!LicaConnector.NegotiateCapabilities(connection))
+        var connection = LincaConnector.Connect(FhirServerBaseUrl);
+        if (!LincaConnector.NegotiateCapabilities(connection))
         {
         }
 

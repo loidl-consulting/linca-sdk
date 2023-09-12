@@ -11,16 +11,16 @@
 
 namespace Lc.Linca.Sdk;
 
-internal class LicaConnection
+internal class LincaConnection
 {
-    public LicaConnection()
+    public LincaConnection()
     {
         JavaWebToken = string.Empty;
         ServerBaseUrl = string.Empty;
         Succeeded = false;
     }
 
-    public LicaConnection(string jwt, string serverBaseUrl)
+    public LincaConnection(string jwt, string serverBaseUrl)
     {
         JavaWebToken = jwt;
         ServerBaseUrl = serverBaseUrl;

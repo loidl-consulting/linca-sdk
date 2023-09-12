@@ -13,15 +13,15 @@ using Hl7.Fhir.Model;
 
 namespace Lc.Linca.Sdk;
 
-internal static class LicaDataExchange
+internal static class LincaDataExchange
 {
-    public static (Patient created, bool canCue) CreatePatient(LicaConnection connection, Patient patient)
+    public static (Patient created, bool canCue) CreatePatient(LincaConnection connection, Patient patient)
     {
         (var createdPatient, var canCue) = FhirDataExchange<Patient>.CreateResource(connection, patient);
 
         if(canCue)
         {
-            Console.WriteLine($"patient created, got id {createdPatient.Id}");
+            Console.WriteLine($"\npatient created, got id {createdPatient.Id}");
 
             return (createdPatient, true);
         }
