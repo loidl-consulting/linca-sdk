@@ -22,4 +22,6 @@ internal class US014_GetOpenOrders : Spec
             e.g., for orders for clients of Haus Vogelsang because they mentioned his pharmacy as preferred pick-up point,
             and his software can interpret the returned LINCA order position chains, 
             and visually present and import the order and all its positions";
+
+    public US014_GetOpenOrders(LincaConnection conn) : base(conn) { }
 }

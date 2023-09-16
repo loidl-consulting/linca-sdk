@@ -22,4 +22,6 @@ internal class US017_PartialDispense : Spec
         then Mag. Andreas Amsel submits a partial dispense record for the order position in question
           and his software will send that to the LINCA server,
           and notify the ordering organization, Pflegedienst Immerdar, about the partial dispense.";
+
+    public US017_PartialDispense(LincaConnection conn) : base(conn) { }
 }

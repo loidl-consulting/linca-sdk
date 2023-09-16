@@ -20,4 +20,6 @@ internal class US010_PrescribeAsOrdered : Spec
         Hence, she submits a prescription for that position with the eMedId and eRezeptId she got
           and her software will send that to the LINCA server,
           and the ordering care giver organization Haus Vogelsang will be informed that the order position has been prescribed as ordered";
+
+    public US010_PrescribeAsOrdered(LincaConnection conn) : base(conn) { }
 }

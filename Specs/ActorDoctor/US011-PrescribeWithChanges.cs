@@ -21,4 +21,6 @@ internal class US011_PrescribeWithChanges : Spec
           and her software will send that to the LINCA server,
           and the ordering care giver organization Haus Vogelsang will be informed that the order position has been 
           prescribed with modified medication/quantity";
+
+    public US011_PrescribeWithChanges(LincaConnection conn) : base(conn) { }
 }

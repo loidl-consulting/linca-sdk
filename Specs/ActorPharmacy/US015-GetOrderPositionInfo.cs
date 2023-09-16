@@ -22,4 +22,6 @@ internal class US015_GetOrderPositionInfo : Spec
           and his software can fetch the corresponding records from LINCA,
           and interpret the returned LINCA order position chains
           and visually present and import the positions included in that prescription for Renate Rüssel-Olifant";
+
+    public US015_GetOrderPositionInfo(LincaConnection conn) : base(conn) { }
 }

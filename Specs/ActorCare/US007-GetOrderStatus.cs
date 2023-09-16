@@ -21,4 +21,6 @@ internal class US007_GetOrderStatus : Spec
         Hence, he submits a read request on the order number,
           and his care software can use the returned LINCA order position chains,
           and visually present the status of the order and all its positions";
+
+    public US007_GetOrderStatus(LincaConnection conn) : base(conn) { }
 }

@@ -27,6 +27,8 @@ internal class Constants
     internal const string ServerProduct = "FHIRCAAT";
     internal const string AnsiSuccess = "\u001b[38;5;2m■\u001b[0m";
     internal const string AnsiFail = "\u001b[38;5;1mX\u001b[0m";
+    internal const string DobFormat = "yyyyMMdd";
+    internal const string WellknownOidSocialInsuranceNr = "urn:oid:1.2.40.0.10.1.4.3.1";
 
     internal static readonly string ServerProductLead = ServerProduct[..4];
     internal static readonly string ServerProductTail = ServerProduct[4..];

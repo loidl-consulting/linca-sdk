@@ -21,4 +21,6 @@ internal class US013_PrescribeSupplementaryArticle : Spec
           and her software will send that to the LINCA server,
           and the ordering care giver organization Haus Vogelsang will be informed that the order has been extended with an additional position,
           and that does not change anything about the fact that Dr. Spitzmaus cannot read other positions of that same order where she is not the designated practitioner";
+
+    public US013_PrescribeSupplementaryArticle(LincaConnection conn) : base(conn) { }
 }

@@ -21,4 +21,6 @@ internal class US005_CancelOrder : Spec
         and sets their status to 'cancelled'. 
         The LINCA systems prevents Walter Specht from submitting such cancellations
         if Patrizia's practitioner, Dr. Kunibert Kreuzotter, has already issued a prescription for the original order position";
+
+    public US005_CancelOrder(LincaConnection conn) : base(conn) { }
 }

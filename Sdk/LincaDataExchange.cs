@@ -21,8 +21,6 @@ internal static class LincaDataExchange
 
         if(canCue)
         {
-            Console.WriteLine($"\npatient created, got id {createdPatient.Id}");
-
             return (createdPatient, true);
         }
 

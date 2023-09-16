@@ -19,6 +19,7 @@ internal class US004_UpdateOrder : Spec
         Now, he needs to modify details of that order, in particular he wants to update one 
         individual order position for his client Günter Gürtelthier.
         The LINCA systems prevents Walter Specht from updating such a position 
-        if Günter's practitioner, Dr. Silvia Spitzmaus, has already issued a prescription for that order position"";
-        ";
+        if Günter's practitioner, Dr. Silvia Spitzmaus, has already issued a prescription for that order position";
+
+    public US004_UpdateOrder(LincaConnection conn) : base(conn) { }
 }

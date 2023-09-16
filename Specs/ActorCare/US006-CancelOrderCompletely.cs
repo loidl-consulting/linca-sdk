@@ -24,4 +24,6 @@ internal class US006_CancelOrderCompletely : Spec
         or the whole order will remain active if for any of its positions the designated practitioner 
             has already issued a prescription. And positions for which the designated practitioner has not yet issued a prescription, 
             will be promoted to the status 'cancelled' by the LINCA system";
+
+    public US006_CancelOrderCompletely(LincaConnection conn) : base(conn) { }
 }

@@ -21,4 +21,6 @@ internal class US016_Dispense : Spec
         then Mag. Andreas Amsel submits a dispense record for the order position in question
           and his software will send that to the LINCA server,
           and notify the ordering organization, Pflegedienst Immerdar, about the thus completed order position.";
+
+    public US016_Dispense(LincaConnection conn) : base(conn) { }
 }

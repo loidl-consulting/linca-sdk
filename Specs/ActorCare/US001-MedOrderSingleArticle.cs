@@ -9,6 +9,11 @@
  * The Linked Care project is co-funded by the Austrian FFG
  ***********************************************************************************/
 
+using Hl7.Fhir.Model;
+using Hl7.Fhir.Support;
+using Lc.Linca.Sdk.Scaffolds;
+using System.Globalization;
+
 namespace Lc.Linca.Sdk.Specs.ActorCare;
 
 internal class US001_MedOrderSingleArticle : Spec
@@ -21,7 +26,7 @@ internal class US001_MedOrderSingleArticle : Spec
         As Susanne Allzeit will pick up the medication on the go, she places the order 
         without specifying a pharmacy.";
 
-    public US001_MedOrderSingleArticle()
+    public US001_MedOrderSingleArticle(LincaConnection conn) : base(conn)
     {
         Steps = new Step[]
         {
@@ -30,8 +35,50 @@ internal class US001_MedOrderSingleArticle : Spec
         };
     }
 
+    /// <summary>
+    /// As an actor who is an order placer,
+    /// it is necessary to ensure that all patient records
+    /// which later occur in the order position(s), are present
+    /// as FHIR resources on the linked care server.
+    /// 
+    /// This is where an actual care information system
+    /// would fetch the client data from its database, 
+    /// and convert it into a FHIR R5 resource
+    /// </summary>
     private bool CreateClientRecord()
     {
-        return true;
+        var client = CareInformationSystem.GetClient();
+        var patient = new Patient
+        {
+            BirthDate = DateTime.ParseExact(
+                client.DoB,
+                Constants.DobFormat,
+                CultureInfo.InvariantCulture
+            ).ToFhirDate()
+        };
+
+        patient.Name.Add(new()
+        { 
+            Family = client.Lastname,
+            Given = new[] { client.Firstname }
+        });
+
+        patient.Identifier.Add(new Identifier(
+            system: Constants.WellknownOidSocialInsuranceNr,
+            value: client.SocInsNumber
+        ));
+
+        (var createdPatient, var canCue) = LincaDataExchange.CreatePatient(Connection, patient);
+       
+        if(canCue)
+        {
+            Console.WriteLine($"Client information transmitted, id {createdPatient.Id}");
+        }
+        else
+        {
+            Console.WriteLine($"Failed to transmit client information");
+        }
+
+        return canCue;
     }
 }

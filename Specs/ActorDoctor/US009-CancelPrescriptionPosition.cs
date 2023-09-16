@@ -20,4 +20,5 @@ internal class US009_CancelPrescriptionPosition : Spec
         Hence, she submits an update on that order position with the status set to 'stopped' or 'ended',
           and her software will send that to the LINCA server,
           and the ordering care giver organization Haus Vogelsang will be informed that this position will not be prescribed further on";
+    public US009_CancelPrescriptionPosition(LincaConnection conn) : base(conn) { }
 }

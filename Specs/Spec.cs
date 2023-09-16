@@ -18,6 +18,12 @@ internal abstract class Spec
     private const double UserStory = Math.Tau;
 
     protected IEnumerable<Step> Steps { get; init; } = Array.Empty<Step>();
+    protected LincaConnection Connection { get; init; }
+
+    public Spec(LincaConnection connection)
+    {
+        Connection = connection;
+    }
 
     public static IEnumerable<(int number, string name, Type spec)> Choice
     {
@@ -50,7 +56,7 @@ internal abstract class Spec
         
         con.Show(true);
         con.Flush(Environment.NewLine);
-        var spec = (Activator.CreateInstance(specToRun) as Spec)!;
+        var spec = (Activator.CreateInstance(specToRun, connection) as Spec)!;
 
         foreach (var step in spec.Steps)
         {

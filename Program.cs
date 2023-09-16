@@ -49,23 +49,6 @@ internal class Program
             }
         } while (KeepGoing());
 
-        /* 3.  as an actor who is an order placer,
-         *     it is necessary to ensure that all patient records
-         *     which later occur in the order position(s), are present
-         *     as FHIR resources on the linked care server.
-         * 3a. prepare and create one patient resource */
-        var patient = new Patient { };
-
-        patient.Name.Add(new() { Family = "Rüssel-Olifant", Given = new[] { "Renate" } });
-        patient.Identifier.Add(new Identifier(value: "1238100866", system: "urn:oid:1.2.40.0.10.1.4.3.1"));
-        patient.BirthDate = new DateTime(1966, 8, 10).ToFhirDate();
-
-        (var createdPatient, var canCue) = LincaDataExchange.CreatePatient(connection, patient);
-        if(canCue)
-        {
-
-        }
-
         if (Environment.UserInteractive)
         {
             Console.ReadKey();

@@ -22,4 +22,6 @@ internal class US002_MedOrderRepeat : Spec
         record of Renate Rüssel-Olifant. 
         Additionally, she specifies her preferred pharmacy, Apotheke 'Klappernder Storch', in advance 
         to collect the order there. ";
+
+    public US002_MedOrderRepeat(LincaConnection conn) : base(conn) { }
 }

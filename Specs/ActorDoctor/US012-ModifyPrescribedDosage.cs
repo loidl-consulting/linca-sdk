@@ -22,4 +22,6 @@ internal class US012_ModifyPrescribedDosage : Spec
           and her software will send that to the LINCA server,
           and the ordering care giver organization Haus Vogelsang will be informed that the prescription has been 
           updated with altered dosage";
+
+    public US012_ModifyPrescribedDosage(LincaConnection conn) : base(conn) { }
 }

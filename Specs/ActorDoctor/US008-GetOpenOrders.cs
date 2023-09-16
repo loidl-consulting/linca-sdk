@@ -22,4 +22,6 @@ internal class US008_GetOpenOrders : Spec
         e.g., all open orders for Patrizia Platypus and Renate Rüssel-Olifant.
         Dr. Kreuzotters software can interpret the returned LINCA order position chains 
         and visually present the status of the order and all its positions.";
+
+    public US008_GetOpenOrders(LincaConnection conn) : base(conn) { }
 }

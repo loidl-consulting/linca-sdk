@@ -21,4 +21,6 @@ internal class US003_MedOrderStationaryCare : Spec
         Walter Specht places an order for all needed client prescription medication on LINCA 
         and specifies in advance the pharmacy Apotheke 'Zum frühen Vogel' that ought 
         to prepare the order";
+
+    public US003_MedOrderStationaryCare(LincaConnection conn) : base(conn) { }
 }
