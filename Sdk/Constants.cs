@@ -25,6 +25,8 @@ internal class Constants
     internal const string AnsiColorCaat = "\u001b[38;5;202m";
     internal const string AnsiReset = "\x1b[0m";
     internal const string ServerProduct = "FHIRCAAT";
+    internal const string AnsiSuccess = "\u001b[38;5;2m■\u001b[0m";
+    internal const string AnsiFail = "\u001b[38;5;1mX\u001b[0m";
 
     internal static readonly string ServerProductLead = ServerProduct[..4];
     internal static readonly string ServerProductTail = ServerProduct[4..];

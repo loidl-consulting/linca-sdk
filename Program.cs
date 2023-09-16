@@ -44,11 +44,8 @@ internal class Program
             }
             else
             {
-                var story = Spec.Story(specToRun);
-
                 exitCode = ExitCodeSuccess;
-                Console.Clear();
-                Console.WriteLine(story);
+                Spec.Run(specToRun, connection);
             }
         } while (KeepGoing());
 

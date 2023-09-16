@@ -13,9 +13,11 @@ using System.Reflection;
 
 namespace Lc.Linca.Sdk;
 
-internal class Spec
+internal abstract class Spec
 {
     private const double UserStory = Math.Tau;
+
+    protected IEnumerable<Step> Steps { get; init; } = Array.Empty<Step>();
 
     public static IEnumerable<(int number, string name, Type spec)> Choice
     {
@@ -38,5 +40,48 @@ internal class Spec
             .GetField(nameof(UserStory))?
             .GetRawConstantValue()?
             .ToString() ?? string.Empty;
+    }
+
+    public static void Run(Type specToRun, LincaConnection connection)
+    {
+        var story = Story(specToRun);
+        var con = new Terminal.Info(story);
+        var outcome = true;
+        
+        con.Show(true);
+        con.Flush(Environment.NewLine);
+        var spec = (Activator.CreateInstance(specToRun) as Spec)!;
+
+        foreach (var step in spec.Steps)
+        {
+            step.terminalRow = Terminal.Info.PeekY();
+            con.WriteLine($"  [ ] {step.Caption}");
+            con.Flush();
+        }
+
+        con.Flush(Environment.NewLine);
+        foreach (var step in spec.Steps)
+        {
+            if(!con.Outcome(step.Runner(), step.terminalRow))
+            {
+                outcome = false;
+            }
+        }
+
+        con.Flush(outcome ? "SUCCEEDED." : "FAILED.");
+    }
+
+    public class Step
+    {
+        internal int terminalRow = -1;
+
+        public string Caption { get; init; }
+        public Func<bool> Runner { get; init; }
+
+        public Step(string caption, Func<bool> runner)
+        {
+            Caption = caption;
+            Runner = runner;
+        }
     }
 }
