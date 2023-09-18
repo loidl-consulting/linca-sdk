@@ -22,25 +22,25 @@ internal class CareInformationSystem : ActorSoftwareScaffold
     private static Guid GetClientIdFromDb()
     {
         var clientId = Guid.NewGuid();
+        var existingClientId = PseudoDatabaseRetrieve(nameof(CareInformationSystem), PseudoDatabaseField.PatientId);
 
-        try
+        if (existingClientId == Guid.Empty)
         {
-            clientId = new(File.ReadAllBytes(CareDb));
-        } 
-        catch
+            /* what a caregiver calls a client,
+             * a doctor calls a patient. */
+            PseudoDatabaseStore(
+                nameof(CareInformationSystem),
+                PseudoDatabaseField.PatientId,
+                clientId
+            );
+        }
+        else
         {
-            RegisterClientAsStored(clientId);
+            clientId = existingClientId;
         }
 
         return clientId;
     }
-
-    private static void RegisterClientAsStored(Guid clientId)
-    {
-        File.WriteAllBytes(CareDb, clientId.ToByteArray());
-    }
-
-    private static string CareDb => $".{nameof(CareInformationSystem)}.tmp.db";
 
     public class Client
     {
