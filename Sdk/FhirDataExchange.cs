@@ -10,8 +10,9 @@
  ***********************************************************************************/
 
 using Hl7.Fhir.Model;
-using Hl7.Fhir.Serialization;
 using Hl7.Fhir.Model.Extensions;
+using Hl7.Fhir.Serialization;
+using System.Net;
 
 namespace Lc.Linca.Sdk;
 
@@ -24,40 +25,87 @@ internal static class FhirDataExchange<T> where T : Resource, new()
     /// </summary>
     public static (T created, bool canCue) CreateResource(LincaConnection connection, T resource)
     {
-        using var http = connection.GetAuthenticatedClient();
-        var request = new HttpRequestMessage
-        (
-            HttpMethod.Post,
-            $"{connection.ServerBaseUrl}/{resource.GetProfiledResourceName()}"
-        );
-
-        var fhirJson = resource.ToJson();
-        request.Content = new StringContent(fhirJson);
-        request.Content.Headers.ContentType = Constants.FhirJson;
-        using var response = http.Send(request);
-        var getRequest = new HttpRequestMessage
-        (
-            HttpMethod.Get,
-            response.Headers.Location
-        );
-
-        getRequest.Headers.Accept.Add(Constants.FhirJson);
-        using var getResponse = http.Send(getRequest);
-        var createdResourceRaw = new StreamReader
-        (
-            getResponse.Content.ReadAsStream()
-        ).ReadToEnd();
-
-        if (new FhirJsonPocoDeserializer().TryDeserializeResource
-        (
-            createdResourceRaw,
-            out Resource? parsedResource,
-            out var _
-        ) && parsedResource is T createdResource)
+        using var response = Send(connection, HttpMethod.Post, resource);
+        if (response != null)
         {
-            return (createdResource, true);
+            using var getResponse = Receive(connection, response.Headers.Location);
+            if (getResponse != null)
+            {
+                var createdResourceRaw = new StreamReader
+                (
+                    getResponse.Content.ReadAsStream()
+                ).ReadToEnd();
+
+                if (new FhirJsonPocoDeserializer().TryDeserializeResource
+                (
+                    createdResourceRaw,
+                    out Resource? parsedResource,
+                    out var _
+                ) && parsedResource is T createdResource)
+                {
+                    return (createdResource, true);
+                }
+            }
         }
 
         return (new(), false);
+    }
+
+    private static HttpResponseMessage? Receive(LincaConnection connection, Uri? fromLocation)
+    {
+        for (; ; )
+        {
+            using var http = connection.GetAuthenticatedClient();
+            var getRequest = new HttpRequestMessage
+            (
+                HttpMethod.Get,
+                fromLocation
+            );
+
+            getRequest.Headers.Accept.Add(Constants.FhirJson);
+            var getResponse = http.Send(getRequest);
+
+            if (getResponse.StatusCode == HttpStatusCode.Unauthorized)
+            {
+                /* token may be expired or may have been revoked.
+                 * retry once with certificate reauthentication */
+                connection.Reauthenticate();
+
+                continue;
+            }
+
+            return getResponse;
+        }
+    }
+
+    private static HttpResponseMessage? Send(LincaConnection connection, HttpMethod method, T resource)
+    {
+        for (; ; )
+        {
+            using var http = connection.GetAuthenticatedClient();
+            var request = new HttpRequestMessage
+            (
+                method,
+                $"{connection.ServerBaseUrl}/{resource.GetProfiledResourceName()}"
+            );
+
+            var fhirJson = resource.ToJson();
+
+            request.Content = new StringContent(fhirJson);
+            request.Content.Headers.ContentType = Constants.FhirJson;
+            request.Headers.Accept.Add(Constants.FhirJson);
+            var response = http.Send(request);
+
+            if (response.StatusCode == HttpStatusCode.Unauthorized)
+            {
+                /* token may be expired or may have been revoked.
+                 * retry once with certificate reauthentication */
+                connection.Reauthenticate();
+
+                continue;
+            }
+
+            return response;
+        }
     }
 }

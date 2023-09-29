@@ -11,16 +11,19 @@
 
 namespace Lc.Linca.Sdk;
 
-internal class LincaConnection
+internal class LincaConnection : IDisposable
 {
+    private HttpClient httpClient;
+
     public LincaConnection()
     {
         JavaWebToken = string.Empty;
         ServerBaseUrl = string.Empty;
         Succeeded = false;
+        httpClient = new HttpClient();
     }
 
-    public LincaConnection(string jwt, string serverBaseUrl)
+    public LincaConnection(string jwt, string serverBaseUrl) : this()
     {
         JavaWebToken = jwt;
         ServerBaseUrl = serverBaseUrl;
@@ -29,7 +32,7 @@ internal class LincaConnection
 
     public bool Succeeded { init; get; }
 
-    public string JavaWebToken { init; get; }
+    public string JavaWebToken { get; internal set; }
 
     public string ServerBaseUrl { init; get; }
 
@@ -38,13 +41,40 @@ internal class LincaConnection
     /// </summary>
     public HttpClient GetAuthenticatedClient()
     {
-        var http = new HttpClient();
-        http.DefaultRequestHeaders.Authorization = new
-        (
-            Constants.AuthenticationScheme,
-            JavaWebToken
-        );
+        httpClient = new();
+        if (httpClient.DefaultRequestHeaders.Authorization == null)
+        {
+            httpClient.DefaultRequestHeaders.Authorization = new
+            (
+                Constants.AuthenticationScheme,
+                JavaWebToken
+            );
+        }
 
-        return http;
+        return httpClient;
+    }
+
+    public void Reauthenticate()
+    {
+        using var newConnection = LincaConnector.Connect(ServerBaseUrl);
+        
+        if (newConnection.Succeeded)
+        {
+            JavaWebToken = newConnection.JavaWebToken;
+        }
+    }
+
+    public void Dispose()
+    {
+        Dispose(true);
+        GC.SuppressFinalize(this);
+    }
+
+    protected virtual void Dispose(bool disposing)
+    {
+        if (disposing)
+        {
+            httpClient.Dispose();
+        }
     }
 }

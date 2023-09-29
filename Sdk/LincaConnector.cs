@@ -12,6 +12,7 @@
 using Hl7.Fhir.Model;
 using Hl7.Fhir.Serialization;
 using Newtonsoft.Json.Linq;
+using System.ComponentModel;
 using System.Security.Authentication;
 using System.Security.Cryptography.X509Certificates;
 
@@ -19,6 +20,8 @@ namespace Lc.Linca.Sdk;
 
 internal static class LincaConnector
 {
+    private static X509Certificate2? certificate = null;
+
     public static LincaConnection Connect(string lincaUrl)
     {
         lincaUrl = lincaUrl.TrimEnd('/');
@@ -30,22 +33,27 @@ internal static class LincaConnector
         var store = new X509Store(Constants.CertificateStoreKeyOwn, StoreLocation.LocalMachine);
         store.Open(OpenFlags.ReadOnly | OpenFlags.OpenExistingOnly);
         var collection = store.Certificates;
-        X509Certificate2? certificate = null;
 
-        if (OperatingSystem.IsWindows())
+        if (certificate == null)
         {
-            certificate = X509Certificate2UI.SelectFromCollection
-            (
-                collection,
-                Localization.CertificatePromptTitleDe,
-                Localization.CertificatePromptDescDe,
-                X509SelectionFlag.SingleSelection
-            ).FirstOrDefault();
-        }
-        else
-        {
-            /* use a method to load the certificate, that works on your
-             * platform (for example, load from a PEM file) */
+            if (OperatingSystem.IsWindows())
+            {
+                certificate = X509Certificate2UI.SelectFromCollection
+                (
+                    collection,
+                    Localization.CertificatePromptTitleDe,
+                    Localization.CertificatePromptDescDe,
+                    X509SelectionFlag.SingleSelection
+                ).FirstOrDefault();
+            }
+            else
+            {
+                /* use a method to load the certificate, that works on your
+                 * platform (for example, load from a PEM file). the following
+                 * line is just an example assuming that there is a PEM file
+                 * present in the current working directory. */
+                certificate = X509Certificate2.CreateFromPemFile("linca-pflegeeinrichtung-001-dev.pem");
+            }
         }
 
         if (certificate == null)
@@ -73,10 +81,28 @@ internal static class LincaConnector
 
         /* 2. use FHIR SMART to present our client certificate and
          *    ask for the token endpoint that we should contact */
+        var smartRaw = string.Empty;
         var smartRequest = new HttpRequestMessage(HttpMethod.Get, $"{lincaUrl}/{Constants.FhirSmartPath}");
         smartRequest.Headers.Accept.Add(Constants.FhirJson);
-        using var smartResponse = certHttp.Send(smartRequest);
-        var smartRaw = new StreamReader(smartResponse.Content.ReadAsStream()).ReadToEnd();
+        try
+        {
+            using var smartResponse = certHttp.Send(smartRequest);
+            smartRaw = new StreamReader(smartResponse.Content.ReadAsStream()).ReadToEnd();
+        }
+        catch (HttpRequestException ex)
+        {
+            if (ex.InnerException?.InnerException is Win32Exception wex)
+            {
+                Console.Error.WriteLine("No permission to read the client certificate: {0}", wex.Message);
+            }
+            else
+            {
+                Console.Error.WriteLine("SMART Authentication failed: {0}", ex.Message);
+            }
+
+            return new();
+        }
+
         var tokenEndpoint = JToken.Parse(smartRaw)[Constants.OAuthKeyTokenEndpoint]?.Value<string>() ?? string.Empty;
 
         /* 3. obtain a JWT for the subsequent REST interactions */

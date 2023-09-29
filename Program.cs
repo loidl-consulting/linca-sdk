@@ -30,24 +30,26 @@ internal class Program
         var exitCode = ExitCodeIdle;
         var connection = Blurb();
 
-        if (!connection.Succeeded)
+        if (connection.Succeeded)
         {
-            return ExitCodeCouldNotConnect;
+            do
+            {
+                var specToRun = SelectSpecToRun();
+                if (specToRun == null)
+                {
+                    Console.WriteLine("Keine Spezifikation ausgewählt.");
+                }
+                else
+                {
+                    exitCode = ExitCodeSuccess;
+                    Spec.Run(specToRun, connection);
+                }
+            } while (KeepGoing());
         }
-
-        do
+        else
         {
-            var specToRun = SelectSpecToRun();
-            if(specToRun == null)
-            {
-                Console.WriteLine("Keine Spezifikation ausgewählt.");
-            }
-            else
-            {
-                exitCode = ExitCodeSuccess;
-                Spec.Run(specToRun, connection);
-            }
-        } while (KeepGoing());
+            exitCode = ExitCodeCouldNotConnect;
+        }
 
         if (Environment.UserInteractive)
         {
@@ -65,6 +67,7 @@ internal class Program
         var connection = LincaConnector.Connect(FhirServerBaseUrl);
         if (!LincaConnector.NegotiateCapabilities(connection))
         {
+            Console.Error.Write("Failed to negotiate FHIR capabilities");
         }
 
         return connection;
