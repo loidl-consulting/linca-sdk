@@ -9,9 +9,6 @@
  * The Linked Care project is co-funded by the Austrian FFG
  ***********************************************************************************/
 
-using Hl7.Fhir.Model;
-using Hl7.Fhir.Support;
-
 namespace Lc.Linca.Sdk.Client;
 
 internal class Program
@@ -65,12 +62,72 @@ internal class Program
         Console.WriteLine("Verbindung mit FHIR Server wird initiiert...");
 
         var connection = LincaConnector.Connect(FhirServerBaseUrl);
-        if (!LincaConnector.NegotiateCapabilities(connection))
+        var con = new Terminal.Info();
+        var outcome = false;
+
+        if (LincaConnector.NegotiateCapabilities(connection))
         {
-            Console.Error.Write("Failed to negotiate FHIR capabilities");
+            outcome = true;
+            con.Flush(Environment.NewLine);
+            var row1 = con.WriteLine($"  [ ] Version des LINCA Servers", true);
+            var row2 = con.WriteLine($"  [ ] Reauthentifizierung bei Tokenablauf", true);
+            var row3 = con.WriteLine($"  [ ] Unterstützte Ressourcen", true);
+
+            var testVersion = connection.Capabilities.FhirVersion?.ToString() == "N5_0_0";
+            if (!con.Outcome(testVersion, row1))
+            {
+                outcome = false;
+            }
+
+            var testReauth = TestReauthentication(connection);
+            if (!con.Outcome(testReauth, row2))
+            {
+                outcome = false;
+            }
+
+            var testResources = connection.Capabilities.Rest.First().Resource.Count >= 5;
+            if (!con.Outcome(testResources, row3))
+            {
+                outcome = false;
+            }
+        }
+
+        con.Flush(Environment.NewLine);
+        if (!outcome)
+        {
+            Console.Error.WriteLine("Failed to negotiate FHIR capabilities");
         }
 
         return connection;
+    }
+
+    private static bool TestReauthentication(LincaConnection connection)
+    {
+        connection.JavaWebToken = "test_invalidated_token";
+        try
+        {
+            using var httpFailing = connection.GetAuthenticatedClient();
+            var failRequest = new HttpRequestMessage(HttpMethod.Options, $"{connection.ServerBaseUrl}/");
+            failRequest.Headers.Accept.Add(Constants.FhirJson);
+            using var failResponse = httpFailing.Send(failRequest);
+
+            if(failResponse.IsSuccessStatusCode)
+            {
+                return false;
+            }
+
+            connection.Reauthenticate();
+            using var httpGood = connection.GetAuthenticatedClient();
+            var goodRequest = new HttpRequestMessage(HttpMethod.Options, $"{connection.ServerBaseUrl}/");
+            goodRequest.Headers.Accept.Add(Constants.FhirJson);
+            using var goodResponse = httpGood.Send(goodRequest);
+
+            return goodResponse.IsSuccessStatusCode;
+        }
+        catch
+        {
+            return false;
+        }
     }
 
     private static Type? SelectSpecToRun()

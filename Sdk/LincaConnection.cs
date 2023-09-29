@@ -9,6 +9,8 @@
  * The Linked Care project is co-funded by the Austrian FFG
  ***********************************************************************************/
 
+using Hl7.Fhir.Model;
+
 namespace Lc.Linca.Sdk;
 
 internal class LincaConnection : IDisposable
@@ -35,6 +37,8 @@ internal class LincaConnection : IDisposable
     public string JavaWebToken { get; internal set; }
 
     public string ServerBaseUrl { init; get; }
+
+    public CapabilityStatement Capabilities { get; internal set; } = new();
 
     /// <summary>
     /// Caller must dispose or use using pattern

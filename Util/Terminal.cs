@@ -35,9 +35,17 @@ internal static class Terminal
             }
         }
 
-        public void WriteLine(string line)
+        public int WriteLine(string line, bool flush = false)
         {
+            var yPos = PeekY();
+
             _content.AppendLine(line);
+            if(flush)
+            {
+                Flush();
+            }
+
+            return yPos;
         }
 
         public void HorizontalRule()
