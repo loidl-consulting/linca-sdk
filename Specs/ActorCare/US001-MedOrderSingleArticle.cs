@@ -36,6 +36,7 @@ internal class US001_MedOrderSingleArticle : Spec
         Steps = new Step[]
         {
             new("Create client record", CreateClientRecord),
+            new("Place order with no pharmacy specified", OrderAnyPharmacy)
             new("Place order with no pharmacy specified", CreateRequestOrchestrationRecord)
         };
     }
@@ -83,7 +84,58 @@ internal class US001_MedOrderSingleArticle : Spec
         }
         else
         {
-            Console.WriteLine($"Failed to transmit client information");
+            Console.WriteLine("Failed to transmit client information");
+        }
+
+        return canCue;
+    }
+
+    private bool OrderAnyPharmacy()
+    {
+        var client = CareInformationSystem.GetClient();
+        if(client.ClientId == Guid.Empty)
+        {
+            Console.WriteLine("No client Id has been registered in the care information system");
+
+            return false;
+        }
+
+        // populate the order position
+        var orderPosition = new MedicationRequest()
+        {
+            // the client for whom the medication is ordered
+            Subject = new()
+            {
+
+            },
+            // the practitioner who will be asked to issue the prescription
+            Performer = new()
+            {
+
+            },
+            // the product ordered
+            Medication = new()
+            {
+
+            }
+        };
+
+
+        // populate the order header
+        var order = new RequestOrchestration()
+        {
+            Contained = new(new[] { orderPosition })
+        };
+
+        (var createdOrder, var canCue) = LincaDataExchange.PlaceOrder(Connection, order);
+
+        if (canCue)
+        {
+            Console.WriteLine($"Order created, id {createdOrder.Id}");
+        }
+        else
+        {
+            Console.WriteLine("Failed to create order");
         }
 
         return canCue;

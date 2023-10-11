@@ -15,6 +15,16 @@ namespace Lc.Linca.Sdk;
 
 internal static class LincaDataExchange
 {
+    /// <summary>
+    /// Create a new patient record on the FHIR server,
+    /// and return the Id that has been assigned.
+    /// If the Id is included in the submitted resource,
+    /// and a patient with this Id does not yet exist in
+    /// the patient store, then the FHIR server will create
+    /// the patient resource using the specified Id (external assignment).
+    /// If a patient record matching that Id is found, it
+    /// it will be updated.
+    /// </summary>
     public static (Patient created, bool canCue) CreatePatient(LincaConnection connection, Patient patient)
     {
         (var createdPatient, var canCue) = FhirDataExchange<Patient>.CreateResource(connection, patient);
@@ -23,6 +33,18 @@ internal static class LincaDataExchange
         {
             return (createdPatient, true);
         }
+
+        return (new(), false);
+    }
+
+    /// <summary>
+    /// Submits a new order for prescription of medication.
+    /// The orchestration request represents the order header,
+    /// and it must contain one or more order positions
+    /// (represented by contained order medication request resources)
+    /// </summary>
+    public static (RequestOrchestration created, bool canCue) PlaceOrder(LincaConnection connection, RequestOrchestration order)
+    {
 
         return (new(), false);
     }
