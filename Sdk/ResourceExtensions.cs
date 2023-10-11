@@ -28,6 +28,10 @@ public static class ResourceExtensions
         {
             return "HL7ATCorePatient";
         }
+        if(resource is RequestOrchestration) 
+        {
+            return "LINCARequestOrchestration";
+        }
 
         return typeof(Resource).Name;
     }

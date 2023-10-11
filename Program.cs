@@ -16,6 +16,7 @@ internal class Program
     /// <summary>
     /// In SDK, this always points to the development system
     /// </summary>
+    // internal const string FhirServerBaseUrl = "https://localhost:8084";
     internal const string FhirServerBaseUrl = "https://fhir5-d.linkedcare.at";
 
     private const int ExitCodeCouldNotConnect = 0xaca1;

@@ -26,4 +26,16 @@ internal static class LincaDataExchange
 
         return (new(), false);
     }
+
+    public static (RequestOrchestration createdRO, bool canCue) CreateRequestOrchestration(LincaConnection connection, RequestOrchestration ro)
+    {
+        (var createdRO, var canCue) = FhirDataExchange<RequestOrchestration>.CreateResource(connection, ro);
+
+        if (canCue)
+        {
+            return (createdRO, true);
+        }
+
+        return (new(), false);
+    }
 }

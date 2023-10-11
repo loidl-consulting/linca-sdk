@@ -26,7 +26,7 @@ internal static class FhirDataExchange<T> where T : Resource, new()
     public static (T created, bool canCue) CreateResource(LincaConnection connection, T resource)
     {
         using var response = Send(connection, HttpMethod.Post, resource);
-        if (response != null)
+        if (response?.StatusCode == HttpStatusCode.Created)
         {
             using var getResponse = Receive(connection, response.Headers.Location);
             if (getResponse != null)
