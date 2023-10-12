@@ -9,6 +9,8 @@
  * The Linked Care project is co-funded by the Austrian FFG
  ***********************************************************************************/
 
+using Hl7.Fhir.Model;
+
 namespace Lc.Linca.Sdk.Specs.ActorCare;
 
 internal class US004_UpdateOrder : Spec
@@ -21,5 +23,96 @@ internal class US004_UpdateOrder : Spec
         The LINCA systems prevents Walter Specht from updating such a position 
         if Günter's practitioner, Dr. Silvia Spitzmaus, has already issued a prescription for that order position";
 
-    public US004_UpdateOrder(LincaConnection conn) : base(conn) { }
+    protected MedicationRequest medReq1 = new();
+
+    public US004_UpdateOrder(LincaConnection conn) : base(conn) {
+
+        Steps = new Step[]
+        {
+            new("Post OrderMedicationRequest with update informations", PostOrderMedicationRequestUpdate)
+        };
+
+    }
+
+    private bool PostOrderMedicationRequestUpdate() 
+    {
+        // post order medication request for Günter Gürtelthier based on an existing order medication request
+        // Medication and Dispenser are updated
+        medReq1.BasedOn.Add(new ResourceReference()
+        {
+            Reference = "LINCAOrderMedicationRequest/4ca9d9bf9936427c926118e9c627fc3a"
+        });
+        medReq1.Status = MedicationRequest.MedicationrequestStatus.Active;      // REQUIRED
+        medReq1.Intent = MedicationRequest.MedicationRequestIntent.Order;     // REQUIRED
+        medReq1.Subject = new ResourceReference()                                // REQUIRED
+        {
+            Reference = "HL7ATCorePatient/6800bda462034a9a8123e3dc48c61d53"     // relative path to Linca Fhir patient resource
+        };
+        medReq1.Medication = new()
+        {
+            Concept = new()
+            {
+                Coding = new()
+                    {
+                        new Coding()
+                        {
+                            Display = "Eine Salbe, die in der Apotheke angemischt wird"
+                        }
+                    }
+            }
+        };
+        medReq1.InformationSource.Add(new ResourceReference()  // REQUIRED, cardinality 1..1 in LINCA
+        {
+            Identifier = new()
+            {
+                Value = "2.999.40.0.34.1.1.1",  // OID of the ordering care organization
+                System = "urn:oid:1.2.40.0.34"  // Code-System: eHVD
+            },
+            Display = "Haus Vogelsang"   // optional
+        });
+        medReq1.Requester = new ResourceReference()  // REQUIRED
+        {
+            Identifier = new()
+            {
+                Value = "ECHT_SPECHT",               // e.g., org internal username or handsign of Susanne Allzeit
+                System = "urn:oid:2.999.40.0.34.1.1.1"  // Code-System: Care-Org Pflegedienst Immerdar
+            },
+            Display = "DGKP Walter Specht"
+        };
+        medReq1.Performer.Add(new ResourceReference()   // REQUIRED, cardinality 1..1 in LINCA
+        {
+            Identifier = new()
+            {
+                Value = "2.999.40.0.34.3.1.3",  // OID of designated practitioner 
+                System = "urn:oid:1.2.40.0.34"  // Code-System: eHVD
+            },
+            Display = "Dr. Silvia Spitzmaus"   // optional
+        });
+        medReq1.DispenseRequest = new()
+        {
+            Dispenser = new()
+            {
+                Identifier = new()
+                {
+                    Value = "2.999.40.0.34.5.1.3",  // OID of designated pharmacy
+                    System = "urn:oid:1.2.40.0.34"  // Code-System: eHVD
+                },
+                Display = "Apotheke 'Zum Linden Wurm'"
+            }
+        };
+
+        (var postedOMR, var canCue) = LincaDataExchange.PostOrderMedicationRequest(Connection, medReq1);
+
+        if (canCue)
+        {
+            Console.WriteLine($"Linca OrderMedicationRequest transmitted, id {postedOMR.Id}");
+        }
+        else
+        {
+            Console.WriteLine($"Failed to transmit Linca OrderMedicationRequest");
+        }
+
+        return canCue;
+    }
+
 }

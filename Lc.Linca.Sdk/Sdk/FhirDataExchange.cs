@@ -23,9 +23,9 @@ internal static class FhirDataExchange<T> where T : Resource, new()
     /// REST entity location from the response, and returns the
     /// new resource obtained from there
     /// </summary>
-    public static (T created, bool canCue) CreateResource(LincaConnection connection, T resource)
+    public static (T created, bool canCue) CreateResource(LincaConnection connection, T resource, string endpoint)
     {
-        using var response = Send(connection, HttpMethod.Post, resource);
+        using var response = Send(connection, HttpMethod.Post, resource, endpoint);
         if (response?.StatusCode == HttpStatusCode.Created)
         {
             using var getResponse = Receive(connection, response.Headers.Location);
@@ -78,7 +78,7 @@ internal static class FhirDataExchange<T> where T : Resource, new()
         }
     }
 
-    private static HttpResponseMessage? Send(LincaConnection connection, HttpMethod method, T resource)
+    private static HttpResponseMessage? Send(LincaConnection connection, HttpMethod method, T resource, string endpoint)
     {
         for (; ; )
         {
@@ -86,7 +86,7 @@ internal static class FhirDataExchange<T> where T : Resource, new()
             var request = new HttpRequestMessage
             (
                 method,
-                $"{connection.ServerBaseUrl}/{resource.GetProfiledResourceName()}"
+                $"{connection.ServerBaseUrl}/{endpoint}"
             );
 
             var fhirJson = resource.ToJson();

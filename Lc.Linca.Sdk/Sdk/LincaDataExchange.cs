@@ -10,6 +10,7 @@
  ***********************************************************************************/
 
 using Hl7.Fhir.Model;
+using Hl7.Fhir.Model.Extensions;
 
 namespace Lc.Linca.Sdk;
 
@@ -30,7 +31,7 @@ public static class LincaDataExchange
     /// </summary>
     public static (Patient created, bool canCue) CreatePatient(LincaConnection connection, Patient patient)
     {
-        (var createdPatient, var canCue) = FhirDataExchange<Patient>.CreateResource(connection, patient);
+        (var createdPatient, var canCue) = FhirDataExchange<Patient>.CreateResource(connection, patient, LincaEndpoints.HL7ATCorePatient);
 
         if(canCue)
         {
@@ -57,11 +58,47 @@ public static class LincaDataExchange
     /// </summary>
     public static (RequestOrchestration createdRO, bool canCue) CreateRequestOrchestration(LincaConnection connection, RequestOrchestration ro)
     {
-        (var createdRO, var canCue) = FhirDataExchange<RequestOrchestration>.CreateResource(connection, ro);
+        (var createdRO, var canCue) = FhirDataExchange<RequestOrchestration>.CreateResource(connection, ro, LincaEndpoints.LINCARequestOrchestration);
 
         if (canCue)
         {
             return (createdRO, true);
+        }
+
+        return (new(), false);
+    }
+
+    public static (MedicationRequest postedOMR, bool canCue) PostOrderMedicationRequest(LincaConnection connection, MedicationRequest omr)
+    {
+        (var postedOMR, var canCue) = FhirDataExchange<MedicationRequest>.CreateResource(connection, omr, LincaEndpoints.LINCAOrderMedicationRequest);
+
+        if (canCue)
+        {
+            return (postedOMR, true);
+        }
+
+        return (new(), false);
+    }
+
+    public static (MedicationRequest postedPMR, bool canCue) CreatePrescriptionMedicationRequest(LincaConnection connection, MedicationRequest pmr)
+    {
+        (var postedPMR, var canCue) = FhirDataExchange<MedicationRequest>.CreateResource(connection, pmr, LincaEndpoints.LINCAPrescriptionMedicationRequest);
+
+        if (canCue)
+        {
+            return (postedPMR, true);
+        }
+
+        return (new(), false);
+    }
+
+    public static (MedicationDispense postedMD, bool canCue) CreateMedicationDispense(LincaConnection connection, MedicationDispense md)
+    {
+        (var postedMD, var canCue) = FhirDataExchange<MedicationDispense>.CreateResource(connection, md, LincaEndpoints.LINCAMedicationDispense);
+
+        if (canCue)
+        {
+            return (postedMD, true);
         }
 
         return (new(), false);
