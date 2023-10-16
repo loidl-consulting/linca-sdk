@@ -40,9 +40,9 @@ internal class US010_PrescribeAsOrdered : Spec
         {
             Reference = "LINCAOrderMedicationRequest/b8aad49741e74c36aeab76cada3ad1bc"
         });
-        prescription.Status = MedicationRequest.MedicationrequestStatus.Active;      // REQUIRED
+        prescription.Status = MedicationRequest.MedicationrequestStatus.Active;    // REQUIRED
         prescription.Intent = MedicationRequest.MedicationRequestIntent.Order;     // REQUIRED
-        prescription.Subject = new ResourceReference()                                // REQUIRED
+        prescription.Subject = new ResourceReference()                             // REQUIRED
         {
             Reference = "HL7ATCorePatient/39dc7aa3a99a4569a2b8b9dfb5036810"     // relative path to Linca Fhir patient resource
         };
@@ -78,9 +78,16 @@ internal class US010_PrescribeAsOrdered : Spec
                     Frequency = 1,
                     Period = 1,
                     PeriodUnit = Timing.UnitsOfTime.D
-                },
+                }
+            },
+            DoseAndRate = new()
+            {
+                new Dosage.DoseAndRateComponent()
+                {
+                    Dose = new Quantity(value: 1, unit: "St")
+                }
             }
-        }) ; 
+        });
 
         // prescription.InformationSource will be copied from resource in basedOn by the Fhir server
         // prescription.Requester will be copied from resource in basedOn by the Fhir server
