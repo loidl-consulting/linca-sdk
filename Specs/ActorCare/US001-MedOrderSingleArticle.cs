@@ -31,13 +31,12 @@ internal class US001_MedOrderSingleArticle : Spec
 
     public US001_MedOrderSingleArticle(LincaConnection conn) : base(conn)
     {
-        
+
 
         Steps = new Step[]
         {
             new("Create client record", CreateClientRecord),
             new("Place order with no pharmacy specified", OrderAnyPharmacy)
-            new("Place order with no pharmacy specified", CreateRequestOrchestrationRecord)
         };
     }
 
