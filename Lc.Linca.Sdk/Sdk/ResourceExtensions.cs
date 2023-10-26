@@ -32,7 +32,7 @@ public static class LincaEndpoints
     /// <summary>
     /// The name of the order medication request resource as defined in the IG profile
     /// </summary>
-    public static string LINCAOrderMedicationRequest = "LINCAOrderMedicationRequest";
+    public static string LINCAProposalMedicationRequest = "LINCAProposalMedicationRequest";
 
     /// <summary>
     /// The name of the prescription medication request resource as defined in the IG profile

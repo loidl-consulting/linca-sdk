@@ -39,13 +39,13 @@ internal class US011_PrescribeWithChanges : Spec
     {
         prescription.BasedOn.Add(new ResourceReference()
         {
-            Reference = "LINCAOrderMedicationRequest/3249246cd3774134abeafdfe6189e8e7"
+            Reference = "LINCAProposalMedicationRequest/af3e2513706c47d2a7cb17ee2350d261"
         });
         prescription.Status = MedicationRequest.MedicationrequestStatus.Active;      // REQUIRED
         prescription.Intent = MedicationRequest.MedicationRequestIntent.Order;     // REQUIRED
         prescription.Subject = new ResourceReference()                                // REQUIRED
         {
-            Reference = "HL7ATCorePatient/6800bda462034a9a8123e3dc48c61d53"     // relative path to Linca Fhir patient resource, copy from order
+            Reference = "HL7ATCorePatient/eb89d0f97916437f84202ee745beb599"     // relative path to Linca Fhir patient resource, copy from order
         };
         prescription.Medication = new()      // the doctor changes the medication to a ready-to-use ointment
         {
@@ -66,26 +66,10 @@ internal class US011_PrescribeWithChanges : Spec
         {
             Text = "1x täglich auf die betroffene Stelle auftragen"
         });
-        /*
-        prescription.InformationSource.Add(new ResourceReference()  // REQUIRED, cardinality 1..1 in LINCA
-        {
-            Identifier = new()
-            {
-                Value = "2.999.40.0.34.1.1.1",  // OID of the ordering care organization
-                System = "urn:oid:1.2.40.0.34"  // Code-System: eHVD
-            },
-            Display = "Haus Vogelsang"   // optional
-        });
-        prescription.Requester = new ResourceReference()  // REQUIRED
-        {
-            Identifier = new()
-            {
-                Value = "ECHT_SPECHT",               // e.g., org internal username or handsign of Susanne Allzeit
-                System = "urn:oid:2.999.40.0.34.1.1.1"  // Code-System: Care-Org Pflegedienst Immerdar
-            },
-            Display = "DGKP Walter Specht"
-        };
-        */
+
+        // prescription.InformationSource.Add(new ResourceReference()  // will be copied from reference in basedOn
+        // prescription.Requester = new ResourceReference()  //will be copied from reference in basedOn
+
         prescription.Performer.Add(new ResourceReference()   // REQUIRED, cardinality 1..1 in LINCA
         {
             Identifier = new()

@@ -39,12 +39,12 @@ internal class US016_Dispense : Spec
     {
         dispense.AuthorizingPrescription.Add(new()
         {
-            Reference = "LINCAPrescriptionMedicationRequest/331c530a6377444a9e78a8a27a2ec35c"
+            Reference = "LINCAPrescriptionMedicationRequest/61b25ab21d4e4492ab460127fbb03b1f"
         });
         dispense.Status = MedicationDispense.MedicationDispenseStatusCodes.Completed;
         dispense.Subject = new ResourceReference()                                // REQUIRED
         {
-            Reference = "HL7ATCorePatient/39dc7aa3a99a4569a2b8b9dfb5036810"    // relative path to Linca Fhir patient resource
+            Reference = "HL7ATCorePatient/5f16757cdbb04496b586862b7d6159f2"    // relative path to Linca Fhir patient resource
         };
         dispense.Medication = new()
         {

@@ -30,24 +30,24 @@ internal class US005_CancelOrder : Spec
     {
        Steps = new Step[]
        {
-            new("Post OrderMedicationRequest for cancellation", PostOrderMedicationRequestCancel)
+            new("Post ProposalMedicationRequest for cancellation", PostProposalMedicationRequestCancel)
        };
     }
 
-    private bool PostOrderMedicationRequestCancel()
+    private bool PostProposalMedicationRequestCancel()
     {
         // post order medication request for Patrizia Platypus based on an existing order medication request
         // set Status to cancelled 
         medReq2.BasedOn.Add(new ResourceReference()
         {
-            Reference = "LINCAOrderMedicationRequest/1762e9b8e2c84b01824f101db887593c"
+            Reference = "LINCAProposalMedicationRequest/f5c4e4d8ed0e4aae87ab99824a2567c3"
         });
         // medication request for Patricia Platypus
         medReq2.Status = MedicationRequest.MedicationrequestStatus.Cancelled;      // REQUIRED
-        medReq2.Intent = MedicationRequest.MedicationRequestIntent.Order;     // REQUIRED
+        medReq2.Intent = MedicationRequest.MedicationRequestIntent.Proposal;     // REQUIRED
         medReq2.Subject = new ResourceReference()                                // REQUIRED
         {
-            Reference = $"HL7ATCorePatient/d14e6251b3c545828f7e44cdc6faf2fb"     // relative path to Linca Fhir patient resource
+            Reference = $"HL7ATCorePatient/73305590f6b14686911b9aae2f245605"     // relative path to Linca Fhir patient resource
         };
         medReq2.Medication = new()
         {
@@ -104,15 +104,15 @@ internal class US005_CancelOrder : Spec
             }
         };
 
-        (var postedOMR, var canCue) = LincaDataExchange.PostOrderMedicationRequest(Connection, medReq2);
+        (var postedOMR, var canCue) = LincaDataExchange.PostProposalMedicationRequest(Connection, medReq2);
 
         if (canCue)
         {
-            Console.WriteLine($"Linca OrderMedicationRequest transmitted, id {postedOMR.Id}");
+            Console.WriteLine($"Linca ProposalMedicationRequest transmitted, id {postedOMR.Id}");
         }
         else
         {
-            Console.WriteLine($"Failed to transmit Linca OrderMedicationRequest");
+            Console.WriteLine($"Failed to transmit Linca ProposalMedicationRequest");
         }
 
         return canCue;

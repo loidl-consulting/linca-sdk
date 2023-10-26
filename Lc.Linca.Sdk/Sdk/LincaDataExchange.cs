@@ -68,9 +68,9 @@ public static class LincaDataExchange
         return (new(), false);
     }
 
-    public static (MedicationRequest postedOMR, bool canCue) PostOrderMedicationRequest(LincaConnection connection, MedicationRequest omr)
+    public static (MedicationRequest postedOMR, bool canCue) PostProposalMedicationRequest(LincaConnection connection, MedicationRequest omr)
     {
-        (var postedOMR, var canCue) = FhirDataExchange<MedicationRequest>.CreateResource(connection, omr, LincaEndpoints.LINCAOrderMedicationRequest);
+        (var postedOMR, var canCue) = FhirDataExchange<MedicationRequest>.CreateResource(connection, omr, LincaEndpoints.LINCAProposalMedicationRequest);
 
         if (canCue)
         {

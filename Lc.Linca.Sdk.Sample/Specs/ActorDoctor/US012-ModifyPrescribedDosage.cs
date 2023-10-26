@@ -39,14 +39,14 @@ internal class US012_ModifyPrescribedDosage : Spec
     {
         prescription.PriorPrescription = new()
         {
-            Reference = "LINCAPrescriptionMedicationRequest/091f1a9d0d64415c91f67caccc3f3848"
+            Reference = "LINCAPrescriptionMedicationRequest/0eca7bd7b404412a8c1e2c8f6cfc0d16"
         };
 
         prescription.Status = MedicationRequest.MedicationrequestStatus.Active;      // REQUIRED
         prescription.Intent = MedicationRequest.MedicationRequestIntent.Order;     // REQUIRED
         prescription.Subject = new ResourceReference()                                // REQUIRED
         {
-            Reference = "HL7ATCorePatient/6800bda462034a9a8123e3dc48c61d53"     // relative path to Linca Fhir patient resource, copy from order
+            Reference = "HL7ATCorePatient/eb89d0f97916437f84202ee745beb599"     // relative path to Linca Fhir patient resource, copy from order
         };
         prescription.Medication = new()      // the doctor changes the medication to a ready-to-use ointment
         {
