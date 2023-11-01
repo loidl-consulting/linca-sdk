@@ -103,4 +103,16 @@ public static class LincaDataExchange
 
         return (new(), false);
     }
+
+    public static bool DeleteRequestOrchestration(LincaConnection connection, string id)
+    {
+        var deleted = FhirDataExchange<RequestOrchestration>.DeleteResource(connection, id, LincaEndpoints.LINCARequestOrchestration);
+
+        if (deleted)
+        {
+            return true;
+        }
+
+        return false;
+    }
 }

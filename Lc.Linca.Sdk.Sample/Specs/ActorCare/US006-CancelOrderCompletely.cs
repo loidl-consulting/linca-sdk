@@ -25,5 +25,27 @@ internal class US006_CancelOrderCompletely : Spec
             has already issued a prescription. And positions for which the designated practitioner has not yet issued a prescription, 
             will be promoted to the status 'cancelled' by the LINCA system";
 
-    public US006_CancelOrderCompletely(LincaConnection conn) : base(conn) { }
+    public US006_CancelOrderCompletely(LincaConnection conn) : base(conn) 
+    {
+        Steps = new Step[]
+        {
+            new("Try to cancel an order completely", DeleteRequestOrchestration)
+        };
+    }
+
+    private bool DeleteRequestOrchestration()
+    {
+        var deleted = LincaDataExchange.DeleteRequestOrchestration(Connection, "a5da43adf383415bac2426dbeaae3962");
+
+        if (deleted)
+        {
+            Console.WriteLine($"Linca Request Orchestration (id: a5da43adf383415bac2426dbeaae3962) successfully deleted");
+        }
+        else
+        {
+            Console.WriteLine($"Failed to delete Linca Request Orchestration");
+        }
+
+        return deleted;
+    }
 }

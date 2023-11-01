@@ -51,6 +51,19 @@ internal static class FhirDataExchange<T> where T : Resource, new()
         return (new(), false);
     }
 
+    public static bool DeleteResource(LincaConnection connection, string id, string endpoint)
+    {
+        using var response = Send(connection, HttpMethod.Delete, id, endpoint);
+        if (response?.StatusCode == HttpStatusCode.OK)
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
+
     private static HttpResponseMessage? Receive(LincaConnection connection, Uri? fromLocation)
     {
         for (; ; )
@@ -93,6 +106,37 @@ internal static class FhirDataExchange<T> where T : Resource, new()
 
             request.Content = new StringContent(fhirJson);
             request.Content.Headers.ContentType = Constants.FhirJson;
+            request.Headers.Accept.Add(Constants.FhirJson);
+            var response = http.Send(request);
+
+            if (response.StatusCode == HttpStatusCode.Unauthorized)
+            {
+                /* token may be expired or may have been revoked.
+                 * retry once with certificate reauthentication */
+                connection.Reauthenticate();
+
+                continue;
+            }
+
+            return response;
+        }
+    }
+
+    private static HttpResponseMessage? Send(LincaConnection connection, HttpMethod method, string id, string endpoint)
+    {
+        for (; ; )
+        {
+            using var http = connection.GetAuthenticatedClient();
+            var request = new HttpRequestMessage
+            (
+                method,
+                $"{connection.ServerBaseUrl}/{endpoint}/{id}"
+            );
+
+            //var fhirJson = resource.ToJson();
+
+            //request.Content = new StringContent(fhirJson);
+            //request.Content.Headers.ContentType = Constants.FhirJson;
             request.Headers.Accept.Add(Constants.FhirJson);
             var response = http.Send(request);
 
