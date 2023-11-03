@@ -13,7 +13,10 @@ using Hl7.Fhir.Model;
 
 namespace Lc.Linca.Sdk;
 
-internal static class LincaDataExchange
+/// <summary>
+/// Methods to interact with the Linked Care FHIR Server
+/// </summary>
+public static class LincaDataExchange
 {
     /// <summary>
     /// Create a new patient record on the FHIR server,
@@ -49,6 +52,9 @@ internal static class LincaDataExchange
         return (new(), false);
     }
 
+    /// <summary>
+    /// Post a new Linked Care Medication Order
+    /// </summary>
     public static (RequestOrchestration createdRO, bool canCue) CreateRequestOrchestration(LincaConnection connection, RequestOrchestration ro)
     {
         (var createdRO, var canCue) = FhirDataExchange<RequestOrchestration>.CreateResource(connection, ro);

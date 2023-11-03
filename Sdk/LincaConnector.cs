@@ -18,10 +18,19 @@ using System.Security.Cryptography.X509Certificates;
 
 namespace Lc.Linca.Sdk;
 
-internal static class LincaConnector
+/// <summary>
+/// Utility functions to manage connections
+/// to the Linked Care FHIR Server
+/// </summary>
+public static class LincaConnector
 {
     private static X509Certificate2? certificate = null;
 
+    /// <summary>
+    /// Establish a connection to the Linked Care FHIR Server
+    /// cluster located at the specified internet address
+    /// </summary>
+    /// <param name="lincaUrl">The internet address of the Linked Care Cluster</param>
     public static LincaConnection Connect(string lincaUrl)
     {
         lincaUrl = lincaUrl.TrimEnd('/');
@@ -36,7 +45,7 @@ internal static class LincaConnector
 
         if (certificate == null)
         {
-            if (OperatingSystem.IsWindows())
+            if (OperatingSystem.IsWindows() && Environment.UserInteractive)
             {
                 certificate = X509Certificate2UI.SelectFromCollection
                 (
@@ -114,15 +123,18 @@ internal static class LincaConnector
         return new(tokenRaw, lincaUrl);
     }
 
-    public static bool NegotiateCapabilities(LincaConnection connection)
+    /// <summary>
+    /// Read the Linked Care FHIR Server's capability statement
+    /// and check whether a connection is possible by comparing
+    /// the major version and supported resources and operations
+    /// </summary>
+    public static (CapabilityNegotiationOutcome outcome, CapabilityStatement? statement) NegotiateCapabilities(LincaConnection connection)
     {
         if(!connection.Succeeded)
         {
-            Console.Error.WriteLine("No connection");
-
-            return false;
+            return (CapabilityNegotiationOutcome.NotConnected, null);
         }
-
+        
         /* 2a. from now on, the http client does not need to send
          *     the client certificate, because there is already the
          *     JWT which is passed via the authorization header */
@@ -135,39 +147,19 @@ internal static class LincaConnector
 
         if (!conformityResponse.IsSuccessStatusCode)
         {
-            Console.Error.WriteLine("Unauthorized");
-
-            return false;
+            return (CapabilityNegotiationOutcome.Unauthorized, null);
         }
 
         var capabilityStatementRaw = new StreamReader(conformityResponse.Content.ReadAsStream()).ReadToEnd();
         if (new FhirJsonPocoDeserializer().TryDeserializeResource(capabilityStatementRaw, out Resource? resource, out var _) && resource is CapabilityStatement capabilityStatement)
         {
             connection.Capabilities = capabilityStatement;
-            Terminal.Info info = new();
-            var name = capabilityStatement
-                .Name
-                .Replace(Constants.ServerProductLead, $"{Constants.AnsiColorFire}{Constants.ServerProductLead}{Constants.AnsiReset}")
-                .Replace(Constants.ServerProductTail, $"{Constants.AnsiColorCaat}{Constants.ServerProductTail}{Constants.AnsiReset}");
-
-            var desc = capabilityStatement
-                .Description
-                .Replace(Constants.ManufacturerName, $"{Constants.AnsiColorMaroon}{Constants.ManufacturerName}{Constants.AnsiReset}");
-
-            info.WriteLine($@"{name}, FHIR version {capabilityStatement.FhirVersion}");
-            info.WriteLine($@"Statement from {capabilityStatement.Date} supporting {capabilityStatement.Rest.First().Resource.Count} resources");
-            info.HorizontalRule();
-            info.WriteLine($@"Connected to {desc}, version {capabilityStatement.Version}");
-            Console.Clear();
-            info.Show();
         }
         else
         {
-            Console.Error.WriteLine("Could not parse the FHIR Server's capability statement");
-
-            return false;
+            return (CapabilityNegotiationOutcome.CouldNotParse, null);
         }
 
-        return true;
+        return (CapabilityNegotiationOutcome.Succeeded, capabilityStatement);
     }
 }
