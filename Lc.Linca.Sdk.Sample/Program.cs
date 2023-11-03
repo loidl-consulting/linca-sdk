@@ -16,8 +16,8 @@ internal class Program
     /// <summary>
     /// In SDK, this always points to the development system
     /// </summary>
-    // internal const string FhirServerBaseUrl = "https://localhost:8084";
     internal const string FhirServerBaseUrl = "https://fhir5-d.linkedcare.at";
+    //internal const string FhirServerBaseUrl = "https://localhost:8084";
 
     private const int ExitCodeCouldNotConnect = 0xaca1;
     private const int ExitCodeIdle = 0x1;
@@ -65,9 +65,25 @@ internal class Program
         var connection = LincaConnector.Connect(FhirServerBaseUrl);
         var con = new Terminal.Info();
         var outcome = false;
-
-        if (LincaConnector.NegotiateCapabilities(connection))
+        var (negotiated, capabilityStatement) = LincaConnector.NegotiateCapabilities(connection);
+        if (negotiated == CapabilityNegotiationOutcome.Succeeded && capabilityStatement != null)
         {
+            Terminal.Info info = new();
+            var name = capabilityStatement
+                .Name
+                .Replace(Constants.ServerProductLead, $"{Constants.AnsiColorFire}{Constants.ServerProductLead}{Constants.AnsiReset}")
+                .Replace(Constants.ServerProductTail, $"{Constants.AnsiColorCaat}{Constants.ServerProductTail}{Constants.AnsiReset}");
+
+            var desc = capabilityStatement
+                .Description
+                .Replace(Constants.ManufacturerName, $"{Constants.AnsiColorMaroon}{Constants.ManufacturerName}{Constants.AnsiReset}");
+
+            info.WriteLine($@"{name}, FHIR version {capabilityStatement.FhirVersion}");
+            info.WriteLine($@"Statement from {capabilityStatement.Date} supporting {capabilityStatement.Rest.First().Resource.Count} resources");
+            info.HorizontalRule();
+            info.WriteLine($@"Connected to {desc}, version {capabilityStatement.Version}");
+            Console.Clear();
+            info.Show();
             outcome = true;
             con.Flush(Environment.NewLine);
             var row1 = con.WriteLine($"  [ ] Version des LINCA Servers", true);
@@ -90,6 +106,27 @@ internal class Program
             if (!con.Outcome(testResources, row3))
             {
                 outcome = false;
+            }
+        }
+        else
+        {
+            switch(negotiated)
+            {
+                case CapabilityNegotiationOutcome.NotConnected:
+                    Console.Error.WriteLine("Not connected");
+                    break;
+
+                case CapabilityNegotiationOutcome.Unauthorized:
+                    Console.Error.WriteLine("Unauthorized");
+                    break;
+
+                case CapabilityNegotiationOutcome.CouldNotParse:
+                    Console.Error.WriteLine("Could not parse the FHIR Server's capability statement");
+                    break;
+
+                default:
+                    Console.Error.WriteLine("Failed to negotiate capabilities");
+                    break;
             }
         }
 

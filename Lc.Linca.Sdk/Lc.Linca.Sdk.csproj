@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <OutputType>Exe</OutputType>
+    <OutputType>Library</OutputType>
     <TargetFramework>net6.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
@@ -22,6 +22,12 @@
     <NoWarn>1701;1702;NU1701</NoWarn>
     <TreatWarningsAsErrors>True</TreatWarningsAsErrors>
   </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="Lc.Linca.Sdk\**" />
+    <EmbeddedResource Remove="Lc.Linca.Sdk\**" />
+    <None Remove="Lc.Linca.Sdk\**" />
+  </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="Hl7.Fhir.R5" Version="5.1.0" />
