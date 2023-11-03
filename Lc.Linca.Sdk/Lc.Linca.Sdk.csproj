@@ -6,11 +6,20 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
     <GenerateDocumentationFile>True</GenerateDocumentationFile>
-    <Product>Linked Care</Product>
+    <Product>FHIRCAAT</Product>
     <Company>LOIDL Consulting &amp; IT Services GmbH</Company>
-    <Description>Linked Care Client Sample Implementation</Description>
-    <Copyright>(C) 2023 LOIDL Consulting</Copyright>
+    <Description>Linked Care Client Software Development Kit</Description>
+    <Copyright>(C) 2023 LOIDL Consulting &amp; IT Services GmbH</Copyright>
     <PackageProjectUrl>https://linkedcare.at</PackageProjectUrl>
+    <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
+    <Title>Linked Care SDK</Title>
+    <Authors>Annemarie Goldmann, Daniel Latikaynen</Authors>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+    <PackageTags>Linked Care;FHIRCAAT;HL7;FHIR</PackageTags>
+    <PackageReleaseNotes>Initial Release</PackageReleaseNotes>
+    <PackageLicenseFile>LICENSE</PackageLicenseFile>
+    <PackageRequireLicenseAcceptance>True</PackageRequireLicenseAcceptance>
+    <RepositoryUrl>https://github.com/loidl-consulting/lica-sdk</RepositoryUrl>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
@@ -27,6 +36,17 @@
     <Compile Remove="Lc.Linca.Sdk\**" />
     <EmbeddedResource Remove="Lc.Linca.Sdk\**" />
     <None Remove="Lc.Linca.Sdk\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="..\LICENSE">
+      <Pack>True</Pack>
+      <PackagePath>\</PackagePath>
+    </None>
+    <None Include="..\README.md">
+      <Pack>True</Pack>
+      <PackagePath>\</PackagePath>
+    </None>
   </ItemGroup>
 
   <ItemGroup>
