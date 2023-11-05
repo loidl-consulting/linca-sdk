@@ -9,18 +9,22 @@
     <GenerateDocumentationFile>True</GenerateDocumentationFile>
     <Product>FHIRCAAT</Product>
     <Company>LOIDL Consulting &amp; IT Services GmbH</Company>
-    <Description>Linked Care Client Software Development Kit</Description>
+    <Description>Linked Care Client Software Development Kit
+The Linked Care Consortium
+https://linkedcare.at
+Annemarie Goldmann, Daniel Latikaynen</Description>
     <Copyright>(C) 2023 LOIDL Consulting &amp; IT Services GmbH</Copyright>
-    <PackageProjectUrl>https://linkedcare.at</PackageProjectUrl>
+    <PackageProjectUrl>https://github.com/loidl-consulting/linca-sdk</PackageProjectUrl>
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
     <Title>Linked Care SDK</Title>
-    <Authors>Annemarie Goldmann, Daniel Latikaynen</Authors>
+    <Authors>LOIDL Consulting &amp; IT Services GmbH</Authors>
     <PackageReadmeFile>README.md</PackageReadmeFile>
     <PackageTags>Linked Care;FHIRCAAT;HL7;FHIR</PackageTags>
     <PackageReleaseNotes>Initial Release</PackageReleaseNotes>
     <PackageLicenseFile>LICENSE</PackageLicenseFile>
     <PackageRequireLicenseAcceptance>True</PackageRequireLicenseAcceptance>
     <RepositoryUrl>https://github.com/loidl-consulting/lica-sdk</RepositoryUrl>
+    <PackageIcon>manufacturer-logo.png</PackageIcon>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
@@ -55,6 +59,13 @@
     <PackageReference Include="Microsoft.Net.Http" Version="2.2.29" />
     <PackageReference Include="Microsoft.Net.Http.Headers" Version="2.2.8" />
     <PackageReference Include="System.Windows.Extensions" Version="7.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="manufacturer-logo.png">
+      <Pack>True</Pack>
+      <PackagePath>\</PackagePath>
+    </None>
   </ItemGroup>
 
 </Project>
