@@ -29,17 +29,17 @@ internal class US006_CancelOrderCompletely : Spec
     {
         Steps = new Step[]
         {
-            new("Try to cancel an order completely", DeleteRequestOrchestration)
+            new("Cancel order(s) completely", DeleteRequestOrchestration)
         };
     }
 
     private bool DeleteRequestOrchestration()
     {
-        var deleted = LincaDataExchange.DeleteRequestOrchestration(Connection, "a5da43adf383415bac2426dbeaae3962");
+        var deleted = LincaDataExchange.DeleteRequestOrchestration(Connection, "0b4c45c1889743c3a9a836feeadcc823");
 
         if (deleted)
         {
-            Console.WriteLine($"Linca Request Orchestration (id: a5da43adf383415bac2426dbeaae3962) successfully deleted");
+            Console.WriteLine($"Linca Request Orchestration successfully deleted");
         }
         else
         {

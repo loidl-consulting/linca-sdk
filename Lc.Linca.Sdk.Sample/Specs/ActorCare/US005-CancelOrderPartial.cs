@@ -40,7 +40,7 @@ internal class US005_CancelOrder : Spec
         // set Status to cancelled 
         medReq2.BasedOn.Add(new ResourceReference()
         {
-            Reference = "LINCAProposalMedicationRequest/f5c4e4d8ed0e4aae87ab99824a2567c3"
+            Reference = "LINCAProposalMedicationRequest/1c6c3d78ab384c52aebc030eb6e92131"
         });
         // medication request for Patricia Platypus
         medReq2.Status = MedicationRequest.MedicationrequestStatus.Cancelled;      // REQUIRED

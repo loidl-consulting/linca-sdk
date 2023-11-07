@@ -9,6 +9,9 @@
  * The Linked Care project is co-funded by the Austrian FFG
  ***********************************************************************************/
 
+using Hl7.Fhir.Model;
+using Lc.Linca.Sdk;
+
 namespace Lc.Linca.Sdk.Specs.ActorDoctor;
 
 internal class US008_GetOpenOrders : Spec
@@ -23,5 +26,27 @@ internal class US008_GetOpenOrders : Spec
         Dr. Kreuzotters software can interpret the returned LINCA order position chains 
         and visually present the status of the order and all its positions.";
 
-    public US008_GetOpenOrders(LincaConnection conn) : base(conn) { }
+    public US008_GetOpenOrders(LincaConnection conn) : base(conn)
+    {
+        Steps = new Step[]
+        {
+            new ("Get proposals to prescribe", GetProposalsToPrescribe)
+        };
+    }
+
+    private bool GetProposalsToPrescribe()
+    {
+        (Bundle results, bool received) = LincaDataExchange.GetProposalsToPrescribe(Connection);
+
+        if (received)
+        {
+            Console.WriteLine($"Get proposals-to-prescribe succeeded");
+        }
+        else
+        {
+            Console.WriteLine($"Get proposals-to-prescribe failed");
+        }
+
+        return received;
+    }
 }

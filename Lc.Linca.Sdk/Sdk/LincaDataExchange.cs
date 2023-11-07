@@ -115,4 +115,54 @@ public static class LincaDataExchange
 
         return false;
     }
+
+    public static (Bundle results, bool canCue) GetProposalStatus(LincaConnection connection, string id)
+    {
+        string operationQuery = $"{LincaEndpoints.proposal_status}?lc_id={id}";
+        (Bundle proposalChains, bool canCue) = FhirDataExchange<Bundle>.GetResource(connection, operationQuery);
+
+        if (canCue)
+        {
+            return (proposalChains, true);
+        }
+
+        return (new(), false);
+    }
+
+    public static (Bundle results, bool canCue) GetProposalsToPrescribe(LincaConnection connection)
+    {
+        (Bundle proposalChains, bool canCue) = FhirDataExchange<Bundle>.GetResource(connection, LincaEndpoints.proposals_to_prescribe);
+
+        if (canCue)
+        {
+            return (proposalChains, true);
+        }
+
+        return (new(), false);
+    }
+
+    public static (Bundle results, bool canCue) GetPrescriptionsToDispense(LincaConnection connection)
+    {
+        (Bundle proposalChains, bool canCue) = FhirDataExchange<Bundle>.GetResource(connection, LincaEndpoints.prescriptions_to_dispense);
+
+        if (canCue)
+        {
+            return (proposalChains, true);
+        }
+
+        return (new(), false);
+    }
+
+    public static (Bundle results, bool canCue) GetPrescriptionToDispense(LincaConnection connection, string id)
+    {
+        string operationQuery = $"{LincaEndpoints.prescription_to_dispense}?id={id}";
+        (Bundle proposalChains, bool canCue) = FhirDataExchange<Bundle>.GetResource(connection, operationQuery);
+
+        if (canCue)
+        {
+            return (proposalChains, true);
+        }
+
+        return (new(), false);
+    }
 }

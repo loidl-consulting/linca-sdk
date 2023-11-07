@@ -40,7 +40,7 @@ internal class US004_UpdateOrder : Spec
         // Medication and Dispenser are updated
         medReq1.BasedOn.Add(new ResourceReference()
         {
-            Reference = "LINCAProposalMedicationRequest/566be2235ae54f218c24f0410437564a"
+            Reference = "LINCAProposalMedicationRequest/3d81b1c5c4d84940975c7e39c8f84633"
         });
         medReq1.Status = MedicationRequest.MedicationrequestStatus.Active;      // REQUIRED
         medReq1.Intent = MedicationRequest.MedicationRequestIntent.Proposal;     // REQUIRED

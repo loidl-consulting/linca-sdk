@@ -12,6 +12,7 @@
 using Hl7.Fhir.Model;
 using Hl7.Fhir.Model.Extensions;
 using Hl7.Fhir.Serialization;
+using Hl7.Fhir.Support;
 using System.Net;
 
 namespace Lc.Linca.Sdk;
@@ -51,6 +52,32 @@ internal static class FhirDataExchange<T> where T : Resource, new()
         return (new(), false);
     }
 
+    public static (Bundle received, bool canCue) GetResource(LincaConnection connection, string operationQuery)
+    {
+        using var getResponse = Receive(connection, operationQuery);
+
+        if (getResponse != null && getResponse.StatusCode == HttpStatusCode.OK)
+        {
+            var receivedResourceRaw = new StreamReader
+            (
+                getResponse.Content.ReadAsStream()
+            ).ReadToEnd();
+
+
+            if (new FhirJsonPocoDeserializer().TryDeserializeResource
+            (
+                receivedResourceRaw,
+                out Resource? parsedResource,
+                out var issues
+            ) && parsedResource is Bundle receivedResource)
+            {
+                return (receivedResource, true);
+            }
+        }
+        
+        return (new(), false);
+    }
+
     public static bool DeleteResource(LincaConnection connection, string id, string endpoint)
     {
         using var response = Send(connection, HttpMethod.Delete, id, endpoint);
@@ -73,6 +100,33 @@ internal static class FhirDataExchange<T> where T : Resource, new()
             (
                 HttpMethod.Get,
                 fromLocation
+            );
+
+            getRequest.Headers.Accept.Add(Constants.FhirJson);
+            var getResponse = http.Send(getRequest);
+
+            if (getResponse.StatusCode == HttpStatusCode.Unauthorized)
+            {
+                /* token may be expired or may have been revoked.
+                 * retry once with certificate reauthentication */
+                connection.Reauthenticate();
+
+                continue;
+            }
+
+            return getResponse;
+        }
+    }
+
+    private static HttpResponseMessage? Receive(LincaConnection connection, string operationQuery)
+    {
+        for (; ; )
+        {
+            using var http = connection.GetAuthenticatedClient();
+            var getRequest = new HttpRequestMessage
+            (
+                HttpMethod.Get,
+                $"{connection.ServerBaseUrl}/{operationQuery}"
             );
 
             getRequest.Headers.Accept.Add(Constants.FhirJson);
@@ -152,4 +206,5 @@ internal static class FhirDataExchange<T> where T : Resource, new()
             return response;
         }
     }
+
 }

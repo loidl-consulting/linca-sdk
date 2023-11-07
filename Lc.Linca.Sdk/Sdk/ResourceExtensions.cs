@@ -49,7 +49,7 @@ public static class LincaEndpoints
     /// order positions associated with a specific LC_ID (the Id of a posted LINCARequestOrchestration
     /// can only be queried by the ordering entity
     /// </summary>
-    public static string order_status = "order-status";
+    public static string proposal_status = "proposal-status";
 
     /// <summary>
     /// The name of the operation to GET the orders that have been adressed to 
@@ -58,7 +58,7 @@ public static class LincaEndpoints
     /// and their associated resource instances)
     /// can only be queried by doctors (ELGA-role in eHVD)
     /// </summary>
-    public static string orders_to_prescribe = "orders-to-prescribe";
+    public static string proposals_to_prescribe = "proposals-to-prescribe";
 
     /// <summary>
     /// The name of the operation to GET the prescriptions that have been adressed to 
@@ -68,7 +68,14 @@ public static class LincaEndpoints
     /// can only be queried by pharmacies (ELGA-role in eHVD)
     /// can be combined with a specific Id presented to the pharmacist by a customer 
     /// </summary>
-    public static string orders_to_dispense = "orders-to-dispense";
+    public static string prescriptions_to_dispense = "prescriptions-to-dispense";
+
+    /// <summary>
+    /// The name of the operation to GET the prescription(s) associated with
+    /// a specific Id presented to the pharmacist by a customer/caregiver 
+    /// can only be queried by pharmacies (ELGA-role in eHVD)
+    /// </summary>
+    public static string prescription_to_dispense = "prescription-to-dispense";
 
     public static string GetProfiledResourceName(this Resource resource)
     {
