@@ -40,13 +40,13 @@ internal class US004_UpdateOrder : Spec
         // Medication and Dispenser are updated
         medReq1.BasedOn.Add(new ResourceReference()
         {
-            Reference = "LINCAProposalMedicationRequest/3d81b1c5c4d84940975c7e39c8f84633"
+            Reference = "LINCAProposalMedicationRequest/ea8382d38bc14615aab521ab63b2f6f0"
         });
         medReq1.Status = MedicationRequest.MedicationrequestStatus.Active;      // REQUIRED
         medReq1.Intent = MedicationRequest.MedicationRequestIntent.Proposal;     // REQUIRED
         medReq1.Subject = new ResourceReference()                                // REQUIRED
         {
-            Reference = "HL7ATCorePatient/eb89d0f97916437f84202ee745beb599"     // relative path to Linca Fhir patient resource
+            Reference = "HL7ATCorePatient/08ac419d3eb743858bbc19a41e66d59e"     // relative path to Linca Fhir patient resource
         };
         medReq1.Medication = new()
         {
@@ -83,10 +83,10 @@ internal class US004_UpdateOrder : Spec
         {
             Identifier = new()
             {
-                Value = "2.999.40.0.34.3.1.3",  // OID of designated practitioner 
+                Value = "2.999.40.0.34.3.1.1",  // OID of designated practitioner 
                 System = "urn:oid:1.2.40.0.34"  // Code-System: eHVD
             },
-            Display = "Dr. Silvia Spitzmaus"   // optional
+            Display = "Dr. Wibke Würm"   // optional
         });
         medReq1.DispenseRequest = new()
         {

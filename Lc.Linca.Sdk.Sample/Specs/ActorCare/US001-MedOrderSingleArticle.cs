@@ -87,7 +87,7 @@ internal class US001_MedOrderSingleArticle : Spec
         }
         else
         {
-            Console.WriteLine("Failed to transmit client information");
+            Console.WriteLine($"Failed to transmit client information");
         }
 
         return canCue;

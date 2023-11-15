@@ -35,7 +35,7 @@ internal class US006_CancelOrderCompletely : Spec
 
     private bool DeleteRequestOrchestration()
     {
-        var deleted = LincaDataExchange.DeleteRequestOrchestration(Connection, "0b4c45c1889743c3a9a836feeadcc823");
+        var deleted = LincaDataExchange.DeleteRequestOrchestration(Connection, "dca2aaf44f00405b835b3bd8ce92b6ba");
 
         if (deleted)
         {

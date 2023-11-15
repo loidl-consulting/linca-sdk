@@ -38,13 +38,13 @@ internal class US010_PrescribeAsOrdered : Spec
     {
         prescription.BasedOn.Add(new()
         {
-            Reference = "LINCAProposalMedicationRequest/845b2636d5a24fef97cec61781598ea5"
+            Reference = "LINCAProposalMedicationRequest/d2359858cb6640faa9d1f8a69214bada"
         });
         prescription.Status = MedicationRequest.MedicationrequestStatus.Active;    // REQUIRED
         prescription.Intent = MedicationRequest.MedicationRequestIntent.Order;     // REQUIRED
         prescription.Subject = new ResourceReference()                             // REQUIRED
         {
-            Reference = "HL7ATCorePatient/5f16757cdbb04496b586862b7d6159f2"     // relative path to Linca Fhir patient resource
+            Reference = "HL7ATCorePatient/c42a921b95004b87a7d19fa59cf64c81"     // relative path to Linca Fhir patient resource
         };
         prescription.Medication = new()
         {

@@ -40,14 +40,14 @@ internal class US005_CancelOrder : Spec
         // set Status to cancelled 
         medReq2.BasedOn.Add(new ResourceReference()
         {
-            Reference = "LINCAProposalMedicationRequest/1c6c3d78ab384c52aebc030eb6e92131"
+            Reference = "LINCAProposalMedicationRequest/bfa0d45270674e0794b694f2892cb1c0"
         });
         // medication request for Patricia Platypus
         medReq2.Status = MedicationRequest.MedicationrequestStatus.Cancelled;      // REQUIRED
         medReq2.Intent = MedicationRequest.MedicationRequestIntent.Proposal;     // REQUIRED
         medReq2.Subject = new ResourceReference()                                // REQUIRED
         {
-            Reference = $"HL7ATCorePatient/73305590f6b14686911b9aae2f245605"     // relative path to Linca Fhir patient resource
+            Reference = $"HL7ATCorePatient/95d91d3044b04667b100f021506dc43c"     // relative path to Linca Fhir patient resource
         };
         medReq2.Medication = new()
         {

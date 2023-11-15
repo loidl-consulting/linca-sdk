@@ -12,6 +12,7 @@
 using Hl7.Fhir.Model;
 using Hl7.Fhir.Support;
 using Lc.Linca.Sdk.Scaffolds;
+using System;
 using System.Globalization;
 
 namespace Lc.Linca.Sdk.Specs.ActorCare;

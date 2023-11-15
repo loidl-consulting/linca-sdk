@@ -39,13 +39,13 @@ internal class US011_PrescribeWithChanges : Spec
     {
         prescription.BasedOn.Add(new ResourceReference()
         {
-            Reference = "LINCAProposalMedicationRequest/af3e2513706c47d2a7cb17ee2350d261"
+            Reference = "LINCAProposalMedicationRequest/ef7c1f512c504a1a932c2f90ed39d5d5"
         });
         prescription.Status = MedicationRequest.MedicationrequestStatus.Active;      // REQUIRED
         prescription.Intent = MedicationRequest.MedicationRequestIntent.Order;     // REQUIRED
         prescription.Subject = new ResourceReference()                                // REQUIRED
         {
-            Reference = "HL7ATCorePatient/eb89d0f97916437f84202ee745beb599"     // relative path to Linca Fhir patient resource, copy from order
+            Reference = "HL7ATCorePatient/08ac419d3eb743858bbc19a41e66d59e"     // relative path to Linca Fhir patient resource, copy from order
         };
         prescription.Medication = new()      // the doctor changes the medication to a ready-to-use ointment
         {
@@ -74,10 +74,10 @@ internal class US011_PrescribeWithChanges : Spec
         {
             Identifier = new()
             {
-                Value = "2.999.40.0.34.3.1.3",  // OID of prescribing practitioner 
+                Value = "2.999.40.0.34.3.1.1",  // OID of prescribing practitioner 
                 System = "urn:oid:1.2.40.0.34"  // Code-System: eHVD
             },
-            Display = "Dr. Silvia Spitzmaus"   // optional
+            Display = "Dr. Wibke Würm"   // optional
         });
         prescription.DispenseRequest = new()
         {
