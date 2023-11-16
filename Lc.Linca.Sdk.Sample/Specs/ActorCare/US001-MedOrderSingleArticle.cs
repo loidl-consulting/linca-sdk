@@ -36,7 +36,7 @@ internal class US001_MedOrderSingleArticle : Spec
         Steps = new Step[]
         {
             new("Create client record", CreateClientRecord),
-            new("Place order with no pharmacy specified", OrderAnyPharmacy)
+            new("Place order with no pharmacy specified", CreateRequestOrchestrationRecord)
         };
     }
 
