@@ -112,13 +112,13 @@ internal class US003_MedOrderStationaryCare : Spec
         RequestOrchestration ro = new()
         {
             Status = RequestStatus.Active,      // REQUIRED
-            Intent = RequestIntent.Order,       // REQUIRED
+            Intent = RequestIntent.Proposal,       // REQUIRED
             Subject = new ResourceReference()   // REQUIRED
             {
                 Identifier = new()
                 {
                     Value = "2.999.40.0.34.1.1.1",  // OID of the ordering care organization from certificate
-                    System = "urn:oid:1.2.40.0.34"  // Code-System: eHVD
+                    System = "urn:oid:1.2.40.0.34.5.2"  // Code-System: eHVD
                 },
                 Display = "Haus Vogelsang"   // optional
             }
@@ -126,6 +126,16 @@ internal class US003_MedOrderStationaryCare : Spec
 
         ro.Contained.Add(medReq1);
         ro.Contained.Add(medReq2);
+
+        foreach (var item in ro.Contained)
+        {
+            var action = new RequestOrchestration.ActionComponent()
+            {
+                //Type =
+                Resource = new ResourceReference($"#{item.Id}")
+            };
+            ro.Action.Add(action);
+        }
 
         (var createdRO, var canCue) = LincaDataExchange.CreateRequestOrchestration(Connection, ro);
 
@@ -144,6 +154,7 @@ internal class US003_MedOrderStationaryCare : Spec
     private void PrepareMedicationRequests()
     {
         // medication request for Günter Gürtelthier
+        medReq1.Id = Guid.NewGuid().ToFhirId();
         medReq1.Status = MedicationRequest.MedicationrequestStatus.Unknown;      // REQUIRED
         medReq1.Intent = MedicationRequest.MedicationRequestIntent.Proposal;     // REQUIRED
         medReq1.Subject = new ResourceReference()                                // REQUIRED
@@ -170,7 +181,7 @@ internal class US003_MedOrderStationaryCare : Spec
             Identifier = new()
             {
                 Value = "2.999.40.0.34.1.1.1",  // OID of the ordering care organization
-                System = "urn:oid:1.2.40.0.34"  // Code-System: eHVD
+                System = "urn:oid:1.2.40.0.34.5.2"  // Code-System: eHVD
             },
             Display = "Haus Vogelsang"   // optional
         });
@@ -188,7 +199,7 @@ internal class US003_MedOrderStationaryCare : Spec
             Identifier = new()
             {
                 Value = "2.999.40.0.34.3.1.3",  // OID of designated practitioner 
-                System = "urn:oid:1.2.40.0.34"  // Code-System: eHVD
+                System = "urn:oid:1.2.40.0.34.5.2"  // Code-System: eHVD
             },
             Display = "Dr. Silvia Spitzmaus"   // optional
         });
@@ -199,15 +210,16 @@ internal class US003_MedOrderStationaryCare : Spec
                 Identifier = new()
                 {
                     Value = "2.999.40.0.34.5.1.2",  // OID of designated pharmacy
-                    System = "urn:oid:1.2.40.0.34"  // Code-System: eHVD
+                    System = "urn:oid:1.2.40.0.34.5.2"  // Code-System: eHVD
                 },
                 Display = "Apotheke 'Zum frühen Vogel'"
             }
         };
 
-        /***********************************************************************************/ 
+        /***********************************************************************************/
 
         // medication request for Patricia Platypus
+        medReq2.Id = Guid.NewGuid().ToFhirId();
         medReq2.Status = MedicationRequest.MedicationrequestStatus.Unknown;      // REQUIRED
         medReq2.Intent = MedicationRequest.MedicationRequestIntent.Proposal;     // REQUIRED
         medReq2.Subject = new ResourceReference()                                // REQUIRED
@@ -234,7 +246,7 @@ internal class US003_MedOrderStationaryCare : Spec
             Identifier = new()
             {
                 Value = "2.999.40.0.34.1.1.1",  // OID of the ordering care organization
-                System = "urn:oid:1.2.40.0.34"  // Code-System: eHVD
+                System = "urn:oid:1.2.40.0.34.5.2"  // Code-System: eHVD
             },
             Display = "Haus Vogelsang"   // optional
         });
@@ -252,7 +264,7 @@ internal class US003_MedOrderStationaryCare : Spec
             Identifier = new()
             {
                 Value = "2.999.40.0.34.3.1.2",  // OID of designated practitioner 
-                System = "urn:oid:1.2.40.0.34"  // Code-System: eHVD
+                System = "urn:oid:1.2.40.0.34.5.2"  // Code-System: eHVD
             },
             Display = "Dr. Kunibert Kreuzotter"   // optional
         });
@@ -263,7 +275,7 @@ internal class US003_MedOrderStationaryCare : Spec
                 Identifier = new()
                 {
                     Value = "2.999.40.0.34.5.1.2",  // OID of designated pharmacy
-                    System = "urn:oid:1.2.40.0.34"  // Code-System: eHVD
+                    System = "urn:oid:1.2.40.0.34.5.2"  // Code-System: eHVD
                 },
                 Display = "Apotheke 'Zum frühen Vogel'"
             }

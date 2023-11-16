@@ -142,6 +142,7 @@ internal class US001_MedOrderSingleArticle : Spec
 
     private void PrepareOrderMedicationRequest()
     {
+        medReq.Id = Guid.NewGuid().ToFhirId();                                  // REQUIRED    
         medReq.Status = MedicationRequest.MedicationrequestStatus.Unknown;      // REQUIRED
         medReq.Intent = MedicationRequest.MedicationRequestIntent.Proposal;     // REQUIRED
         medReq.Subject = new ResourceReference()                                // REQUIRED
@@ -169,7 +170,7 @@ internal class US001_MedOrderSingleArticle : Spec
             Identifier = new()
             {
                 Value = "2.999.40.0.34.1.1.3",  // OID of the ordering care organization
-                System = "urn:oid:1.2.40.0.34"  // Code-System: eHVD
+                System = "urn:oid:1.2.40.0.34.5.2"  // Code-System: eHVD
             },
             Display = "Pflegedienst Immerdar"   // optional
         });
@@ -187,7 +188,7 @@ internal class US001_MedOrderSingleArticle : Spec
             Identifier = new()
             {
                 Value = "2.999.40.0.34.3.1.1",  // OID of designated practitioner 
-                System = "urn:oid:1.2.40.0.34"  // Code-System: eHVD
+                System = "urn:oid:1.2.40.0.34.5.2"  // Code-System: eHVD
             },
             Display = "Dr. Wibke Würm"   // optional
         });
@@ -201,19 +202,28 @@ internal class US001_MedOrderSingleArticle : Spec
         RequestOrchestration ro = new()
         {
             Status = RequestStatus.Active,      // REQUIRED
-            Intent = RequestIntent.Order,       // REQUIRED
+            Intent = RequestIntent.Proposal,       // REQUIRED
             Subject = new ResourceReference()   // REQUIRED
             {
                 Identifier = new()
                 {
                     Value = "2.999.40.0.34.1.1.3",  // OID of the ordering care organization from certificate
-                    System = "urn:oid:1.2.40.0.34"  // Code-System: eHVD
+                    System = "urn:oid:1.2.40.0.34.5.2"  // Code-System: eHVD
                 },
                 Display = "Pflegedienst Immerdar"   // optional
             }
         };
 
         ro.Contained.Add(medReq);
+
+        var action = new RequestOrchestration.ActionComponent()
+        {
+            //Type = 
+            Resource = new ResourceReference($"#{medReq.Id}")
+        };
+
+        ro.Action.Add( action );
+
        
         (var createdRO, var canCue) = LincaDataExchange.CreateRequestOrchestration(Connection, ro);
 
