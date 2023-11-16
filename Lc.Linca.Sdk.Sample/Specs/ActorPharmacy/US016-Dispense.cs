@@ -39,12 +39,12 @@ internal class US016_Dispense : Spec
     {
         dispense.AuthorizingPrescription.Add(new()
         {
-            Reference = "LINCAPrescriptionMedicationRequest/61b25ab21d4e4492ab460127fbb03b1f"
+            Reference = "LINCAPrescriptionMedicationRequest/d95fcdbc14cc4c7ba88ae915d5722797"
         });
         dispense.Status = MedicationDispense.MedicationDispenseStatusCodes.Completed;
         dispense.Subject = new ResourceReference()                                // REQUIRED
         {
-            Reference = "HL7ATCorePatient/5f16757cdbb04496b586862b7d6159f2"    // relative path to Linca Fhir patient resource
+            Reference = "HL7ATCorePatient/c42a921b95004b87a7d19fa59cf64c81"    // relative path to Linca Fhir patient resource
         };
         dispense.Medication = new()
         {
@@ -87,10 +87,10 @@ internal class US016_Dispense : Spec
             {
                 Identifier = new()
                 {
-                    Value = "2.999.40.0.34.5.1.2",  // OID of dispensing pharmacy
-                    System = "urn:oid:1.2.40.0.34"  // Code-System: eHVD
+                    Value = "2.999.40.0.34.5.1.1",  // OID of dispensing pharmacy
+                    System = "urn:oid:1.2.40.0.34.5.2"  // Code-System: eHVD
                 },
-                Display = "Apotheke 'Zum frühen Vogel'"
+                Display = "Apotheke 'Klappernder Storch'"
             }
         });
         dispense.Type = new()
