@@ -68,6 +68,9 @@ public static class LincaDataExchange
         return (new(), false);
     }
 
+    /// <summary>
+    /// Post a new Linked Care order position
+    /// </summary>
     public static (MedicationRequest postedOMR, bool canCue) PostProposalMedicationRequest(LincaConnection connection, MedicationRequest omr)
     {
         (var postedOMR, var canCue) = FhirDataExchange<MedicationRequest>.CreateResource(connection, omr, LincaEndpoints.LINCAProposalMedicationRequest);
@@ -80,6 +83,9 @@ public static class LincaDataExchange
         return (new(), false);
     }
 
+    /// <summary>
+    /// Create a new Linked Care prescription
+    /// </summary>
     public static (MedicationRequest postedPMR, bool canCue) CreatePrescriptionMedicationRequest(LincaConnection connection, MedicationRequest pmr)
     {
         (var postedPMR, var canCue) = FhirDataExchange<MedicationRequest>.CreateResource(connection, pmr, LincaEndpoints.LINCAPrescriptionMedicationRequest);
@@ -92,6 +98,9 @@ public static class LincaDataExchange
         return (new(), false);
     }
 
+    /// <summary>
+    /// Create a new Linked Care medication dispense
+    /// </summary>
     public static (MedicationDispense postedMD, bool canCue) CreateMedicationDispense(LincaConnection connection, MedicationDispense md)
     {
         (var postedMD, var canCue) = FhirDataExchange<MedicationDispense>.CreateResource(connection, md, LincaEndpoints.LINCAMedicationDispense);
@@ -104,6 +113,9 @@ public static class LincaDataExchange
         return (new(), false);
     }
 
+    /// <summary>
+    /// Revoke a Linked Care request orchestration and cancel all contained order positions
+    /// </summary>
     public static bool DeleteRequestOrchestration(LincaConnection connection, string id)
     {
         var deleted = FhirDataExchange<RequestOrchestration>.DeleteResource(connection, id, LincaEndpoints.LINCARequestOrchestration);
@@ -116,6 +128,9 @@ public static class LincaDataExchange
         return false;
     }
 
+    /// <summary>
+    /// Get a all order chain links for the given lc_id
+    /// </summary>
     public static (Bundle results, bool canCue) GetProposalStatus(LincaConnection connection, string id)
     {
         string operationQuery = $"{LincaEndpoints.proposal_status}?lc_id={id}";
@@ -129,6 +144,9 @@ public static class LincaDataExchange
         return (new(), false);
     }
 
+    /// <summary>
+    /// Get a all order chain links (order positions, prescriptions, dispenses) for the given lc_id
+    /// </summary>
     public static (Bundle results, bool canCue) GetProposalsToPrescribe(LincaConnection connection)
     {
         (Bundle proposalChains, bool canCue) = FhirDataExchange<Bundle>.GetResource(connection, LincaEndpoints.proposals_to_prescribe);
@@ -141,6 +159,9 @@ public static class LincaDataExchange
         return (new(), false);
     }
 
+    /// <summary>
+    /// Get all prescriptions to dispense (the complete order chains)
+    /// </summary>
     public static (Bundle results, bool canCue) GetPrescriptionsToDispense(LincaConnection connection)
     {
         (Bundle proposalChains, bool canCue) = FhirDataExchange<Bundle>.GetResource(connection, LincaEndpoints.prescriptions_to_dispense);
@@ -153,6 +174,9 @@ public static class LincaDataExchange
         return (new(), false);
     }
 
+    /// <summary>
+    /// Get all Linked Care prescriptions which are connected to the given id
+    /// </summary>
     public static (Bundle results, bool canCue) GetPrescriptionToDispense(LincaConnection connection, string id)
     {
         string operationQuery = $"{LincaEndpoints.prescription_to_dispense}?id={id}";

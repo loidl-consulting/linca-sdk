@@ -83,6 +83,9 @@ public static class LincaEndpoints
     /// </summary>
     public static string prescription_to_dispense = "$prescription-to-dispense";
 
+    /// <summary>
+    /// Get the profiled name of a standard Fhir resource
+    /// </summary>
     public static string GetProfiledResourceName(this Resource resource)
     {
         if(resource is Patient)
