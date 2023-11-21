@@ -9,6 +9,14 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Resources\linca_pflegeeinrichtung_001_dev.pfx" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\linca_pflegeeinrichtung_001_dev.pfx" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\Lc.Linca.Sdk\Lc.Linca.Sdk.csproj" />
   </ItemGroup>
 

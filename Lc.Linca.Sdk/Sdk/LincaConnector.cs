@@ -31,7 +31,9 @@ public static class LincaConnector
     /// cluster located at the specified internet address
     /// </summary>
     /// <param name="lincaUrl">The internet address of the Linked Care Cluster</param>
-    public static LincaConnection Connect(string lincaUrl)
+    /// <param name="clientCertificate">The X509 certificate which is presented to the FHIR server for authentication<br/>
+    /// (if null, and on Windows, and interactive, will prompt to select one from the store)</param>
+    public static LincaConnection Connect(string lincaUrl, X509Certificate2? clientCertificate = null)
     {
         lincaUrl = lincaUrl.TrimEnd('/');
 
@@ -39,35 +41,42 @@ public static class LincaConnector
          * 1a. select a client certificate for authentication
          *     (this is about authentication on organization level,
          *     where organization means care, practitioner or pharmacy). */
-        var store = new X509Store(Constants.CertificateStoreKeyOwn, StoreLocation.LocalMachine);
-        store.Open(OpenFlags.ReadOnly | OpenFlags.OpenExistingOnly);
-        var collection = store.Certificates;
-
-        if (certificate == null)
+        if (clientCertificate == null)
         {
-            if (OperatingSystem.IsWindows() && Environment.UserInteractive)
+            var store = new X509Store(Constants.CertificateStoreKeyOwn, StoreLocation.LocalMachine);
+            store.Open(OpenFlags.ReadOnly | OpenFlags.OpenExistingOnly);
+            var collection = store.Certificates;
+
+            if (certificate == null)
             {
-                certificate = X509Certificate2UI.SelectFromCollection
-                (
-                    collection,
-                    Localization.CertificatePromptTitleDe,
-                    Localization.CertificatePromptDescDe,
-                    X509SelectionFlag.SingleSelection
-                ).FirstOrDefault();
+                if (OperatingSystem.IsWindows() && Environment.UserInteractive)
+                {
+                    certificate = X509Certificate2UI.SelectFromCollection
+                    (
+                        collection,
+                        Localization.CertificatePromptTitleDe,
+                        Localization.CertificatePromptDescDe,
+                        X509SelectionFlag.SingleSelection
+                    ).FirstOrDefault();
+                }
+                else
+                {
+                    /* use a method to load the certificate, that works on your
+                     * platform (for example, load from a PEM file). the following
+                     * line is just an example assuming that there is a PEM file
+                     * present in the current working directory. */
+                    certificate = X509Certificate2.CreateFromPemFile("linca-pflegeeinrichtung-001-dev.pem");
+                }
             }
-            else
+
+            if (certificate == null)
             {
-                /* use a method to load the certificate, that works on your
-                 * platform (for example, load from a PEM file). the following
-                 * line is just an example assuming that there is a PEM file
-                 * present in the current working directory. */
-                certificate = X509Certificate2.CreateFromPemFile("linca-pflegeeinrichtung-001-dev.pem");
+                return new();
             }
         }
-
-        if (certificate == null)
+        else
         {
-            return new();
+            certificate = clientCertificate;
         }
 
         HttpClientHandler handler = new()

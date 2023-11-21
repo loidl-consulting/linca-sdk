@@ -9,6 +9,9 @@
  * The Linked Care project is co-funded by the Austrian FFG
  ***********************************************************************************/
 
+using Lc.Linca.Sdk.Sample.Resources;
+using System.Security.Cryptography.X509Certificates;
+
 namespace Lc.Linca.Sdk.Client;
 
 internal class Program
@@ -19,6 +22,7 @@ internal class Program
     internal const string FhirServerBaseUrl = "https://fhir5-d.linkedcare.at";
     //internal const string FhirServerBaseUrl = "https://localhost:8084";
 
+    private const string CommandLineArgumentUseEmbeddedCert = "--use-embedded-cert";
     private const int ExitCodeCouldNotConnect = 0xaca1;
     private const int ExitCodeIdle = 0x1;
     private const int ExitCodeSuccess = 0x0;
@@ -59,10 +63,19 @@ internal class Program
 
     private static LincaConnection Blurb()
     {
+        X509Certificate2? clientCertificate = null;
+
         Console.WriteLine("Linked Care Software Development Kit");
         Console.WriteLine("Verbindung mit FHIR Server wird initiiert...");
 
-        var connection = LincaConnector.Connect(FhirServerBaseUrl);
+        if(Environment.GetCommandLineArgs().Contains(CommandLineArgumentUseEmbeddedCert))
+        {
+            /* this shows how the certificate can be passed to the connection
+             * when it is provided as a byte array (when loaded from database or a file) */
+            clientCertificate = new(ResourceProxy.linca_pflegeeinrichtung_001_dev, ResourceProxy.pk_pw);
+        }
+
+        var connection = LincaConnector.Connect(FhirServerBaseUrl, clientCertificate);
         var con = new Terminal.Info();
         var outcome = false;
         var (negotiated, capabilityStatement) = LincaConnector.NegotiateCapabilities(connection);

@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "Lc.Linca.Sdk.Sample": {
+      "commandName": "Project",
+      //"commandLineArgs": "--use-embedded-cert"
+    }
+  }
+}
