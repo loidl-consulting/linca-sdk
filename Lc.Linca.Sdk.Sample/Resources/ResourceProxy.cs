@@ -6,6 +6,12 @@ namespace Lc.Linca.Sdk.Sample.Resources;
 
 internal class ResourceProxy
 {
+    /// <summary>
+    /// Returns #1 of the actor: care pseudocertificates for development and test purposes,
+    /// as a byte array - to show by example, how a client certificate that is loaded from 
+    /// a database could be passed to the SDK's Connect() function
+    /// (This certificate will not work in a staging or production environment)
+    /// </summary>
 #pragma warning disable IDE1006 // Naming Styles
     internal static byte[] linca_pflegeeinrichtung_001_dev
 #pragma warning restore IDE1006 // Naming Styles
@@ -14,12 +20,10 @@ internal class ResourceProxy
         {
             using var certBytes = new MemoryStream();
 
-            Assembly.GetExecutingAssembly()!.GetManifestResourceStream(typeof(ResourceProxy), $"{nameof(linca_pflegeeinrichtung_001_dev)}.pfx")!.CopyTo(certBytes);
-
-            if(certBytes.CanSeek)
-            {
-                certBytes.Seek(0, SeekOrigin.Begin);
-            }
+            Assembly
+                .GetExecutingAssembly()!
+                .GetManifestResourceStream(typeof(ResourceProxy), $"{nameof(linca_pflegeeinrichtung_001_dev)}.pfx")!
+                .CopyTo(certBytes);
 
             return certBytes.ToArray();
         }
