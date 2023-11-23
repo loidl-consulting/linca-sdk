@@ -14,7 +14,7 @@ using Lc.Linca.Sdk;
 
 namespace Lc.Linca.Sdk.Specs.ActorDoctor;
 
-internal class US008_GetOpenOrders : Spec
+internal class US009_GetOpenOrders : Spec
 {
     public const string UserStory = @"
         Practitioner Dr. Kunibert Kreuzotter is responsible for the LINCA registered care giver clients 
@@ -26,7 +26,7 @@ internal class US008_GetOpenOrders : Spec
         Dr. Kreuzotters software can interpret the returned LINCA order position chains 
         and visually present the status of the order and all its positions.";
 
-    public US008_GetOpenOrders(LincaConnection conn) : base(conn)
+    public US009_GetOpenOrders(LincaConnection conn) : base(conn)
     {
         Steps = new Step[]
         {
@@ -41,6 +41,11 @@ internal class US008_GetOpenOrders : Spec
         if (received)
         {
             Console.WriteLine($"Get proposals-to-prescribe succeeded");
+
+            foreach (var item in results.Entry)
+            {
+                Console.WriteLine(item.FullUrl);
+            }
         }
         else
         {

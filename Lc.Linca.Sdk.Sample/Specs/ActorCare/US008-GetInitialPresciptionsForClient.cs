@@ -11,37 +11,37 @@
 
 using Hl7.Fhir.Model;
 using Lc.Linca.Sdk.Client;
+using Lc.Linca.Sdk.Scaffolds;
 
 namespace Lc.Linca.Sdk.Specs.ActorCare;
 
-internal class US007_GetOrderStatus : Spec
+internal class US008_GetInitialPrescriptionsForClient : Spec
 {
     public const string UserStory = @"
-        User Walter Specht (DGKP) is a caregiver in the inpatient care facility Haus Vogelsang. 
-        He has already placed a collective order for prescription medication for several clients on LINCA.
-        Walter Specht needs to know the status of that order, and he has the permission to read the 
-        entire order. 
-        Hence, he submits a read request on the order number,
-          and his care software can use the returned LINCA order position chains,
-          and visually present the status of the order and all its positions";
+        Renate Rüssel-Olifant had a check-up with her general practitioner Dr. Wibke Würm and 
+        got an initial prescription for new medication that she has not been taking so far. 
+        Her caregiver Susanne Allzeit (DGKP) can see the new prescription for Renate Rüssel-Olifant 
+        on her mobile device and can pick the new medications at any pharmacy of her choice by presenting the
+        corresponding data matrix code";
 
-    public US007_GetOrderStatus(LincaConnection conn) : base(conn) 
+
+    public US008_GetInitialPrescriptionsForClient(LincaConnection conn) : base(conn) 
     {
         Steps = new Step[]
         {
-            new("Get proposal status", GetProposalStatus)
+            new("Get initial prescriptions by a patient's social security number", GetPrescriptionsBySvnr)
         };
     }
 
-    private bool GetProposalStatus()
+    private bool GetPrescriptionsBySvnr()
     {
         LinkedCareSampleClient.CareInformationSystemScaffold.PseudoDatabaseRetrieve();
 
-        (Bundle results, bool received) = LincaDataExchange.GetProposalStatus(Connection, $"{LinkedCareSampleClient.CareInformationSystemScaffold.Data.LcIdVogelsang}");
+        (Bundle results, bool received) = LincaDataExchange.GetInitialPrescription(Connection, $"{new CareInformationSystem.Client().SocInsNumber}");
 
         if (received)
         {
-            Console.WriteLine("Get proposal-status succeeded");
+            Console.WriteLine("Get initial prescriptions succeeded");
             foreach (var item in results.Entry)
             {
                 Console.WriteLine(item.FullUrl);
@@ -49,7 +49,7 @@ internal class US007_GetOrderStatus : Spec
         }
         else
         {
-            Console.WriteLine($"Get proposal-status failed");
+            Console.WriteLine($"Get initial prescriptions failed");
         }
 
         return received;

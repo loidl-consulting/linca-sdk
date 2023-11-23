@@ -35,9 +35,9 @@ internal class US002_MedOrderRepeat : Spec
     public US002_MedOrderRepeat(LincaConnection conn) : base(conn)
     {
         Steps = new Step[]
-       {
+        {
             new("Place order with pharmacy specified", CreateRequestOrchestrationRecord)
-       };
+        };
     }
 
     private bool CreateRequestOrchestrationRecord()
@@ -69,9 +69,11 @@ internal class US002_MedOrderRepeat : Spec
 
             var action = new RequestOrchestration.ActionComponent()
             {
-                // Type = 
+                Type = new(),
                 Resource = new ResourceReference($"#{medReq.Id}")
             };
+
+            action.Type.Coding.Add(new() { Code = "create" });
 
             ro.Action.Add(action);
 
@@ -79,6 +81,9 @@ internal class US002_MedOrderRepeat : Spec
 
             if (canCue)
             {
+                LinkedCareSampleClient.CareInformationSystemScaffold.Data.LcIdImmerdar002 = createdRO.Id;
+                LinkedCareSampleClient.CareInformationSystemScaffold.PseudoDatabaseStore();
+
                 Console.WriteLine($"Linca Request Orchestration transmitted, id {createdRO.Id}");
             }
             else
@@ -98,13 +103,13 @@ internal class US002_MedOrderRepeat : Spec
 
     private void PrepareOrderMedicationRequest(string patientId)
     {
-        medReq.Id = Guid.NewGuid().ToFhirId();
+        medReq.Id = Guid.NewGuid().ToFhirId();                                  // REQUIRED
         medReq.Status = MedicationRequest.MedicationrequestStatus.Unknown;      // REQUIRED
         medReq.Intent = MedicationRequest.MedicationRequestIntent.Proposal;     // REQUIRED
         medReq.Subject = new ResourceReference()                                // REQUIRED
         {
             // relative path to Linca Fhir patient resource
-            Reference = $"HL7ATCorePatient/{patientId}"
+            Reference = $"HL7ATCorePatient/{LinkedCareSampleClient.CareInformationSystemScaffold.Data.ClientIdRenate}"
         };
 
         medReq.Medication = new()
@@ -147,10 +152,10 @@ internal class US002_MedOrderRepeat : Spec
         {
             Identifier = new()
             {
-                Value = "2.999.40.0.34.3.1.1",  // OID of designated practitioner 
+                Value = "2.999.40.0.34.3.1.2",  // OID of designated practitioner 
                 System = "urn:oid:1.2.40.0.34.5.2"  // Code-System: eHVD
             },
-            Display = "Dr. Wibke Würm"   // optional
+            Display = "Dr. Kunibert Kreuzotter"   // optional
         });
 
         medReq.DispenseRequest = new()

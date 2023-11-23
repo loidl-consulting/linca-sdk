@@ -11,14 +11,16 @@
 
 namespace Lc.Linca.Sdk.Specs.ActorDoctor;
 
-internal class US009_CancelPrescriptionPosition : Spec
+internal class US014_PrescribeSupplementaryArticle : Spec
 {
     public const string UserStory = @"
         Practitioner Dr. Silvia Spitzmaus is responsible for the LINCA registered care giver client Günter Gürtelthier. 
         She has received a LINCA order position requesting medication prescription for him.
-        She decides that Günter Gürtelthier shall no longer take the medication intended by that order position. 
-        Hence, she submits an update on that order position with the status set to 'stopped' or 'ended',
+        She decides that  an additional medication is needed for Günter Gürtelthier.
+        Hence, she creates and submits an additionally prescribed position referring to the LINCA order number
           and her software will send that to the LINCA server,
-          and the ordering care giver organization Haus Vogelsang will be informed that this position will not be prescribed further on";
-    public US009_CancelPrescriptionPosition(LincaConnection conn) : base(conn) { }
+          and the ordering care giver organization Haus Vogelsang will be informed that the order has been extended with an additional position,
+          and that does not change anything about the fact that Dr. Spitzmaus cannot read other positions of that same order where she is not the designated practitioner";
+
+    public US014_PrescribeSupplementaryArticle(LincaConnection conn) : base(conn) { }
 }

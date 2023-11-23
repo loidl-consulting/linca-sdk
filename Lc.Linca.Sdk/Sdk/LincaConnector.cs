@@ -160,7 +160,7 @@ public static class LincaConnector
         }
 
         var capabilityStatementRaw = new StreamReader(conformityResponse.Content.ReadAsStream()).ReadToEnd();
-        if (new FhirJsonPocoDeserializer().TryDeserializeResource(capabilityStatementRaw, out Resource? resource, out var _) && resource is CapabilityStatement capabilityStatement)
+        if (new FhirJsonPocoDeserializer().TryDeserializeResource(capabilityStatementRaw, out Resource? resource, out var issues) && resource is CapabilityStatement capabilityStatement)
         {
             connection.Capabilities = capabilityStatement;
         }

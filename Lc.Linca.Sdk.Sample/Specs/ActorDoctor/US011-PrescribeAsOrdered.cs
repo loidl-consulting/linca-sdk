@@ -13,7 +13,7 @@ using Hl7.Fhir.Model;
 
 namespace Lc.Linca.Sdk.Specs.ActorDoctor;
 
-internal class US010_PrescribeAsOrdered : Spec
+internal class US011_PrescribeAsOrdered : Spec
 {
     public const string UserStory = @"
         Practitioner Dr. Wibke Würm is responsible for the LINCA registered mobile caregiver client Renate Rüssel-Olifant. 
@@ -26,7 +26,7 @@ internal class US010_PrescribeAsOrdered : Spec
 
     protected MedicationRequest prescription = new();
 
-    public US010_PrescribeAsOrdered(LincaConnection conn) : base(conn) 
+    public US011_PrescribeAsOrdered(LincaConnection conn) : base(conn) 
     {
         Steps = new Step[]
             {

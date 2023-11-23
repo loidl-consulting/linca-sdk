@@ -13,7 +13,7 @@ using Hl7.Fhir.Model;
 
 namespace Lc.Linca.Sdk.Specs.ActorPharmacy;
 
-internal class US016_Dispense : Spec
+internal class US018_Dispense : Spec
 {
     protected MedicationDispense dispense = new();
 
@@ -26,7 +26,7 @@ internal class US016_Dispense : Spec
           and his software will send that to the LINCA server,
           and notify the ordering organization, Pflegedienst Immerdar, about the thus completed order position.";
 
-    public US016_Dispense(LincaConnection conn) : base(conn)
+    public US018_Dispense(LincaConnection conn) : base(conn)
     {
         Steps = new Step[]
             {

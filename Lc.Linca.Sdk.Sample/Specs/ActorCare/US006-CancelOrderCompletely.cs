@@ -9,6 +9,8 @@
  * The Linked Care project is co-funded by the Austrian FFG
  ***********************************************************************************/
 
+using Lc.Linca.Sdk.Client;
+
 namespace Lc.Linca.Sdk.Specs.ActorCare;
 
 internal class US006_CancelOrderCompletely : Spec
@@ -35,11 +37,13 @@ internal class US006_CancelOrderCompletely : Spec
 
     private bool DeleteRequestOrchestration()
     {
-        var deleted = LincaDataExchange.DeleteRequestOrchestration(Connection, "dca2aaf44f00405b835b3bd8ce92b6ba");
+        LinkedCareSampleClient.CareInformationSystemScaffold.PseudoDatabaseRetrieve();
+
+        var deleted = LincaDataExchange.DeleteRequestOrchestration(Connection, $"{LinkedCareSampleClient.CareInformationSystemScaffold.Data.LcIdVogelsang}");
 
         if (deleted)
         {
-            Console.WriteLine($"Linca Request Orchestration successfully deleted");
+            Console.WriteLine($"Linca Request Orchestration successfully (partially) deleted");
         }
         else
         {

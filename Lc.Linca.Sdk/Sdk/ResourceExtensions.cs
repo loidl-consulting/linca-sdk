@@ -84,6 +84,13 @@ public static class LincaEndpoints
     public static string prescription_to_dispense = "$prescription-to-dispense";
 
     /// <summary>
+    /// The name of the operation to GET the prescription(s) associated with
+    /// a specific Id presented to the pharmacist by a customer/caregiver 
+    /// can only be queried by pharmacies (ELGA-role in eHVD)
+    /// </summary>
+    public static string patient_initial_prescriptions = "$patient-initial-prescriptions";
+
+    /// <summary>
     /// Get the profiled name of a standard Fhir resource
     /// </summary>
     public static string GetProfiledResourceName(this Resource resource)

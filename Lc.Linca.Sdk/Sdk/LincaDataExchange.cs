@@ -189,4 +189,20 @@ public static class LincaDataExchange
 
         return (new(), false);
     }
+
+    /// <summary>
+    /// Get initial prescriptions (and corresponding dispenses) from the last 90 days for the given svnr
+    /// </summary>
+    public static (Bundle results, bool canCue) GetInitialPrescription(LincaConnection connection, string svnr)
+    {
+        string operationQuery = $"{LincaEndpoints.patient_initial_prescriptions}?svnr={svnr}";
+        (Bundle proposalChains, bool canCue) = FhirDataExchange<Bundle>.GetResource(connection, operationQuery);
+
+        if (canCue)
+        {
+            return (proposalChains, true);
+        }
+
+        return (new(), false);
+    }
 }

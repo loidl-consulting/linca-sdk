@@ -10,38 +10,39 @@
  ***********************************************************************************/
 
 using Hl7.Fhir.Model;
-using Hl7.Fhir.Utility;
 
 namespace Lc.Linca.Sdk.Specs.ActorDoctor;
 
-internal class US011_PrescribeWithChanges : Spec
+internal class US013_ModifyPrescribedDosage : Spec
 {
     protected MedicationRequest prescription = new();
 
     public const string UserStory = @"
         Practitioner Dr. Silvia Spitzmaus is responsible for the LINCA registered care giver client Günter Gürtelthier. 
-        She has received a LINCA order position requesting medication prescription for him.
-        She decides that the medication intended by a particular order position needs to be adjusted.  
-        Hence, she submits a prescription for that position with the eMedId and eRezeptId she got, with changed medication/quantity,
+        She has received a LINCA order position requesting medication prescription for him and has already 
+        submitted a prescription for that order position.
+        She decides that the dosage instructions in the prior prescription need to be defined or modified. 
+        Hence, she submits an update to that prescription with new dosage instructions,
           and her software will send that to the LINCA server,
-          and the ordering care giver organization Haus Vogelsang will be informed that the order position has been 
-          prescribed with modified medication/quantity";
+          and the ordering care giver organization Haus Vogelsang will be informed that the prescription has been 
+          updated with altered dosage";
 
-    public US011_PrescribeWithChanges(LincaConnection conn) : base(conn) 
+    public US013_ModifyPrescribedDosage(LincaConnection conn) : base(conn) 
     {
         Steps = new Step[]
         {
-            new("Create PrescriptionMedicationRequest with changed medication", CreatePrescriptionRecord)
+            new("Create PrescriptionMedicationRequest with modified dosage", CreatePrescriptionRecord)
         };
     }
 
     private bool CreatePrescriptionRecord()
     {
-        prescription.BasedOn.Add(new ResourceReference()
+        prescription.PriorPrescription = new()
         {
-            Reference = "LINCAProposalMedicationRequest/ef7c1f512c504a1a932c2f90ed39d5d5"
-        });
-        prescription.Status = MedicationRequest.MedicationrequestStatus.Active;      // REQUIRED
+            Reference = "LINCAPrescriptionMedicationRequest/b14ea7233ca44f1ca7ec0a02e98c0982"
+        };
+
+        prescription.Status = MedicationRequest.MedicationrequestStatus.EnteredInError;      // REQUIRED
         prescription.Intent = MedicationRequest.MedicationRequestIntent.Order;     // REQUIRED
         prescription.Subject = new ResourceReference()                                // REQUIRED
         {
@@ -64,12 +65,28 @@ internal class US011_PrescribeWithChanges : Spec
         };
         prescription.DosageInstruction.Add(new Dosage()
         {
-            Text = "1x täglich auf die betroffene Stelle auftragen"
+            Text = "täglich morgens und abends auf die betroffene Stelle auftragen"
         });
-
-        // prescription.InformationSource.Add(new ResourceReference()  // will be copied from reference in basedOn
-        // prescription.Requester = new ResourceReference()  //will be copied from reference in basedOn
-
+        /*
+        prescription.InformationSource.Add(new ResourceReference()  // REQUIRED, cardinality 1..1 in LINCA
+        {
+            Identifier = new()
+            {
+                Value = "2.999.40.0.34.1.1.1",  // OID of the ordering care organization
+                System = "urn:oid:1.2.40.0.34"  // Code-System: eHVD
+            },
+            Display = "Haus Vogelsang"   // optional
+        });
+        prescription.Requester = new ResourceReference()  // REQUIRED
+        {
+            Identifier = new()
+            {
+                Value = "ECHT_SPECHT",               // e.g., org internal username or handsign of Susanne Allzeit
+                System = "urn:oid:2.999.40.0.34.1.1.1"  // Code-System: Care-Org Pflegedienst Immerdar
+            },
+            Display = "DGKP Walter Specht"
+        };
+        */
         prescription.Performer.Add(new ResourceReference()   // REQUIRED, cardinality 1..1 in LINCA
         {
             Identifier = new()
@@ -79,6 +96,7 @@ internal class US011_PrescribeWithChanges : Spec
             },
             Display = "Dr. Wibke Würm"   // optional
         });
+        /*
         prescription.DispenseRequest = new()
         {
             Dispenser = new()
@@ -91,6 +109,7 @@ internal class US011_PrescribeWithChanges : Spec
                 Display = "Apotheke 'Zum Linden Wurm'"
             }
         };
+        */
         prescription.Identifier.Add(new Identifier()
         {
             Value = "CVF1 23ER USW1",

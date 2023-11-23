@@ -11,7 +11,7 @@
 
 namespace Lc.Linca.Sdk.Specs.ActorPharmacy;
 
-internal class US017_PartialDispense : Spec
+internal class US019_PartialDispense : Spec
 {
     public const string UserStory = @"
         Pharmacist Mag. Andreas Amsel, owner of the pharmacy Apotheke 'Zum frühen Vogel' has 
@@ -23,5 +23,5 @@ internal class US017_PartialDispense : Spec
           and his software will send that to the LINCA server,
           and notify the ordering organization, Pflegedienst Immerdar, about the partial dispense.";
 
-    public US017_PartialDispense(LincaConnection conn) : base(conn) { }
+    public US019_PartialDispense(LincaConnection conn) : base(conn) { }
 }

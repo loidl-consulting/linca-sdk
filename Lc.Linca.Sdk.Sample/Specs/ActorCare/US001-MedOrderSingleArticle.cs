@@ -177,9 +177,11 @@ internal class US001_MedOrderSingleArticle : Spec
 
         var action = new RequestOrchestration.ActionComponent()
         {
-            //Type = 
+            Type = new(),
             Resource = new ResourceReference($"#{medReq.Id}")
         };
+
+        action.Type.Coding.Add(new() { Code = "create" });
 
         ro.Action.Add( action );
 
@@ -188,6 +190,9 @@ internal class US001_MedOrderSingleArticle : Spec
 
         if (canCue)
         {
+            LinkedCareSampleClient.CareInformationSystemScaffold.Data.LcIdImmerdar001 = createdRO.Id;
+            LinkedCareSampleClient.CareInformationSystemScaffold.PseudoDatabaseStore();
+
             Console.WriteLine($"Linca Request Orchestration transmitted, id {createdRO.Id}");
         }
         else
