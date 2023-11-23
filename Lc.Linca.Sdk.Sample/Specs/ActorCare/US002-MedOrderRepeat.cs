@@ -11,6 +11,7 @@
 
 using Hl7.Fhir.Model;
 using Hl7.Fhir.Support;
+using Lc.Linca.Sdk.Client;
 using Lc.Linca.Sdk.Scaffolds;
 using System.Globalization;
 
@@ -41,10 +42,13 @@ internal class US002_MedOrderRepeat : Spec
 
     private bool CreateRequestOrchestrationRecord()
     {
-        if (CreateClientRecord()) // in UserStory002 we assume that this has already been done
+        LinkedCareSampleClient.CareInformationSystemScaffold.PseudoDatabaseRetrieve();
+        var patientId = LinkedCareSampleClient.CareInformationSystemScaffold.Data.ClientIdRenate;
+
+        if (!string.IsNullOrEmpty(patientId)) // in UserStory002 we assume that this has already been done
         {
             // first prepare a LincaOrderMedicationRequest to be contained in the LincaRequestOrchestration
-            PrepareOrderMedicationRequest();
+            PrepareOrderMedicationRequest(patientId);
 
             RequestOrchestration ro = new()
             {
@@ -86,74 +90,39 @@ internal class US002_MedOrderRepeat : Spec
         }
         else
         {
+            Console.WriteLine($"No patient information stored in care information system");
+
             return false;
         }
-
     }
 
-    private bool CreateClientRecord()
-    {
-        var client = CareInformationSystem.GetClient();
-        var patient = new Patient
-        {
-            BirthDate = DateTime.ParseExact(
-                client.DoB,
-                Constants.DobFormat,
-                CultureInfo.InvariantCulture
-            ).ToFhirDate()
-        };
-
-        patient.Name.Add(new()
-        {
-            Family = client.Lastname,
-            Given = new[] { client.Firstname },
-            Text = client.Firstname + " " + client.Lastname
-        });
-
-        patient.Identifier.Add(new Identifier(
-            system: Constants.WellknownOidSocialInsuranceNr,
-            value: client.SocInsNumber
-        ));
-        patient.Gender = AdministrativeGender.Female;
-
-        (createdPatient, var canCue) = LincaDataExchange.CreatePatient(Connection, patient);
-
-        if (canCue)
-        {
-            Console.WriteLine($"Client information transmitted, id {createdPatient.Id}");
-        }
-        else
-        {
-            Console.WriteLine($"Failed to transmit client information");
-        }
-
-        return canCue;
-    }
-
-    private void PrepareOrderMedicationRequest()
+    private void PrepareOrderMedicationRequest(string patientId)
     {
         medReq.Id = Guid.NewGuid().ToFhirId();
         medReq.Status = MedicationRequest.MedicationrequestStatus.Unknown;      // REQUIRED
         medReq.Intent = MedicationRequest.MedicationRequestIntent.Proposal;     // REQUIRED
         medReq.Subject = new ResourceReference()                                // REQUIRED
         {
-            Reference = $"HL7ATCorePatient/{createdPatient.Id}"     // relative path to Linca Fhir patient resource
+            // relative path to Linca Fhir patient resource
+            Reference = $"HL7ATCorePatient/{patientId}"
         };
+
         medReq.Medication = new()
         {
             Concept = new()
             {
                 Coding = new()
+                {
+                    new Coding()
                     {
-                        new Coding()
-                        {
-                            Code = "2420396",
-                            System = "https://termgit.elga.gv.at/CodeSystem/asp-liste",
-                            Display = "Bisoprolol Arcana 5 mg Filmtabletten"
-                        }
+                        Code = "2420396",
+                        System = "https://termgit.elga.gv.at/CodeSystem/asp-liste",
+                        Display = "Bisoprolol Arcana 5 mg Filmtabletten"
                     }
+                }
             }
         };
+
         medReq.InformationSource.Add(new ResourceReference()  // REQUIRED, cardinality 1..1 in LINCA
         {
             Identifier = new()
@@ -163,6 +132,7 @@ internal class US002_MedOrderRepeat : Spec
             },
             Display = "Pflegedienst Immerdar"   // optional
         });
+
         medReq.Requester = new ResourceReference()  // REQUIRED
         {
             Identifier = new()
@@ -172,6 +142,7 @@ internal class US002_MedOrderRepeat : Spec
             },
             Display = "DGKP Susanne Allzeit"
         };
+
         medReq.Performer.Add(new ResourceReference()   // REQUIRED, cardinality 1..1 in LINCA
         {
             Identifier = new()
@@ -181,6 +152,7 @@ internal class US002_MedOrderRepeat : Spec
             },
             Display = "Dr. Wibke Würm"   // optional
         });
+
         medReq.DispenseRequest = new()
         {
             Dispenser = new()

@@ -11,6 +11,7 @@
 
 using Hl7.Fhir.Model;
 using Hl7.Fhir.Support;
+using Lc.Linca.Sdk.Client;
 using Lc.Linca.Sdk.Scaffolds;
 using System.Globalization;
 
@@ -26,7 +27,6 @@ internal class US001_MedOrderSingleArticle : Spec
         As Susanne Allzeit will pick up the medication on the go, she places the order 
         without specifying a pharmacy.";
 
-    public Patient createdPatient = new Patient();
     protected MedicationRequest medReq = new();
 
     public US001_MedOrderSingleArticle(LincaConnection conn) : base(conn)
@@ -52,7 +52,8 @@ internal class US001_MedOrderSingleArticle : Spec
     /// </summary>
     private bool CreateClientRecord()
     {
-        var client = CareInformationSystem.GetClient();
+        LinkedCareSampleClient.CareInformationSystemScaffold.PseudoDatabaseRetrieve();
+        var client = new CareInformationSystem.Client();
         var patient = new Patient
         {
             BirthDate = DateTime.ParseExact(
@@ -73,12 +74,15 @@ internal class US001_MedOrderSingleArticle : Spec
             system: Constants.WellknownOidSocialInsuranceNr,
             value: client.SocInsNumber
         ));
-        patient.Gender = AdministrativeGender.Female;
 
-        (createdPatient, var canCue) = LincaDataExchange.CreatePatient(Connection, patient);
+        patient.Gender = AdministrativeGender.Female;
+        (var createdPatient, var canCue) = LincaDataExchange.CreatePatient(Connection, patient);
        
         if(canCue)
         {
+            LinkedCareSampleClient.CareInformationSystemScaffold.Data.ClientIdRenate = createdPatient.Id;
+            LinkedCareSampleClient.CareInformationSystemScaffold.PseudoDatabaseStore();
+
             Console.WriteLine($"Client information transmitted, id {createdPatient.Id}");
         }
         else
@@ -89,82 +93,35 @@ internal class US001_MedOrderSingleArticle : Spec
         return canCue;
     }
 
-    private bool OrderAnyPharmacy()
-    {
-        var client = CareInformationSystem.GetClient();
-        if(client.ClientId == Guid.Empty)
-        {
-            Console.WriteLine("No client Id has been registered in the care information system");
-
-            return false;
-        }
-
-        // populate the order position
-        var orderPosition = new MedicationRequest()
-        {
-            // the client for whom the medication is ordered
-            Subject = new()
-            {
-
-            },
-            // the practitioner who will be asked to issue the prescription
-            Performer = new()
-            {
-
-            },
-            // the product ordered
-            Medication = new()
-            {
-
-            }
-        };
-
-
-        // populate the order header
-        var order = new RequestOrchestration()
-        {
-            Contained = new(new[] { orderPosition })
-        };
-
-        (var createdOrder, var canCue) = LincaDataExchange.PlaceOrder(Connection, order);
-
-        if (canCue)
-        {
-            Console.WriteLine($"Order created, id {createdOrder.Id}");
-        }
-        else
-        {
-            Console.WriteLine("Failed to create order");
-        }
-
-        return canCue;
-    }
-
     private void PrepareOrderMedicationRequest()
     {
+        LinkedCareSampleClient.CareInformationSystemScaffold.PseudoDatabaseRetrieve();
+
         medReq.Id = Guid.NewGuid().ToFhirId();                                  // REQUIRED    
         medReq.Status = MedicationRequest.MedicationrequestStatus.Unknown;      // REQUIRED
         medReq.Intent = MedicationRequest.MedicationRequestIntent.Proposal;     // REQUIRED
         medReq.Subject = new ResourceReference()                                // REQUIRED
         {
-            Reference = $"HL7ATCorePatient/{createdPatient.Id}"     // relative path to Linca Fhir patient resource
-            //Reference = "HL7ATCorePatient/c4313cca3e5b4cda89053630b5caae8d"
+            // relative path to Linca Fhir patient resource
+            Reference = $"HL7ATCorePatient/{LinkedCareSampleClient.CareInformationSystemScaffold.Data.ClientIdRenate}"
         };
+
         medReq.Medication = new()
         {
             Concept = new()
             {
                 Coding = new()
+                {
+                    new Coding()
                     {
-                        new Coding()
-                        {
-                            Code = "0031130",
-                            System = "https://termgit.elga.gv.at/CodeSystem/asp-liste",
-                            Display = "Lasix 40 mg Tabletten"
-                        }
+                        Code = "0031130",
+                        System = "https://termgit.elga.gv.at/CodeSystem/asp-liste",
+                        Display = "Lasix 40 mg Tabletten"
                     }
+                }
             }
         };
+
         medReq.InformationSource.Add(new ResourceReference()  // REQUIRED, cardinality 1..1 in LINCA
         {
             Identifier = new()
@@ -174,6 +131,7 @@ internal class US001_MedOrderSingleArticle : Spec
             },
             Display = "Pflegedienst Immerdar"   // optional
         });
+
         medReq.Requester = new ResourceReference()  // REQUIRED
         {
             Identifier = new()
@@ -183,6 +141,7 @@ internal class US001_MedOrderSingleArticle : Spec
             },
             Display = "DGKP Susanne Allzeit"
         };
+
         medReq.Performer.Add(new ResourceReference()   // REQUIRED, cardinality 1..1 in LINCA
         {
             Identifier = new()

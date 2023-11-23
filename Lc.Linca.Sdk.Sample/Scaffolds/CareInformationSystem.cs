@@ -1,6 +1,4 @@
-﻿using System.Runtime.CompilerServices;
-
-namespace Lc.Linca.Sdk.Scaffolds;
+﻿namespace Lc.Linca.Sdk.Scaffolds;
 
 /// <summary>
 /// A minimal implementation of a fictitious care information
@@ -9,38 +7,7 @@ namespace Lc.Linca.Sdk.Scaffolds;
 /// </summary>
 internal class CareInformationSystem : ActorSoftwareScaffold
 {
-    public static Client GetClient()
-    {
-        var clientInfo = new Client()
-        {
-            ClientId = GetClientIdFromDb()
-        };
-
-        return clientInfo;
-    }
-
-    private static Guid GetClientIdFromDb()
-    {
-        var clientId = Guid.NewGuid();
-        var existingClientId = PseudoDatabaseRetrieve(nameof(CareInformationSystem), PseudoDatabaseField.PatientId);
-
-        if (existingClientId == Guid.Empty)
-        {
-            /* what a caregiver calls a client,
-             * a doctor calls a patient. */
-            PseudoDatabaseStore(
-                nameof(CareInformationSystem),
-                PseudoDatabaseField.PatientId,
-                clientId
-            );
-        }
-        else
-        {
-            clientId = existingClientId;
-        }
-
-        return clientId;
-    }
+    public CareInformationSystem() : base(nameof(CareInformationSystem)) { }
 
     public class Client
     {

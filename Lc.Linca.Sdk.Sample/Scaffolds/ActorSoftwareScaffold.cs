@@ -1,4 +1,7 @@
-﻿namespace Lc.Linca.Sdk.Scaffolds;
+﻿using System.Text.Json;
+using System.Text.Json.Serialization;
+
+namespace Lc.Linca.Sdk.Scaffolds;
 
 /// <summary>
 /// An abstract representation of a software product
@@ -8,30 +11,43 @@
 /// </summary>
 internal abstract class ActorSoftwareScaffold
 {
-    internal enum PseudoDatabaseField
+    internal PseudoStore Data;
+
+    protected string db { init; get; }
+
+    protected internal ActorSoftwareScaffold(string db)
     {
-        PatientId = 0
+        Data = new();
+        this.db = db;
     }
 
-    internal static void PseudoDatabaseStore(string db, PseudoDatabaseField field, Guid value)
+    internal void PseudoDatabaseStore()
     {
-        var record = new byte[16 * typeof(PseudoDatabaseField).GetFields().Length];
-
-        value.ToByteArray().CopyTo(record, 16 * (short)field);
-        File.WriteAllBytes($".{db}.tmp.db", record);
+        File.WriteAllText($".{db}.tmp.lcdb", JsonSerializer.Serialize(Data));
     }
 
-    internal static Guid PseudoDatabaseRetrieve(string db, PseudoDatabaseField field)
+    internal void PseudoDatabaseRetrieve()
     {
-        try
-        {
-            var content = File.ReadAllBytes($".{db}.tmp.db");
+        var fileName = $".{db}.tmp.lcdb";
 
-            return new(content.Skip((short)field * 16).Take(16).ToArray());
-        }
-        catch
+        if (File.Exists(fileName))
         {
-            return Guid.Empty;
+            Data = JsonSerializer.Deserialize<PseudoStore>(File.ReadAllText(fileName))!;
         }
+        else
+        {
+            Data = new();
+        }
+    }
+
+    internal class PseudoStore
+    {
+        public string ClientIdRenate { get; set; } = string.Empty;
+        public string ClientIdGuenter { get; set; } = string.Empty;
+        public string ClientIdPatrizia { get; set; } = string.Empty;
+        public string LcIdImmerdar { get; set; } = string.Empty;
+        public string LcIdVogelsang { get; set; } = string.Empty;
+        public string OrderProposalIdGuenter { get; set; } = string.Empty;
+        public string OrderProposalIdPatrizia { get; set; } = string.Empty;
     }
 }

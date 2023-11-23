@@ -7,4 +7,5 @@
 /// </summary>
 internal class PharmacyInformationSystem : ActorSoftwareScaffold
 {
+    public PharmacyInformationSystem() : base(nameof(PharmacyInformationSystem)) { }
 }

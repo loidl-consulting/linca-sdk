@@ -10,17 +10,22 @@
  ***********************************************************************************/
 
 using Lc.Linca.Sdk.Sample.Resources;
+using Lc.Linca.Sdk.Scaffolds;
 using System.Security.Cryptography.X509Certificates;
 
 namespace Lc.Linca.Sdk.Client;
 
-internal class Program
+internal static class LinkedCareSampleClient
 {
     /// <summary>
     /// In SDK, this always points to the development system
     /// </summary>
     internal const string FhirServerBaseUrl = "https://fhir5-d.linkedcare.at";
     //internal const string FhirServerBaseUrl = "https://localhost:8084";
+
+    internal static CareInformationSystem CareInformationSystemScaffold = new();
+    internal static PractitionerInformationSystem PractitionerInformationSystemScaffold = new();
+    internal static PharmacyInformationSystem PharmacyInformationSystemScaffold = new();
 
     private const string CommandLineArgumentUseEmbeddedCert = "--use-embedded-cert";
     private const int ExitCodeCouldNotConnect = 0xaca1;

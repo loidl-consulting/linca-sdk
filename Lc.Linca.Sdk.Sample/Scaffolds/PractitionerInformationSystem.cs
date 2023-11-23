@@ -7,4 +7,5 @@
 /// </summary>
 internal class PractitionerInformationSystem : ActorSoftwareScaffold
 {
+    public PractitionerInformationSystem() : base(nameof(PractitionerInformationSystem)) { }
 }
