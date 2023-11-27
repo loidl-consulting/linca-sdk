@@ -33,6 +33,7 @@ internal class US003_MedOrderStationaryCare : Spec
     protected Patient createdPatrizia = new Patient();
     protected MedicationRequest medReq1 = new();
     protected MedicationRequest medReq2 = new();
+    protected MedicationRequest medReq3 = new();
 
 
     public US003_MedOrderStationaryCare(LincaConnection conn) : base(conn) 
@@ -135,6 +136,7 @@ internal class US003_MedOrderStationaryCare : Spec
 
         ro.Contained.Add(medReq1);
         ro.Contained.Add(medReq2);
+        ro.Contained.Add(medReq3);  
 
         foreach (var item in ro.Contained)
         {
@@ -167,7 +169,7 @@ internal class US003_MedOrderStationaryCare : Spec
     {
         LinkedCareSampleClient.CareInformationSystemScaffold.PseudoDatabaseRetrieve();
         
-        // medication request for Günter Gürtelthier
+        // medication request 1 for Günter Gürtelthier
         medReq1.Id = Guid.NewGuid().ToFhirId();                                  // REQUIRED
         medReq1.Status = MedicationRequest.MedicationrequestStatus.Unknown;      // REQUIRED
         medReq1.Intent = MedicationRequest.MedicationRequestIntent.Proposal;     // REQUIRED
@@ -235,15 +237,13 @@ internal class US003_MedOrderStationaryCare : Spec
             }
         };
 
-        /***********************************************************************************/
-
-        // medication request for Patricia Platypus
+        // medication request 2 for Günter Gürtelthier
         medReq2.Id = Guid.NewGuid().ToFhirId();                                  // REQUIRED
         medReq2.Status = MedicationRequest.MedicationrequestStatus.Unknown;      // REQUIRED
         medReq2.Intent = MedicationRequest.MedicationRequestIntent.Proposal;     // REQUIRED
         medReq2.Subject = new ResourceReference()                                // REQUIRED
         {
-            Reference = $"HL7ATCorePatient/{LinkedCareSampleClient.CareInformationSystemScaffold.Data.ClientIdPatrizia}"     // relative path to Linca Fhir patient resource
+            Reference = $"HL7ATCorePatient/{LinkedCareSampleClient.CareInformationSystemScaffold.Data.ClientIdGuenter}"     // relative path to Linca Fhir patient resource
         };
 
         medReq2.Medication = new()
@@ -254,9 +254,9 @@ internal class US003_MedOrderStationaryCare : Spec
                     {
                         new Coding()
                         {
-                            Code = "0028903",
+                            Code = "4460951",
                             System = "https://termgit.elga.gv.at/CodeSystem/asp-liste",
-                            Display = "Isoptin 80 mg - Dragees"
+                            Display = "Granpidam 20 mg Filmtabletten"
                         }
                     }
             }
@@ -286,13 +286,83 @@ internal class US003_MedOrderStationaryCare : Spec
         {
             Identifier = new()
             {
+                Value = "2.999.40.0.34.3.1.3",  // OID of designated practitioner 
+                System = "urn:oid:1.2.40.0.34.5.2"  // Code-System: eHVD
+            },
+            Display = "Dr. Silvia Spitzmaus"   // optional
+        });
+
+        medReq2.DispenseRequest = new()
+        {
+            Dispenser = new()
+            {
+                Identifier = new()
+                {
+                    Value = "2.999.40.0.34.5.1.2",  // OID of designated pharmacy
+                    System = "urn:oid:1.2.40.0.34.5.2"  // Code-System: eHVD
+                },
+                Display = "Apotheke 'Zum frühen Vogel'"
+            }
+        };
+
+        /***********************************************************************************/
+
+        // medication request for Patricia Platypus
+        medReq3.Id = Guid.NewGuid().ToFhirId();                                  // REQUIRED
+        medReq3.Status = MedicationRequest.MedicationrequestStatus.Unknown;      // REQUIRED
+        medReq3.Intent = MedicationRequest.MedicationRequestIntent.Proposal;     // REQUIRED
+        medReq3.Subject = new ResourceReference()                                // REQUIRED
+        {
+            Reference = $"HL7ATCorePatient/{LinkedCareSampleClient.CareInformationSystemScaffold.Data.ClientIdPatrizia}"     // relative path to Linca Fhir patient resource
+        };
+
+        medReq3.Medication = new()
+        {
+            Concept = new()
+            {
+                Coding = new()
+                    {
+                        new Coding()
+                        {
+                            Code = "0028903",
+                            System = "https://termgit.elga.gv.at/CodeSystem/asp-liste",
+                            Display = "Isoptin 80 mg - Dragees"
+                        }
+                    }
+            }
+        };
+
+        medReq3.InformationSource.Add(new ResourceReference()  // REQUIRED, cardinality 1..1 in LINCA
+        {
+            Identifier = new()
+            {
+                Value = "2.999.40.0.34.1.1.1",  // OID of the ordering care organization
+                System = "urn:oid:1.2.40.0.34.5.2"  // Code-System: eHVD
+            },
+            Display = "Haus Vogelsang"   // optional
+        });
+
+        medReq3.Requester = new ResourceReference()  // REQUIRED
+        {
+            Identifier = new()
+            {
+                Value = "ECHT_SPECHT",               // e.g., org internal username or handsign of Susanne Allzeit
+                System = "urn:oid:2.999.40.0.34.1.1.1"  // Code-System: Care-Org Pflegedienst Immerdar
+            },
+            Display = "DGKP Walter Specht"
+        };
+
+        medReq3.Performer.Add(new ResourceReference()   // REQUIRED, cardinality 1..1 in LINCA
+        {
+            Identifier = new()
+            {
                 Value = "2.999.40.0.34.3.1.2",  // OID of designated practitioner 
                 System = "urn:oid:1.2.40.0.34.5.2"  // Code-System: eHVD
             },
             Display = "Dr. Kunibert Kreuzotter"   // optional
         });
 
-        medReq2.DispenseRequest = new()
+        medReq3.DispenseRequest = new()
         {
             Dispenser = new()
             {

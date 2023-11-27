@@ -11,6 +11,7 @@
 
 using Hl7.Fhir.Model;
 using Hl7.Fhir.Specification;
+using Hl7.Fhir.Utility;
 using Lc.Linca.Sdk.Client;
 
 namespace Lc.Linca.Sdk.Specs.ActorCare;
@@ -54,7 +55,7 @@ internal class US004_UpdateOrder : Spec
                 }
             }
 
-            LinkedCareSampleClient.CareInformationSystemScaffold.Data.OrderProposalIdGuenter = proposals.Find(x => x.Subject.Reference.Contains($"{LinkedCareSampleClient.CareInformationSystemScaffold.Data.ClientIdGuenter}"))!.Id;
+            LinkedCareSampleClient.CareInformationSystemScaffold.Data.OrderProposalIdGuenter = proposals.Find(x => x.Medication.Concept.Coding.First().Display.Contains("Effortil") && x.Subject.Reference.Contains($"{LinkedCareSampleClient.CareInformationSystemScaffold.Data.ClientIdGuenter}"))!.Id;
             LinkedCareSampleClient.CareInformationSystemScaffold.PseudoDatabaseStore();
 
             // post order medication request for Günter Gürtelthier based on an existing order medication request

@@ -21,7 +21,7 @@ internal class US008_GetInitialPrescriptionsForClient : Spec
         Renate Rüssel-Olifant had a check-up with her general practitioner Dr. Wibke Würm and 
         got an initial prescription for new medication that she has not been taking so far. 
         Her caregiver Susanne Allzeit (DGKP) can see the new prescription for Renate Rüssel-Olifant 
-        on her mobile device and can pick the new medications at any pharmacy of her choice by presenting the
+        on her mobile device and can pick the new medication at any pharmacy of her choice by presenting the
         corresponding data matrix code";
 
 

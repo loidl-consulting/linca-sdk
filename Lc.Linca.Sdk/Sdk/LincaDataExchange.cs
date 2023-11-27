@@ -84,7 +84,7 @@ public static class LincaDataExchange
     }
 
     /// <summary>
-    /// Create a new Linked Care prescription
+    /// Create a LINCAPrescriptionsMedicationRequest: used to stop or end single order positions
     /// </summary>
     public static (MedicationRequest postedPMR, bool canCue) CreatePrescriptionMedicationRequest(LincaConnection connection, MedicationRequest pmr)
     {
@@ -93,6 +93,21 @@ public static class LincaDataExchange
         if (canCue)
         {
             return (postedPMR, true);
+        }
+
+        return (new(), false);
+    }
+
+    /// <summary>
+    /// Create a new LINCA prescription 
+    /// </summary>
+    public static (Bundle results, bool canCue) CreatePrescriptionBundle(LincaConnection connection, Bundle prescriptions)
+    {
+        (Bundle createdPrescriptions, bool canCue) = FhirDataExchange<Bundle>.CreateResourceBundle(connection, prescriptions, LincaEndpoints.prescription);
+
+        if (canCue)
+        {
+            return (createdPrescriptions, true);
         }
 
         return (new(), false);

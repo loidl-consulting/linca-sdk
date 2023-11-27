@@ -52,6 +52,38 @@ internal static class FhirDataExchange<T> where T : Resource, new()
         return (new(), false);
     }
 
+    /// <summary>
+    /// Posts a Bundle of R5 resources to the FHIR server, and returns the
+    /// new resource obtained as answer
+    /// </summary>
+    public static (T created, bool canCue) CreateResourceBundle(LincaConnection connection, T resource, string endpoint)
+    {
+        using var response = Send(connection, HttpMethod.Post, resource, endpoint);
+        if (response?.StatusCode == HttpStatusCode.Created)
+        {
+            //using var getResponse = Receive(connection, response.Headers.Location);
+            if (response != null)
+            {
+                var createdResourceRaw = new StreamReader
+                (
+                    response.Content.ReadAsStream()
+                ).ReadToEnd();
+
+                if (new FhirJsonPocoDeserializer().TryDeserializeResource
+                (
+                    createdResourceRaw,
+                    out Resource? parsedResource,
+                    out var _
+                ) && parsedResource is T createdResource)
+                {
+                    return (createdResource, true);
+                }
+            }
+        }
+
+        return (new(), false);
+    }
+
     public static (Bundle received, bool canCue) GetResource(LincaConnection connection, string operationQuery)
     {
         using var getResponse = Receive(connection, operationQuery);
