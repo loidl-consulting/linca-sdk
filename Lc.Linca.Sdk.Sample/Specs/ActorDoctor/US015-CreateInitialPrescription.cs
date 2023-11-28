@@ -22,10 +22,11 @@ internal class US015_CreateInitialPrescription : Spec
 {
     public const string UserStory = @"
         Renate Rüssel-Olifant had a check-up with her general practitioner Dr. Wibke Würm. 
-        Dr. Würm sees the need for Renate Rüssel-Olifant to take two drugs she has not been taking so far. 
-        So, Dr. Würm creates an initial prescription for Renate Rüssel-Olifant and sends it to the LINCA system.";
+        Dr. Würm decides to prescribe new medication for Renate Rüssel-Olifant she has not been taking so far. 
+        So, Dr. Würm creates an initial prescription for Renate Rüssel-Olifant for two products and sends it to the LINCA system.";
 
-    MedicationRequest initialPresc = new();
+    MedicationRequest initialPresc1 = new();
+    MedicationRequest initialPresc2 = new();
 
     public US015_CreateInitialPrescription(LincaConnection conn) : base(conn)
     {
@@ -37,9 +38,10 @@ internal class US015_CreateInitialPrescription : Spec
 
     private bool CreateInitialPrescriptionRecord()
     {
-        initialPresc.Status = MedicationRequest.MedicationrequestStatus.Active;             // REQUIRED
-        initialPresc.Intent = MedicationRequest.MedicationRequestIntent.OriginalOrder;      // REQUIRED
-        initialPresc.Subject = new ResourceReference()                                      // REQUIRED
+        // Linca Prescription Medication Request for drug 1
+        initialPresc1.Status = MedicationRequest.MedicationrequestStatus.Active;             // REQUIRED
+        initialPresc1.Intent = MedicationRequest.MedicationRequestIntent.OriginalOrder;      // REQUIRED
+        initialPresc1.Subject = new ResourceReference()                                      // REQUIRED
         {
             Identifier = new Identifier()
             {
@@ -49,7 +51,7 @@ internal class US015_CreateInitialPrescription : Spec
             Display = "Renate Rüssel-Olifant"
         };
 
-        initialPresc.Medication = new()
+        initialPresc1.Medication = new()
         {
             Concept = new()
             {
@@ -65,7 +67,7 @@ internal class US015_CreateInitialPrescription : Spec
             }
         };
 
-        initialPresc.DosageInstruction.Add(new Dosage()
+        initialPresc1.DosageInstruction.Add(new Dosage()
         {
             Sequence = 1,
             Text = "0-0-1-0",
@@ -93,7 +95,7 @@ internal class US015_CreateInitialPrescription : Spec
             }
         });
 
-        initialPresc.InformationSource.Add(new ResourceReference()   // REQUIRED, cardinality 1..1 in LINCA
+        initialPresc1.InformationSource.Add(new ResourceReference()   // REQUIRED, cardinality 1..1 in LINCA
         {
             Identifier = new()
             {
@@ -103,7 +105,7 @@ internal class US015_CreateInitialPrescription : Spec
             Display = "Dr. Wibke Würm"   // optional
         });
 
-        initialPresc.Performer.Add(new ResourceReference()   // REQUIRED, cardinality 1..1 in LINCA
+        initialPresc1.Performer.Add(new ResourceReference()   // REQUIRED, cardinality 1..1 in LINCA
         {
             Identifier = new()
             {
@@ -113,25 +115,94 @@ internal class US015_CreateInitialPrescription : Spec
             Display = "Dr. Wibke Würm"   // optional
         });
 
-        initialPresc.Identifier.Add(new Identifier()
+        initialPresc1.Identifier.Add(new Identifier()
         {
             Value = "1231 RSTO 345G",
             System = "urn:oid:1.2.40.0.10.1.4.3.4.2.1"    // OID: eMed-Id
         });
 
-        initialPresc.GroupIdentifier = new()
+        initialPresc1.GroupIdentifier = new()
         {
             Value = "WABI 0001 VVCC",
             System = "urn:oid:1.2.40.0.10.1.4.3.3"       // OID: Rezeptnummer
         };
 
+        // Linca Prescription Medication Request for drug 2
+        initialPresc2.Status = MedicationRequest.MedicationrequestStatus.Active;             // REQUIRED
+        initialPresc2.Intent = MedicationRequest.MedicationRequestIntent.OriginalOrder;      // REQUIRED
+        initialPresc2.Subject = new ResourceReference()                                      // REQUIRED
+        {
+            Identifier = new Identifier()
+            {
+                Value = "1238100866",
+                System = Constants.WellknownOidSocialInsuranceNr
+            },
+            Display = "Renate Rüssel-Olifant"
+        };
+
+        initialPresc2.Medication = new()
+        {
+            Concept = new()
+            {
+                Coding = new()
+                    {
+                        new Coding()
+                        {
+                            Code = "4450562",
+                            System = "https://termgit.elga.gv.at/CodeSystem/asp-liste",
+                            Display = "Luxerm 160 mg/g Creme"
+                        }
+                    }
+            }
+        };
+
+        initialPresc2.DosageInstruction.Add(new Dosage()
+        {
+            Text = "morgens und abends auf die betroffene Stelle auftragen",
+        });
+
+        initialPresc2.InformationSource.Add(new ResourceReference()   // REQUIRED, cardinality 1..1 in LINCA
+        {
+            Identifier = new()
+            {
+                Value = "2.999.40.0.34.3.1.1",  // OID of designated practitioner 
+                System = "urn:oid:1.2.40.0.34"  // Code-System: eHVD
+            },
+            Display = "Dr. Wibke Würm"   // optional
+        });
+
+        initialPresc2.Performer.Add(new ResourceReference()   // REQUIRED, cardinality 1..1 in LINCA
+        {
+            Identifier = new()
+            {
+                Value = "2.999.40.0.34.3.1.1",  // OID of designated practitioner 
+                System = "urn:oid:1.2.40.0.34"  // Code-System: eHVD
+            },
+            Display = "Dr. Wibke Würm"   // optional
+        });
+
+        initialPresc2.Identifier.Add(new Identifier()
+        {
+            Value = "1231 RSTO 345G",
+            System = "urn:oid:1.2.40.0.10.1.4.3.4.2.1"    // OID: eMed-Id
+        });
+
+        initialPresc2.GroupIdentifier = new()
+        {
+            Value = "WABI 0001 VVCC",
+            System = "urn:oid:1.2.40.0.10.1.4.3.3"       // OID: Rezeptnummer
+        };
+
+
+        /***** add the Linca Prescription Medication Requests to a Bundle for transaction ****************/
         Bundle prescriptions = new()
         {
             Type = Bundle.BundleType.Transaction
         };
 
         prescriptions.Entry = new();
-        prescriptions.AddResourceEntry(initialPresc, $"{Connection.ServerBaseUrl}/{LincaEndpoints.LINCAPrescriptionMedicationRequest}");
+        prescriptions.AddResourceEntry(initialPresc1, $"{Connection.ServerBaseUrl}/{LincaEndpoints.LINCAPrescriptionMedicationRequest}");
+        prescriptions.AddResourceEntry(initialPresc2, $"{Connection.ServerBaseUrl}/{LincaEndpoints.LINCAPrescriptionMedicationRequest}");
 
         (Bundle results, var canCue) = LincaDataExchange.CreatePrescriptionBundle(Connection, prescriptions);
 

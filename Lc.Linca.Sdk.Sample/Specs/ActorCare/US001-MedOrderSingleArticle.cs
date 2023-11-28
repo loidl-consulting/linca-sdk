@@ -161,7 +161,7 @@ internal class US001_MedOrderSingleArticle : Spec
         RequestOrchestration ro = new()
         {
             Status = RequestStatus.Active,      // REQUIRED
-            Intent = RequestIntent.Proposal,       // REQUIRED
+            Intent = RequestIntent.Proposal,    // REQUIRED
             Subject = new ResourceReference()   // REQUIRED
             {
                 Identifier = new()

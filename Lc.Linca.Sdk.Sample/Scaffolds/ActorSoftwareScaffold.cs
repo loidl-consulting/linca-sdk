@@ -56,5 +56,6 @@ internal abstract class ActorSoftwareScaffold
         public string UpdateOrderProposalGuenter { get; set; } = string.Empty;
         public string CancelledOrderProposalPatricia { get; set; } = string.Empty;
         public string PrescriptionWithChangesGuenter { get; set; } = string.Empty;
+        public string PrescriptionIdRenateLuxerm { get; set; } = string.Empty;
     }
 }

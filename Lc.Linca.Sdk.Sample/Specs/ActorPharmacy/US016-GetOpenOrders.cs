@@ -40,6 +40,11 @@ internal class US016_GetOpenOrders : Spec
         if (received)
         {
             Console.WriteLine($"Get prescriptions-to-dispense succeeded");
+
+            foreach (var item in results.Entry)
+            {
+                Console.WriteLine(item.FullUrl);
+            }
         }
         else
         {

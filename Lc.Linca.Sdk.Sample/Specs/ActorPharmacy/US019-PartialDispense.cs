@@ -9,6 +9,11 @@
  * The Linked Care project is co-funded by the Austrian FFG
  ***********************************************************************************/
 
+using Hl7.Fhir.Model;
+using Lc.Linca.Sdk;
+using Lc.Linca.Sdk.Client;
+using static System.Net.Mime.MediaTypeNames;
+
 namespace Lc.Linca.Sdk.Specs.ActorPharmacy;
 
 internal class US019_PartialDispense : Spec
@@ -23,5 +28,116 @@ internal class US019_PartialDispense : Spec
           and his software will send that to the LINCA server,
           and notify the ordering organization, Pflegedienst Immerdar, about the partial dispense.";
 
-    public US019_PartialDispense(LincaConnection conn) : base(conn) { }
+    protected MedicationDispense dispense = new();
+
+    public US019_PartialDispense(LincaConnection conn) : base(conn)
+    {
+        Steps = new Step[]
+        {
+            new ("Dispense prescription partially", CreatePartialDispense)
+        };
+    }
+
+    private bool CreatePartialDispense()
+    {
+        (Bundle results, bool received) = LincaDataExchange.GetPrescriptionToDispense(Connection, "WABI 0001 VVCC");
+
+        if (received)
+        {
+            List<MedicationRequest> prescriptions = new List<MedicationRequest>();
+
+            foreach (var item in results.Entry)
+            {
+                if (item.FullUrl.Contains("LINCAPrescription"))
+                {
+                    prescriptions.Add((item.Resource as MedicationRequest)!);
+                }
+            }
+
+            LinkedCareSampleClient.CareInformationSystemScaffold.Data.PrescriptionIdRenateLuxerm = prescriptions.Find(x => x.Medication.Concept.Coding.First().Display.Contains("Luxerm"))!.Id;
+            LinkedCareSampleClient.CareInformationSystemScaffold.PseudoDatabaseStore();
+
+            if (! string.IsNullOrEmpty(LinkedCareSampleClient.CareInformationSystemScaffold.Data.PrescriptionIdRenateLuxerm))
+            {
+                dispense.AuthorizingPrescription.Add(new()
+                {
+                    Reference = $"LINCAPrescriptionMedicationRequest/{LinkedCareSampleClient.CareInformationSystemScaffold.Data.PrescriptionIdRenateLuxerm}"
+                });
+
+                dispense.Status = MedicationDispense.MedicationDispenseStatusCodes.Completed;
+                dispense.Subject = new ResourceReference()                                
+                {
+                    Identifier = new Identifier()
+                    {
+                        Value = "1238100866",
+                        System = Constants.WellknownOidSocialInsuranceNr
+                    },
+                    Display = "Renate Rüssel-Olifant"
+                };
+
+                dispense.Medication = new()
+                {
+                    Concept = new()
+                    {
+                        Coding = new()
+                    {
+                        new Coding()
+                        {
+                            Code = "4450562",
+                            System = "https://termgit.elga.gv.at/CodeSystem/asp-liste",
+                            Display = "Luxerm 160 mg/g Creme"
+                        }
+                    }
+                    }
+                };
+
+                dispense.DosageInstruction.Add(new Dosage()
+                {
+                    Text = "morgens und abends auf die betroffene Stelle auftragen",
+                });
+
+                dispense.Performer.Add(new()
+                {
+                    Actor = new()
+                    {
+                        Identifier = new()
+                        {
+                            Value = "2.999.40.0.34.5.1.2",  // OID of dispensing pharmacy
+                            System = "urn:oid:1.2.40.0.34.5.2"  // Code-System: eHVD
+                        },
+                        Display = "Apotheke 'Zum frühen Vogel'"
+                    }
+                });
+
+                dispense.Type = new()
+                {
+                    Coding = new()
+            {
+                new Coding(system: "http://terminology.hl7.org/CodeSystem/v3-ActCode", code: "FFP")
+            }
+                };
+
+                (var postedMD, var canCue) = LincaDataExchange.CreateMedicationDispense(Connection, dispense);
+
+                if (canCue)
+                {
+                    Console.WriteLine($"Linca MedicationDispense (type partial dispense) transmitted, id {postedMD.Id}");
+                }
+
+                return canCue;
+            }
+            else
+            {
+                Console.WriteLine($"Initial prescription (Luxerm for Renate Rüssel-Oilfant) not found, run US015 first");
+
+                return false;
+            }
+        }
+        else
+        {
+            Console.WriteLine($"Get prescription-to-dispense failed");
+
+            return false;
+        }
+    }
 }
