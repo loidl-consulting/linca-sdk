@@ -39,15 +39,11 @@ internal class US006_CancelOrderCompletely : Spec
     {
         LinkedCareSampleClient.CareInformationSystemScaffold.PseudoDatabaseRetrieve();
 
-        var deleted = LincaDataExchange.DeleteRequestOrchestration(Connection, $"{LinkedCareSampleClient.CareInformationSystemScaffold.Data.LcIdVogelsang}");
+        (var oo, var deleted) = LincaDataExchange.DeleteRequestOrchestration(Connection, $"{LinkedCareSampleClient.CareInformationSystemScaffold.Data.LcIdVogelsang}");
 
-        if (deleted)
+        foreach (var item in oo.Issue)
         {
-            Console.WriteLine($"Linca Request Orchestration successfully (partially) deleted");
-        }
-        else
-        {
-            Console.WriteLine($"Failed to delete Linca Request Orchestration");
+            Console.WriteLine($"Details: {item.Details.Text}");
         }
 
         return deleted;

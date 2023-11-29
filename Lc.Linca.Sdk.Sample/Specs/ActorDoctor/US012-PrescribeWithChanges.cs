@@ -148,11 +148,7 @@ internal class US012_PrescribeWithChanges : Spec
             {
                 Console.WriteLine($"Linca PrescriptionMedicationRequestBundle transmitted, created Linca PrescriptionMedicationRequests");
 
-                foreach (var item in results.Entry)
-                {
-                    Console.WriteLine(item.FullUrl);
-                    LinkedCareSampleClient.CareInformationSystemScaffold.Data.PrescriptionWithChangesGuenter = item.Resource.Id;
-                }
+                BundleViewer.ShowOrderChains(results);
             }
             else
             {

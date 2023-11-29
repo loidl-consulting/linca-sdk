@@ -38,6 +38,8 @@ internal class US013_ModifyPrescribedDosage : Spec
 
     private bool CreatePrescriptionRecord()
     {
+        LinkedCareSampleClient.CareInformationSystemScaffold.PseudoDatabaseRetrieve();
+
         if (!string.IsNullOrEmpty(LinkedCareSampleClient.CareInformationSystemScaffold.Data.PrescriptionWithChangesGuenter))
         {
             prescription.PriorPrescription = new()

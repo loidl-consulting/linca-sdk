@@ -12,6 +12,7 @@
 using Hl7.Fhir.Model;
 using Hl7.Fhir.Model.Extensions;
 using Hl7.Fhir.Serialization;
+using Hl7.Fhir.Specification;
 using Hl7.Fhir.Support;
 using System.Net;
 
@@ -110,16 +111,42 @@ internal static class FhirDataExchange<T> where T : Resource, new()
         return (new(), false);
     }
 
-    public static bool DeleteResource(LincaConnection connection, string id, string endpoint)
+    public static (OperationOutcome received, bool canCue) DeleteResource(LincaConnection connection, string id, string endpoint)
     {
         using var response = Send(connection, HttpMethod.Delete, id, endpoint);
-        if (response?.StatusCode == HttpStatusCode.OK)
+
+        if (response != null)
         {
-            return true;
+            var receivedResourceRaw = new StreamReader
+                (
+                    response.Content.ReadAsStream()
+                ).ReadToEnd();
+
+
+            if (new FhirJsonPocoDeserializer().TryDeserializeResource
+            (
+                receivedResourceRaw,
+                out Resource? parsedResource,
+                out var issues
+            ) && parsedResource is OperationOutcome receivedResource)
+            {
+                if (response?.StatusCode == HttpStatusCode.OK)
+                {
+                    return (receivedResource, true) ;
+                }
+                else
+                {
+                    return (receivedResource, false);
+                }
+            }
+            else 
+            { 
+                return (new(), false); 
+            }
         }
         else
         {
-            return false;
+            return (new(), false);
         }
     }
 

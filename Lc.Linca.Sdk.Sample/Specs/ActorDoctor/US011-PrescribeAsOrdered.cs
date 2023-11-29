@@ -54,20 +54,29 @@ internal class US011_PrescribeAsOrdered : Spec
                 }
             }
 
-            LinkedCareSampleClient.CareInformationSystemScaffold.Data.OrderProposalIdRenateAtWuerm = proposals.Find(x => x.Subject.Reference.Contains($"{LinkedCareSampleClient.CareInformationSystemScaffold.Data.ClientIdRenate}"))!.Id;
-            LinkedCareSampleClient.CareInformationSystemScaffold.PseudoDatabaseStore();
+            MedicationRequest? orderProposalRenate = proposals.Find(x => x.Subject.Display.Contains("Renate"));
+            
+            if (orderProposalRenate != null)
+            {
+                LinkedCareSampleClient.CareInformationSystemScaffold.Data.OrderProposalIdRenateLasix = orderProposalRenate.Id;
+                LinkedCareSampleClient.CareInformationSystemScaffold.PseudoDatabaseStore();
+            }
+            else
+            {
+                Console.WriteLine($"ProposalMedicationRequest for Renate Rüssel-Olifant not found");
+
+                return false;
+            }
+
 
             prescription.BasedOn.Add(new()
             {
-                Reference = $"LINCAProposalMedicationRequest/{LinkedCareSampleClient.CareInformationSystemScaffold.Data.OrderProposalIdRenateAtWuerm}"
+                Reference = $"LINCAProposalMedicationRequest/{LinkedCareSampleClient.CareInformationSystemScaffold.Data.OrderProposalIdRenateLasix}"
             });
 
             prescription.Status = MedicationRequest.MedicationrequestStatus.Active;    // REQUIRED
             prescription.Intent = MedicationRequest.MedicationRequestIntent.Order;     // REQUIRED
-            prescription.Subject = new ResourceReference()                             // REQUIRED
-            {
-                Reference = $"HL7ATCorePatient/{LinkedCareSampleClient.CareInformationSystemScaffold.Data.ClientIdRenate}"     // relative path to Linca Fhir patient resource
-            };
+            prescription.Subject = orderProposalRenate!.Subject;
 
             prescription.Medication = new()
             {
@@ -153,20 +162,19 @@ internal class US011_PrescribeAsOrdered : Spec
             {
                 Console.WriteLine($"Linca PrescriptionMedicationRequestBundle transmitted, created Linca PrescriptionMedicationRequests");
 
-                foreach (var item in results.Entry)
-                {
-                    Console.WriteLine(item.FullUrl);
-                }
+                BundleViewer.ShowOrderChains(results);  
+
             }
             else
             {
                 Console.WriteLine($"Failed to transmit Linca PrescriptionMedicationRequestBundle");
             }
+
             return canCue;
         }
         else
         {
-            Console.WriteLine($"Failed to receive ProposalMedicationRequest for Renate Rüssel-Olifant");
+            Console.WriteLine($"Failed to receive ProposalMedicationRequests");
 
             return false;
         }

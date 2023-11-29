@@ -56,6 +56,8 @@ internal class US010_CancelPrescriptionPosition : Spec
                 }
             }
 
+            MedicationRequest? bisoprololForRenate = proposals.Find(x => x.Subject.Reference.Contains(""));
+
             LinkedCareSampleClient.CareInformationSystemScaffold.Data.OrderProposalIdRenateAtKreuzotter = proposals.Find(x => x.Subject.Reference.Contains($"{LinkedCareSampleClient.CareInformationSystemScaffold.Data.ClientIdRenate}"))!.Id;
             LinkedCareSampleClient.CareInformationSystemScaffold.PseudoDatabaseStore();
 

@@ -41,10 +41,7 @@ internal class US016_GetOpenOrders : Spec
         {
             Console.WriteLine($"Get prescriptions-to-dispense succeeded");
 
-            foreach (var item in results.Entry)
-            {
-                Console.WriteLine(item.FullUrl);
-            }
+            BundleViewer.ShowOrderChains(results);
         }
         else
         {

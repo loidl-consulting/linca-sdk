@@ -49,13 +49,14 @@ internal abstract class ActorSoftwareScaffold
         public string LcIdImmerdar002 { get; set; } = string.Empty;
         public string LcIdVogelsang { get; set; } = string.Empty;
         public string OrderProposalIdRenateAtKreuzotter { get; set; } = string.Empty;
-        public string OrderProposalIdRenateAtWuerm { get; set; } = string.Empty;
+        public string OrderProposalIdRenateLasix { get; set; } = string.Empty;
         public string OrderProposalIdGuenter { get; set; } = string.Empty;
         public string OrderProposalIdGuenterGranpidam { get; set; } = string.Empty;
         public string OrderProposalIdPatrizia { get; set; } = string.Empty;
         public string UpdateOrderProposalGuenter { get; set; } = string.Empty;
         public string CancelledOrderProposalPatricia { get; set; } = string.Empty;
         public string PrescriptionWithChangesGuenter { get; set; } = string.Empty;
+        public string PrescriptionIdRenateLasix { get; set; } = string.Empty;
         public string PrescriptionIdRenateLuxerm { get; set; } = string.Empty;
     }
 }

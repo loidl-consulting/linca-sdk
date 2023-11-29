@@ -131,16 +131,9 @@ public static class LincaDataExchange
     /// <summary>
     /// Revoke a Linked Care request orchestration and cancel all contained order positions
     /// </summary>
-    public static bool DeleteRequestOrchestration(LincaConnection connection, string id)
+    public static (OperationOutcome oo, bool deleted) DeleteRequestOrchestration(LincaConnection connection, string id)
     {
-        var deleted = FhirDataExchange<RequestOrchestration>.DeleteResource(connection, id, LincaEndpoints.LINCARequestOrchestration);
-
-        if (deleted)
-        {
-            return true;
-        }
-
-        return false;
+        return FhirDataExchange<RequestOrchestration>.DeleteResource(connection, id, LincaEndpoints.LINCARequestOrchestration);
     }
 
     /// <summary>

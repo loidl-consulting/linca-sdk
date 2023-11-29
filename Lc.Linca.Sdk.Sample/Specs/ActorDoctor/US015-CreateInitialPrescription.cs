@@ -210,10 +210,7 @@ internal class US015_CreateInitialPrescription : Spec
         {
             Console.WriteLine($"Linca PrescriptionMedicationRequestBundle transmitted, created Linca PrescriptionMedicationRequests");
 
-            foreach (var item in results.Entry)
-            {
-                Console.WriteLine(item.FullUrl);
-            }
+            BundleViewer.ShowOrderChains(results);
         }
         else
         {
