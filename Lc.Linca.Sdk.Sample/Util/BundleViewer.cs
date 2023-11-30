@@ -60,7 +60,7 @@ public static class BundleViewer
             }
             else if (item.PriorPrescription != null) 
             {
-                Console.WriteLine($"Prescription Id: {item.Id} --> refers to prior prescription: {item.BasedOn.First().Reference}");
+                Console.WriteLine($"Prescription Id: {item.Id} --> refers to prior prescription: {item.PriorPrescription.Reference}");
             }
             else
             {

@@ -56,11 +56,20 @@ internal class US010_CancelPrescriptionPosition : Spec
                 }
             }
 
-            MedicationRequest? bisoprololForRenate = proposals.Find(x => x.Subject.Reference.Contains(""));
+            MedicationRequest? bisoprololForRenate = proposals.Find(x => x.Medication.Concept.Coding.First().Display.Contains("Bisoprolol"));
 
-            LinkedCareSampleClient.CareInformationSystemScaffold.Data.OrderProposalIdRenateAtKreuzotter = proposals.Find(x => x.Subject.Reference.Contains($"{LinkedCareSampleClient.CareInformationSystemScaffold.Data.ClientIdRenate}"))!.Id;
-            LinkedCareSampleClient.CareInformationSystemScaffold.PseudoDatabaseStore();
+            if (bisoprololForRenate != null)
+            {
+                LinkedCareSampleClient.CareInformationSystemScaffold.Data.OrderProposalIdRenateAtKreuzotter = bisoprololForRenate.Id;
+                LinkedCareSampleClient.CareInformationSystemScaffold.PseudoDatabaseStore();
+            }
+            else
+            {
+                Console.WriteLine("Order proposal for Renate Rüssel-Olifant (Med. Bisoprolol) not found");
 
+                return false;
+            }
+            
             medReq.BasedOn.Add(new ResourceReference()
             {
                 Reference = $"LINCAProposalMedicationRequest/{LinkedCareSampleClient.CareInformationSystemScaffold.Data.OrderProposalIdRenateAtKreuzotter}"
@@ -68,11 +77,7 @@ internal class US010_CancelPrescriptionPosition : Spec
 
             medReq.Status = MedicationRequest.MedicationrequestStatus.Stopped;    // REQUIRED
             medReq.Intent = MedicationRequest.MedicationRequestIntent.Order;      // REQUIRED
-            medReq.Subject = new ResourceReference()                              // REQUIRED
-            {
-                // relative path to Linca Fhir patient resource
-                Reference = $"HL7ATCorePatient/{LinkedCareSampleClient.CareInformationSystemScaffold.Data.ClientIdRenate}"
-            };
+            medReq.Subject = bisoprololForRenate.Subject;                           
 
             medReq.Medication = new()
             {

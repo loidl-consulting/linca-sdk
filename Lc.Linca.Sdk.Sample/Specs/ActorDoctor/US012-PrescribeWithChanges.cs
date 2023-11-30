@@ -146,7 +146,9 @@ internal class US012_PrescribeWithChanges : Spec
 
             if (canCue)
             {
-                Console.WriteLine($"Linca PrescriptionMedicationRequestBundle transmitted, created Linca PrescriptionMedicationRequests");
+                Console.WriteLine($"Linca PrescriptionMedicationRequestBundle transmitted, created Linca PrescriptionMedicationRequest");
+                LinkedCareSampleClient.CareInformationSystemScaffold.Data.PrescriptionWithChangesGuenter = results.Entry.First().Resource.Id;
+                LinkedCareSampleClient.CareInformationSystemScaffold.PseudoDatabaseStore();
 
                 BundleViewer.ShowOrderChains(results);
             }
