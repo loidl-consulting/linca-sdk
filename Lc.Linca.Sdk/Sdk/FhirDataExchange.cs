@@ -27,10 +27,22 @@ internal static class FhirDataExchange<T> where T : Resource, new()
     /// </summary>
     public static (T created, bool canCue) CreateResource(LincaConnection connection, T resource, string endpoint)
     {
-        using var response = Send(connection, HttpMethod.Post, resource, endpoint);
+        HttpResponseMessage? response = new();
+
+        if (string.IsNullOrEmpty(resource.Id))
+        {
+            response = Send(connection, HttpMethod.Post, resource, endpoint);
+        }
+        else
+        {
+            response = Send(connection, HttpMethod.Put, resource, endpoint);
+        }
+        
         if (response?.StatusCode == HttpStatusCode.Created)
         {
             using var getResponse = Receive(connection, response.Headers.Location);
+            response.Dispose();
+
             if (getResponse != null)
             {
                 var createdResourceRaw = new StreamReader
@@ -209,11 +221,24 @@ internal static class FhirDataExchange<T> where T : Resource, new()
         for (; ; )
         {
             using var http = connection.GetAuthenticatedClient();
-            var request = new HttpRequestMessage
-            (
-                method,
-                $"{connection.ServerBaseUrl}/{endpoint}"
-            );
+            HttpRequestMessage request;
+
+            if (string.IsNullOrEmpty(resource.Id))
+            {
+                request = new HttpRequestMessage
+                (
+                    method,
+                    $"{connection.ServerBaseUrl}/{endpoint}"
+                );
+            }
+            else
+            {
+                request = new HttpRequestMessage
+                (
+                    method,
+                    $"{connection.ServerBaseUrl}/{endpoint}/{resource.Id}"
+                );
+            }
 
             var fhirJson = resource.ToJson();
 
