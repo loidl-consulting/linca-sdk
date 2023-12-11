@@ -42,7 +42,7 @@ internal class US008_GetInitialPrescriptionsForClient : Spec
         if (received)
         {
             Console.WriteLine("Get initial prescriptions succeeded");
-            BundleViewer.ShowOrderChains(results);
+            BundleHelper.ShowOrderChains(results);
         }
         else
         {

@@ -54,7 +54,7 @@ internal class US013_ModifyPrescribedDosage : Spec
                 Reference = $"HL7ATCorePatient/{LinkedCareSampleClient.CareInformationSystemScaffold.Data.ClientIdGuenter}"     // relative path to Linca Fhir patient resource, copy from order
             };
 
-            prescription.Medication = new() // the doctor changes the medication to a ready-to-use ointment
+            prescription.Medication = new() 
             {
                 Concept = new()
                 {
@@ -75,9 +75,9 @@ internal class US013_ModifyPrescribedDosage : Spec
                 Text = "täglich morgens und abends auf die betroffene Stelle auftragen"
             });
 
-            // prescription.InformationSource           // will be copied from reference in basedOn
-            // prescription.Requester                   // will be copied from reference in basedOn
-            // prescription.DispenseRequest.Dispenser   // will be copied from reference in basedOn, if available
+            // prescription.InformationSource           // will be copied from reference in priorPrescription
+            // prescription.Requester                   // will be copied from reference in priorPrescription
+            // prescription.DispenseRequest.Dispenser   // will be copied from reference in priorPrescription, if available
 
             prescription.Performer.Add(new ResourceReference()   // REQUIRED, cardinality 1..1 in LINCA
             {
@@ -116,7 +116,8 @@ internal class US013_ModifyPrescribedDosage : Spec
         }
         else 
         {
-            Console.WriteLine($"Linca PrescriptionMedicationRequest for Guenter has not been created before");
+            Console.WriteLine($"Linca PrescriptionMedicationRequest for Guenter not found, run US012 first");
+
             return false;
         }
     }

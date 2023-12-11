@@ -44,17 +44,9 @@ internal class US011_PrescribeAsOrdered : Spec
 
         if (received)
         {
-            List<MedicationRequest> proposals = new List<MedicationRequest>();
+            List<MedicationRequest> proposalsToPrescribe = BundleHelper.FilterProposalsToPrescribe(orders);
 
-            foreach (var item in orders.Entry)
-            {
-                if (item.FullUrl.Contains("LINCAProposal"))
-                {
-                    proposals.Add((item.Resource as MedicationRequest)!);
-                }
-            }
-
-            MedicationRequest? orderProposalRenate = proposals.Find(x => x.Subject.Display.Contains("Renate"));
+            MedicationRequest? orderProposalRenate = proposalsToPrescribe.Find(x => x.Subject.Display.Contains("Renate") && x.Medication.Concept.Coding.First().Display.Contains("Lasix"));
             
             if (orderProposalRenate != null)
             {
@@ -63,7 +55,7 @@ internal class US011_PrescribeAsOrdered : Spec
             }
             else
             {
-                Console.WriteLine($"ProposalMedicationRequest for Renate Rüssel-Olifant not found");
+                Console.WriteLine($"Linca ProposalMedicationRequest for Renate Rüssel-Olifant not found, or it was already processed, prescription cannot be created");
 
                 return false;
             }
@@ -150,10 +142,10 @@ internal class US011_PrescribeAsOrdered : Spec
 
             Bundle prescriptions = new()
             {
-                Type = Bundle.BundleType.Transaction
+                Type = Bundle.BundleType.Transaction,
+                Entry = new()
             };
 
-            prescriptions.Entry = new();
             prescriptions.AddResourceEntry(prescription, $"{Connection.ServerBaseUrl}/{LincaEndpoints.LINCAPrescriptionMedicationRequest}");
 
             (Bundle results, var canCue) = LincaDataExchange.CreatePrescriptionBundle(Connection, prescriptions);
@@ -162,7 +154,7 @@ internal class US011_PrescribeAsOrdered : Spec
             {
                 Console.WriteLine($"Linca PrescriptionMedicationRequestBundle transmitted, created Linca PrescriptionMedicationRequests");
 
-                BundleViewer.ShowOrderChains(results);  
+                BundleHelper.ShowOrderChains(results);  
 
             }
             else

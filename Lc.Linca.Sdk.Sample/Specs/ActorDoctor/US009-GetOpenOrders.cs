@@ -43,7 +43,7 @@ internal class US009_GetOpenOrders : Spec
         {
             Console.WriteLine($"Get proposals-to-prescribe succeeded");
 
-            BundleViewer.ShowOrderChains(results);
+            BundleHelper.ShowOrderChains(results);
         }
         else
         {

@@ -41,7 +41,7 @@ internal class US017_GetOrderPositionInfo : Spec
         {
             Console.WriteLine($"Get prescription-to-dispense succeeded");
 
-            BundleViewer.ShowOrderChains(results);
+            BundleHelper.ShowOrderChains(results);
         }
         else
         {

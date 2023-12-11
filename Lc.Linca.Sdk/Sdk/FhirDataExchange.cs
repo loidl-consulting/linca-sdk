@@ -21,21 +21,46 @@ namespace Lc.Linca.Sdk;
 internal static class FhirDataExchange<T> where T : Resource, new()
 {
     /// <summary>
+    /// Deprecated, for backward compatibility
+    /// </summary>
+    public static (T created, bool canCue) CreateResource(LincaConnection connection, T resource, string overwriteResourceName)
+    {
+        (var created, var cancue, _) = CreateResourceWithOutcome(connection, resource, overwriteResourceName);
+
+        return (created, cancue);
+    }
+
+    /// <summary>
     /// Posts an R5 resource to the FHIR server, reads back the 
     /// REST entity location from the response, and returns the
     /// new resource obtained from there
     /// </summary>
-    public static (T created, bool canCue) CreateResource(LincaConnection connection, T resource, string endpoint)
+    public static (T created, bool canCue, OperationOutcome? outcome) CreateResourceWithOutcome(LincaConnection connection, T resource, string? overwriteResourceName = null)
     {
-        HttpResponseMessage? response = new();
+        HttpResponseMessage? response;
+
+        if (overwriteResourceName == null)
+        {
+            if (resource is MedicationRequest)
+            {
+                Console.WriteLine("Create resource MedicationRequest requires additional parameter overwriteResourceName");
+
+                return (new(), false, null);
+            }
+            else
+            {
+                overwriteResourceName = LincaEndpoints.GetProfiledResourceName(resource);
+            }
+
+        }
 
         if (string.IsNullOrEmpty(resource.Id))
         {
-            response = Send(connection, HttpMethod.Post, resource, endpoint);
+            response = Send(connection, HttpMethod.Post, resource, overwriteResourceName);
         }
         else
         {
-            response = Send(connection, HttpMethod.Put, resource, endpoint);
+            response = Send(connection, HttpMethod.Put, resource, overwriteResourceName);
         }
         
         if (response?.StatusCode == HttpStatusCode.Created)
@@ -57,24 +82,42 @@ internal static class FhirDataExchange<T> where T : Resource, new()
                     out var _
                 ) && parsedResource is T createdResource)
                 {
-                    return (createdResource, true);
+                    return (createdResource, true, null);
                 }
             }
         }
+        else if (response != null)
+        {
+            var receivedResourceRaw = new StreamReader
+                (
+                    response.Content.ReadAsStream()
+                ).ReadToEnd();
 
-        return (new(), false);
+
+            if (new FhirJsonPocoDeserializer().TryDeserializeResource
+            (
+                receivedResourceRaw,
+                out Resource? parsedResource,
+                out var _
+            ) && parsedResource is OperationOutcome outcome)
+            {
+                return (new(), false, outcome);
+            }
+        }
+
+        return (new(), false, null);
+
     }
 
     /// <summary>
     /// Posts a Bundle of R5 resources to the FHIR server, and returns the
     /// new resource obtained as answer
     /// </summary>
-    public static (T created, bool canCue) CreateResourceBundle(LincaConnection connection, T resource, string endpoint)
+    public static (T created, bool canCue, OperationOutcome? outcome) CreateResourceBundle(LincaConnection connection, T resource, string operation)
     {
-        using var response = Send(connection, HttpMethod.Post, resource, endpoint);
+        using var response = Send(connection, HttpMethod.Post, resource, operation);
         if (response?.StatusCode == HttpStatusCode.Created)
         {
-            //using var getResponse = Receive(connection, response.Headers.Location);
             if (response != null)
             {
                 var createdResourceRaw = new StreamReader
@@ -87,14 +130,21 @@ internal static class FhirDataExchange<T> where T : Resource, new()
                     createdResourceRaw,
                     out Resource? parsedResource,
                     out var _
-                ) && parsedResource is T createdResource)
+                ))
                 {
-                    return (createdResource, true);
+                    if (parsedResource is T createdResource)
+                    {
+                        return (createdResource, true, null);
+                    }
+                    if (parsedResource is  OperationOutcome outcome)
+                    {
+                        return (new(), false, outcome);
+                    }
                 }
             }
         }
 
-        return (new(), false);
+        return (new(), false, null);
     }
 
     public static (Bundle received, bool canCue) GetResource(LincaConnection connection, string operationQuery)
@@ -113,7 +163,7 @@ internal static class FhirDataExchange<T> where T : Resource, new()
             (
                 receivedResourceRaw,
                 out Resource? parsedResource,
-                out var issues
+                out var _
             ) && parsedResource is Bundle receivedResource)
             {
                 return (receivedResource, true);
@@ -123,9 +173,9 @@ internal static class FhirDataExchange<T> where T : Resource, new()
         return (new(), false);
     }
 
-    public static (OperationOutcome received, bool canCue) DeleteResource(LincaConnection connection, string id, string endpoint)
+    public static (OperationOutcome received, bool canCue) DeleteResource(LincaConnection connection, string id, string overwriteResourceName)
     {
-        using var response = Send(connection, HttpMethod.Delete, id, endpoint);
+        using var response = Send(connection, HttpMethod.Delete, id, overwriteResourceName);
 
         if (response != null)
         {
@@ -139,7 +189,7 @@ internal static class FhirDataExchange<T> where T : Resource, new()
             (
                 receivedResourceRaw,
                 out Resource? parsedResource,
-                out var issues
+                out var _
             ) && parsedResource is OperationOutcome receivedResource)
             {
                 if (response?.StatusCode == HttpStatusCode.OK)
@@ -216,7 +266,7 @@ internal static class FhirDataExchange<T> where T : Resource, new()
         }
     }
 
-    private static HttpResponseMessage? Send(LincaConnection connection, HttpMethod method, T resource, string endpoint)
+    private static HttpResponseMessage? Send(LincaConnection connection, HttpMethod method, T resource, string overwriteResourceName)
     {
         for (; ; )
         {
@@ -228,7 +278,7 @@ internal static class FhirDataExchange<T> where T : Resource, new()
                 request = new HttpRequestMessage
                 (
                     method,
-                    $"{connection.ServerBaseUrl}/{endpoint}"
+                    $"{connection.ServerBaseUrl}/{overwriteResourceName}"
                 );
             }
             else
@@ -236,7 +286,7 @@ internal static class FhirDataExchange<T> where T : Resource, new()
                 request = new HttpRequestMessage
                 (
                     method,
-                    $"{connection.ServerBaseUrl}/{endpoint}/{resource.Id}"
+                    $"{connection.ServerBaseUrl}/{overwriteResourceName}/{resource.Id}"
                 );
             }
 
@@ -260,7 +310,7 @@ internal static class FhirDataExchange<T> where T : Resource, new()
         }
     }
 
-    private static HttpResponseMessage? Send(LincaConnection connection, HttpMethod method, string id, string endpoint)
+    private static HttpResponseMessage? Send(LincaConnection connection, HttpMethod method, string id, string overwriteResourceName)
     {
         for (; ; )
         {
@@ -268,13 +318,9 @@ internal static class FhirDataExchange<T> where T : Resource, new()
             var request = new HttpRequestMessage
             (
                 method,
-                $"{connection.ServerBaseUrl}/{endpoint}/{id}"
+                $"{connection.ServerBaseUrl}/{overwriteResourceName}/{id}"
             );
 
-            //var fhirJson = resource.ToJson();
-
-            //request.Content = new StringContent(fhirJson);
-            //request.Content.Headers.ContentType = Constants.FhirJson;
             request.Headers.Accept.Add(Constants.FhirJson);
             var response = http.Send(request);
 

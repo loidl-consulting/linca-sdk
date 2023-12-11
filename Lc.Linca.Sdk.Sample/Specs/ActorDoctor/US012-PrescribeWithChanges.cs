@@ -45,35 +45,23 @@ internal class US012_PrescribeWithChanges : Spec
 
         if (received)
         {
-            List<MedicationRequest> proposals = new List<MedicationRequest>();
+            List<MedicationRequest> proposals = BundleHelper.FilterProposalsToPrescribe(orders);
 
-            foreach (var item in orders.Entry)
-            {
-                if (item.FullUrl.Contains("LINCAProposal"))
-                {
-                    proposals.Add((item.Resource as MedicationRequest)!);
-                }
-            }
 
-            List<MedicationRequest> proposalsGuenterNotGranpidam = proposals.FindAll(x => x.Subject.Reference.Contains($"{LinkedCareSampleClient.CareInformationSystemScaffold.Data.ClientIdGuenter}") 
+            MedicationRequest? proposalsGuenterNotGranpidam = proposals.Find(x => x.Subject.Reference.Contains($"{LinkedCareSampleClient.CareInformationSystemScaffold.Data.ClientIdGuenter}") 
                                                                                         && ! x.Medication.Concept.Coding.First().Display.Contains("Granpidam"));
 
-            if (proposalsGuenterNotGranpidam.Count == 1)
+            if (proposalsGuenterNotGranpidam != null)
             {
-                LinkedCareSampleClient.CareInformationSystemScaffold.Data.OrderProposalIdGuenter = proposalsGuenterNotGranpidam[0].Id;
-            }
-            else if (proposalsGuenterNotGranpidam.Count == 2)
-            {
-                LinkedCareSampleClient.CareInformationSystemScaffold.Data.OrderProposalIdGuenter = proposalsGuenterNotGranpidam.Find(x => x.BasedOn.Count == 1)!.Id;
+                LinkedCareSampleClient.CareInformationSystemScaffold.Data.OrderProposalIdGuenter = proposalsGuenterNotGranpidam.Id;
+                LinkedCareSampleClient.CareInformationSystemScaffold.PseudoDatabaseStore();
             }
             else
             {
-                Console.WriteLine($"Failed to receive Linca ProposalMedicationRequest for Guenter");
+                Console.WriteLine($"Linca ProposalMedicationRequest for Guenter not found, prescription cannot be created");
 
                 return false;
             }
-
-            LinkedCareSampleClient.CareInformationSystemScaffold.PseudoDatabaseStore();
 
             prescription.BasedOn.Add(new ResourceReference()
             {
@@ -136,10 +124,10 @@ internal class US012_PrescribeWithChanges : Spec
 
             Bundle prescriptions = new()
             {
-                Type = Bundle.BundleType.Transaction
+                Type = Bundle.BundleType.Transaction,
+                Entry = new()
             };
 
-            prescriptions.Entry = new();
             prescriptions.AddResourceEntry(prescription, $"{Connection.ServerBaseUrl}/{LincaEndpoints.LINCAPrescriptionMedicationRequest}");
 
             (Bundle results, var canCue) = LincaDataExchange.CreatePrescriptionBundle(Connection, prescriptions);
@@ -150,7 +138,7 @@ internal class US012_PrescribeWithChanges : Spec
                 LinkedCareSampleClient.CareInformationSystemScaffold.Data.PrescriptionWithChangesGuenter = results.Entry.First().Resource.Id;
                 LinkedCareSampleClient.CareInformationSystemScaffold.PseudoDatabaseStore();
 
-                BundleViewer.ShowOrderChains(results);
+                BundleHelper.ShowOrderChains(results);
             }
             else
             {

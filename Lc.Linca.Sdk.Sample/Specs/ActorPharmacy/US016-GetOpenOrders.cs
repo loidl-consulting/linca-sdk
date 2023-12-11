@@ -41,7 +41,7 @@ internal class US016_GetOpenOrders : Spec
         {
             Console.WriteLine($"Get prescriptions-to-dispense succeeded");
 
-            BundleViewer.ShowOrderChains(results);
+            BundleHelper.ShowOrderChains(results);
         }
         else
         {

@@ -46,17 +46,9 @@ internal class US010_CancelPrescriptionPosition : Spec
 
         if (received)
         {
-            List<MedicationRequest> proposals = new List<MedicationRequest>();
+            List<MedicationRequest> proposals = BundleHelper.FilterProposalsToPrescribe(results);
 
-            foreach (var item in results.Entry)
-            {
-                if (item.FullUrl.Contains("LINCAProposal"))
-                {
-                    proposals.Add((item.Resource as MedicationRequest)!);
-                }
-            }
-
-            MedicationRequest? bisoprololForRenate = proposals.Find(x => x.Medication.Concept.Coding.First().Display.Contains("Bisoprolol"));
+            MedicationRequest? bisoprololForRenate = proposals.Find(x => x.Subject.Display.Contains("Renate") && x.Medication.Concept.Coding.First().Display.Contains("Bisoprolol"));
 
             if (bisoprololForRenate != null)
             {
@@ -65,7 +57,7 @@ internal class US010_CancelPrescriptionPosition : Spec
             }
             else
             {
-                Console.WriteLine("Order proposal for Renate Rüssel-Olifant (Med. Bisoprolol) not found");
+                Console.WriteLine("Linca ProposalMedicationRequest for Renate Rüssel-Olifant not found, or it was already processed");
 
                 return false;
             }

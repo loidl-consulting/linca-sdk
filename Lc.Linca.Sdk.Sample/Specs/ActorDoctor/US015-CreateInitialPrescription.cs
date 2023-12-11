@@ -197,10 +197,10 @@ internal class US015_CreateInitialPrescription : Spec
         /***** add the Linca Prescription Medication Requests to a Bundle for transaction ****************/
         Bundle prescriptions = new()
         {
-            Type = Bundle.BundleType.Transaction
+            Type = Bundle.BundleType.Transaction,
+            Entry = new()
         };
 
-        prescriptions.Entry = new();
         prescriptions.AddResourceEntry(initialPresc1, $"{Connection.ServerBaseUrl}/{LincaEndpoints.LINCAPrescriptionMedicationRequest}");
         prescriptions.AddResourceEntry(initialPresc2, $"{Connection.ServerBaseUrl}/{LincaEndpoints.LINCAPrescriptionMedicationRequest}");
 
@@ -210,7 +210,7 @@ internal class US015_CreateInitialPrescription : Spec
         {
             Console.WriteLine($"Linca PrescriptionMedicationRequestBundle transmitted, created Linca PrescriptionMedicationRequests");
 
-            BundleViewer.ShowOrderChains(results);
+            BundleHelper.ShowOrderChains(results);
         }
         else
         {

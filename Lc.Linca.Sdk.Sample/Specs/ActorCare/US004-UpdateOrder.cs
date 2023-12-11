@@ -45,19 +45,22 @@ internal class US004_UpdateOrder : Spec
 
         if (received)
         {
-            List<MedicationRequest> proposals = new List<MedicationRequest>();
+            List<MedicationRequest> proposals = BundleHelper.FilterProposalsToPrescribe(results);
 
-            foreach (var item in results.Entry)
+            MedicationRequest? proposalForUpdate = proposals.Find(x => x.Medication.Concept.Coding.First().Display.Contains("Effortil") && x.Subject.Reference.Contains($"{LinkedCareSampleClient.CareInformationSystemScaffold.Data.ClientIdGuenter}"));
+
+            if (proposalForUpdate != null )
             {
-                if (item.FullUrl.Contains("LINCAProposal"))
-                {
-                    proposals.Add((item.Resource as MedicationRequest)!);
-                }
+                LinkedCareSampleClient.CareInformationSystemScaffold.Data.OrderProposalIdGuenter = proposalForUpdate.Id;
+                LinkedCareSampleClient.CareInformationSystemScaffold.PseudoDatabaseStore();
             }
+            else
+            {
+                Console.WriteLine($"Linca ProposalMedicationRequest for update not found, it might have been already processed");
 
-            LinkedCareSampleClient.CareInformationSystemScaffold.Data.OrderProposalIdGuenter = proposals.Find(x => x.Medication.Concept.Coding.First().Display.Contains("Effortil") && x.Subject.Reference.Contains($"{LinkedCareSampleClient.CareInformationSystemScaffold.Data.ClientIdGuenter}"))!.Id;
-            LinkedCareSampleClient.CareInformationSystemScaffold.PseudoDatabaseStore();
-
+                return false;
+            }
+           
             // post order medication request for Günter Gürtelthier based on an existing order medication request
             // Medication and Dispenser are updated
             medReq1.BasedOn.Add(new ResourceReference()

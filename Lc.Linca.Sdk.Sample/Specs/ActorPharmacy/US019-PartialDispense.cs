@@ -44,15 +44,7 @@ internal class US019_PartialDispense : Spec
 
         if (received)
         {
-            List<MedicationRequest> prescriptions = new List<MedicationRequest>();
-
-            foreach (var item in results.Entry)
-            {
-                if (item.FullUrl.Contains("LINCAPrescription"))
-                {
-                    prescriptions.Add((item.Resource as MedicationRequest)!);
-                }
-            }
+            List<MedicationRequest> prescriptions = BundleHelper.FilterPrescriptionsToDispense(results);
 
             LinkedCareSampleClient.CareInformationSystemScaffold.Data.PrescriptionIdRenateLuxerm = prescriptions.Find(x => x.Medication.Concept.Coding.First().Display.Contains("Luxerm"))!.Id;
             LinkedCareSampleClient.CareInformationSystemScaffold.PseudoDatabaseStore();

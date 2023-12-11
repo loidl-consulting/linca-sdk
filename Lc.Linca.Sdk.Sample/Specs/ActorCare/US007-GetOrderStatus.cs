@@ -37,20 +37,12 @@ internal class US007_GetOrderStatus : Spec
     {
         LinkedCareSampleClient.CareInformationSystemScaffold.PseudoDatabaseRetrieve();
 
-        Bundle results = new Bundle();
+        Bundle results = new();
         bool received = false;  
 
-        if(/*Connection.JavaWebToken.Contains("2.999.40.0.34.1.1.1") && */ ! string.IsNullOrEmpty(LinkedCareSampleClient.CareInformationSystemScaffold.Data.LcIdVogelsang)) 
+        if (! string.IsNullOrEmpty(LinkedCareSampleClient.CareInformationSystemScaffold.Data.LcIdVogelsang)) 
         {
             (results, received) = LincaDataExchange.GetProposalStatus(Connection, $"{LinkedCareSampleClient.CareInformationSystemScaffold.Data.LcIdVogelsang}");
-        }
-        else if (/*Connection.JavaWebToken.Contains("2.999.40.0.34.1.1.3") &&*/ ! string.IsNullOrEmpty(LinkedCareSampleClient.CareInformationSystemScaffold.Data.LcIdImmerdar001))
-        {
-            (results, received) = LincaDataExchange.GetProposalStatus(Connection, $"{LinkedCareSampleClient.CareInformationSystemScaffold.Data.LcIdImmerdar001}");
-        }
-        else if (/*Connection.JavaWebToken.Contains("2.999.40.0.34.1.1.3") &&**/ ! string.IsNullOrEmpty(LinkedCareSampleClient.CareInformationSystemScaffold.Data.LcIdImmerdar002))
-        {
-            (results, received) = LincaDataExchange.GetProposalStatus(Connection, $"{LinkedCareSampleClient.CareInformationSystemScaffold.Data.LcIdImmerdar002}");
         }
 
 
@@ -58,7 +50,7 @@ internal class US007_GetOrderStatus : Spec
         {
             Console.WriteLine("Get proposal-status succeeded");
 
-            BundleViewer.ShowOrderChains(results);
+            BundleHelper.ShowOrderChains(results);
         }
         else
         {

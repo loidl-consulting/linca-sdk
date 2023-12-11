@@ -46,15 +46,7 @@ internal class US014_PrescribeSupplementaryArticle : Spec
 
         if (received)
         {
-            List<MedicationRequest> proposals = new List<MedicationRequest>();
-
-            foreach (var item in orders.Entry)
-            {
-                if (item.FullUrl.Contains("LINCAProposal"))
-                {
-                    proposals.Add((item.Resource as MedicationRequest)!);
-                }
-            }
+            List<MedicationRequest> proposals = BundleHelper.FilterProposalsToPrescribe(orders);
 
             MedicationRequest? proposal = proposals.Find(x => x.Subject.Reference.Contains($"{LinkedCareSampleClient.CareInformationSystemScaffold.Data.ClientIdGuenter}")
                                                                                             && x.Medication.Concept.Coding.First().Display.Contains("Granpidam"));
@@ -216,10 +208,10 @@ internal class US014_PrescribeSupplementaryArticle : Spec
 
             Bundle prescriptions = new()
             {
-                Type = Bundle.BundleType.Transaction
+                Type = Bundle.BundleType.Transaction,
+                Entry = new()
             };
 
-            prescriptions.Entry = new();
             prescriptions.AddResourceEntry(prescription, $"{Connection.ServerBaseUrl}/{LincaEndpoints.LINCAPrescriptionMedicationRequest}");
             prescriptions.AddResourceEntry(adhoc, $"{Connection.ServerBaseUrl}/{LincaEndpoints.LINCAPrescriptionMedicationRequest}");
 
@@ -229,7 +221,7 @@ internal class US014_PrescribeSupplementaryArticle : Spec
             {
                 Console.WriteLine($"Linca PrescriptionMedicationRequestBundle transmitted, created Linca PrescriptionMedicationRequests");
 
-                BundleViewer.ShowOrderChains(results);
+                BundleHelper.ShowOrderChains(results);
             }
             else
             {

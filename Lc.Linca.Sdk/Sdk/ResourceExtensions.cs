@@ -22,34 +22,34 @@ public static class LincaEndpoints
     /// <summary>
     /// The name of the patient resource as defined in the IG profile
     /// </summary>
-    public static string HL7ATCorePatient = "HL7ATCorePatient";
+    public const string HL7ATCorePatient = "HL7ATCorePatient";
 
     /// <summary>
     /// The name of the request orchestration resource as defined in the IG profile
     /// </summary>
-    public static string LINCARequestOrchestration = "LINCARequestOrchestration";
+    public const string LINCARequestOrchestration = "LINCARequestOrchestration";
 
     /// <summary>
     /// The name of the order medication request resource as defined in the IG profile
     /// </summary>
-    public static string LINCAProposalMedicationRequest = "LINCAProposalMedicationRequest";
+    public const string LINCAProposalMedicationRequest = "LINCAProposalMedicationRequest";
 
     /// <summary>
     /// The name of the prescription medication request resource as defined in the IG profile
     /// </summary>
-    public static string LINCAPrescriptionMedicationRequest = "LINCAPrescriptionMedicationRequest";
+    public const string LINCAPrescriptionMedicationRequest = "LINCAPrescriptionMedicationRequest";
 
     /// <summary>
     /// The name of the prescription medication request resource as defined in the IG profile
     /// </summary>
-    public static string LINCAMedicationDispense = "LINCAMedicationDispense";
+    public const string LINCAMedicationDispense = "LINCAMedicationDispense";
 
     /// <summary>
     /// The name of the operation to GET the order status for all 
     /// order positions associated with a specific LC_ID (the Id of a posted LINCARequestOrchestration
     /// can only be queried by the ordering entity
     /// </summary>
-    public static string proposal_status = "$proposal-status";
+    public const string proposal_status = "$proposal-status";
 
     /// <summary>
     /// The name of the operation to GET the orders that have been adressed to 
@@ -58,13 +58,13 @@ public static class LincaEndpoints
     /// and their associated resource instances)
     /// can only be queried by doctors (ELGA-role in eHVD)
     /// </summary>
-    public static string proposals_to_prescribe = "$proposals-to-prescribe";
+    public const string proposals_to_prescribe = "$proposals-to-prescribe";
 
     /// <summary>
     /// The name of the operation to POST a Bundle of LINCAPrescriptionMedicationRequest
     /// that share the same eRezeptId in groupIdentifier
     /// </summary>
-    public static string prescription = "$prescription";
+    public const string prescription = "$prescription";
 
     /// <summary>
     /// The name of the operation to GET the prescriptions that have been adressed to 
@@ -74,21 +74,21 @@ public static class LincaEndpoints
     /// can only be queried by pharmacies (ELGA-role in eHVD)
     /// can be combined with a specific Id presented to the pharmacist by a customer 
     /// </summary>
-    public static string prescriptions_to_dispense = "$prescriptions-to-dispense";
+    public const string prescriptions_to_dispense = "$prescriptions-to-dispense";
 
     /// <summary>
     /// The name of the operation to GET the prescription(s) associated with
     /// a specific Id presented to the pharmacist by a customer/caregiver 
     /// can only be queried by pharmacies (ELGA-role in eHVD)
     /// </summary>
-    public static string prescription_to_dispense = "$prescription-to-dispense";
+    public const string prescription_to_dispense = "$prescription-to-dispense";
 
     /// <summary>
     /// The name of the operation to GET the prescription(s) associated with
     /// a specific Id presented to the pharmacist by a customer/caregiver 
     /// can only be queried by pharmacies (ELGA-role in eHVD)
     /// </summary>
-    public static string patient_initial_prescriptions = "$patient-initial-prescriptions";
+    public const string patient_initial_prescriptions = "$patient-initial-prescriptions";
 
     /// <summary>
     /// Get the profiled name of a standard Fhir resource
@@ -103,6 +103,11 @@ public static class LincaEndpoints
         if(resource is RequestOrchestration) 
         {
             return "LINCARequestOrchestration";
+        }
+
+        if (resource is MedicationDispense) 
+        {
+            return "LINCAMedicationDispense";
         }
 
         return typeof(Resource).Name;

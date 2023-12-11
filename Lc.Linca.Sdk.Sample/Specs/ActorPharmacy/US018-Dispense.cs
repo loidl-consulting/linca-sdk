@@ -44,26 +44,20 @@ internal class US018_Dispense : Spec
 
         if (received)
         {
-            List<MedicationRequest> proposals = new List<MedicationRequest>();
+            List<MedicationRequest> prescriptionsToDispense = BundleHelper.FilterPrescriptionsToDispense(orders);
 
-            foreach (var item in orders.Entry)
+            MedicationRequest? prescriptionRenateLasix = prescriptionsToDispense.Find(x => x.Medication.Concept.Coding.First().Display.Contains("Lasix"));
+
+            if (prescriptionRenateLasix != null)
             {
-                if (item.FullUrl.Contains("LINCAPrescription"))
-                {
-                    proposals.Add((item.Resource as MedicationRequest)!);
-                }
-            }
-
-            MedicationRequest? orderProposalRenate = proposals.Find(x => x.Medication.Concept.Coding.First().Display.Contains("Lasix"));
-
-            if (orderProposalRenate != null)
-            {
-                LinkedCareSampleClient.CareInformationSystemScaffold.Data.PrescriptionIdRenateLasix = orderProposalRenate.Id;
+                LinkedCareSampleClient.CareInformationSystemScaffold.Data.PrescriptionIdRenateLasix = prescriptionRenateLasix.Id;
                 LinkedCareSampleClient.CareInformationSystemScaffold.PseudoDatabaseStore();
             }
             else
             {
-                Console.WriteLine("Linca Prescription Medication Request for Renate Rüssel-Olifant, medication Lasix, not found");
+                Console.WriteLine("Linca PrescriptionMedicationRequest for Renate Rüssel-Olifant not found, LINCAMedicationDispense cannot be created");
+
+                return (false);
             }
 
             dispense.AuthorizingPrescription.Add(new()
@@ -72,7 +66,7 @@ internal class US018_Dispense : Spec
             });
 
             dispense.Status = MedicationDispense.MedicationDispenseStatusCodes.Completed;
-            dispense.Subject = orderProposalRenate!.Subject;
+            dispense.Subject = prescriptionRenateLasix!.Subject;
             dispense.Medication = new()
             {
                 Concept = new()

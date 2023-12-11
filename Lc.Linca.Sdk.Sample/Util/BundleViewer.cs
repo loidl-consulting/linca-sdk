@@ -11,20 +11,83 @@
 
 using Hl7.Fhir.Model;
 using Hl7.Fhir.Support;
+using Hl7.Fhir.Utility;
 
 namespace Lc.Linca.Sdk;
 
 /// <summary>
-/// Utilities for console/terminal input/output
+/// Utilities for filtering and printing Bundles
 /// </summary>
-public static class BundleViewer
+public static class BundleHelper
 {
-    
+    public static List<MedicationRequest> FilterProposalsToPrescribe(Bundle orderchains)
+    {
+        List<MedicationRequest> openProposal = new();
+        List<MedicationRequest> proposals = new();
+        List<MedicationRequest> prescriptions = new();
+
+        foreach (var item in orderchains.Entry)
+        {
+            if (item.FullUrl.Contains("LINCAProposal"))
+            {
+                proposals.Add((item.Resource as MedicationRequest)!);
+
+            }
+            if (item.FullUrl.Contains("LINCAPrescription"))
+            {
+                prescriptions.Add((item.Resource as MedicationRequest)!) ;
+            }
+        }
+
+        foreach (var item in proposals) 
+        {
+            if (proposals.Find(x => !x.BasedOn.IsNullOrEmpty() && x.BasedOn.First().Reference.Contains(item.Id)) ==  null
+                && prescriptions.Find(x => !x.BasedOn.IsNullOrEmpty() && x.BasedOn.First().Reference.Contains(item.Id)) == null)
+            {
+                openProposal.Add(item);
+            }
+        
+        }
+
+        return openProposal;
+    }
+
+    public static List<MedicationRequest> FilterPrescriptionsToDispense(Bundle orderchains)
+    {
+        List<MedicationRequest> openPrescriptions = new();
+        List<MedicationRequest> prescriptions = new();
+        List<MedicationDispense> dispenses = new();
+
+        foreach (var item in orderchains.Entry)
+        {
+            if (item.FullUrl.Contains("LINCAPrescription"))
+            {
+                prescriptions.Add((item.Resource as MedicationRequest)!);
+
+            }
+            if (item.FullUrl.Contains("LINCAMedicationDispense"))
+            {
+                dispenses.Add((item.Resource as MedicationDispense)!);
+            }
+        }
+
+        foreach (var item in prescriptions)
+        {
+            if(prescriptions.Find(x => x.PriorPrescription != null && x.PriorPrescription.Reference.Contains(item.Id)) == null 
+               && dispenses.Find(x => !x.AuthorizingPrescription.IsNullOrEmpty() && x.AuthorizingPrescription.First().Reference.Contains(item.Id)) == null)
+            {
+                openPrescriptions.Add(item);
+            }
+        }
+
+        return openPrescriptions;
+    }
+
     public static void ShowOrderChains (Bundle orderchains)
     {
-        List<MedicationRequest> proposals = new List<MedicationRequest> ();
-        List<MedicationRequest> prescriptions = new List<MedicationRequest> ();
-        List<MedicationDispense> dispenses = new List<MedicationDispense> ();
+        List<MedicationRequest> proposals = new();
+        List<MedicationRequest> prescriptions = new();
+        List<MedicationDispense> dispenses = new();
 
         Console.WriteLine("Bundle Entries:");
 
@@ -64,7 +127,7 @@ public static class BundleViewer
             }
             else
             {
-                Console.WriteLine($"Prescription Id: {item.Id} is an initial or adhoc prescription");
+                Console.WriteLine($"Prescription Id: {item.Id} is an initial prescription");
             }
         }
         foreach (var item in proposals)
