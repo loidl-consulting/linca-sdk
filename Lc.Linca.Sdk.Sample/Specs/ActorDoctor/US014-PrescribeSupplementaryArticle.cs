@@ -9,10 +9,9 @@
  * The Linked Care project is co-funded by the Austrian FFG
  ***********************************************************************************/
 
-using Hl7.Fhir.Model.Extensions;
 using Hl7.Fhir.Model;
+using Hl7.Fhir.Model.Extensions;
 using Lc.Linca.Sdk.Client;
-using Lc.Linca.Sdk;
 
 namespace Lc.Linca.Sdk.Specs.ActorDoctor;
 
@@ -48,8 +47,12 @@ internal class US014_PrescribeSupplementaryArticle : Spec
         {
             List<MedicationRequest> proposals = BundleHelper.FilterProposalsToPrescribe(orders);
 
-            MedicationRequest? proposal = proposals.Find(x => x.Subject.Reference.Contains($"{LinkedCareSampleClient.CareInformationSystemScaffold.Data.ClientIdGuenter}")
-                                                                                            && x.Medication.Concept.Coding.First().Display.Contains("Granpidam"));
+            MedicationRequest? proposal = proposals.Find(
+                x =>
+                x.Subject.Reference.Contains($"{LinkedCareSampleClient.CareInformationSystemScaffold.Data.ClientIdGuenter}")
+                && x.Medication.Concept.Coding.First().Display.Contains("Granpidam")
+            );
+
             if (proposal != null)
             {
                 LinkedCareSampleClient.CareInformationSystemScaffold.Data.OrderProposalIdGuenterGranpidam = proposal.Id;
@@ -64,7 +67,6 @@ internal class US014_PrescribeSupplementaryArticle : Spec
             LinkedCareSampleClient.CareInformationSystemScaffold.PseudoDatabaseStore();
 
             /******* Create prescription for proposal ******/
-
             prescription.BasedOn.Add(new ResourceReference()
             {
                 Reference = $"LINCAProposalMedicationRequest/{LinkedCareSampleClient.CareInformationSystemScaffold.Data.OrderProposalIdGuenterGranpidam}"
@@ -202,7 +204,6 @@ internal class US014_PrescribeSupplementaryArticle : Spec
                 Value = "1A2B 3C4D 5E6F",
                 System = "urn:oid:1.2.40.0.10.1.4.3.3"        // OID: Rezeptnummer
             };
-            
 
             /***** Add both to one Bundle ******/
 

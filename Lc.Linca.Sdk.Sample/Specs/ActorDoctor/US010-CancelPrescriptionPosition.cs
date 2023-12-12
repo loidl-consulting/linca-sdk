@@ -11,7 +11,6 @@
 
 using Hl7.Fhir.Model;
 using Lc.Linca.Sdk.Client;
-using System.Drawing.Text;
 
 namespace Lc.Linca.Sdk.Specs.ActorDoctor;
 
@@ -34,8 +33,6 @@ internal class US010_CancelPrescriptionPosition : Spec
         {
             new("Stop the intake of an ordered medication", SetProposalStatusEnded )
         };
-
-
     }
 
     private bool SetProposalStatusEnded()
@@ -69,21 +66,20 @@ internal class US010_CancelPrescriptionPosition : Spec
 
             medReq.Status = MedicationRequest.MedicationrequestStatus.Stopped;    // REQUIRED
             medReq.Intent = MedicationRequest.MedicationRequestIntent.Order;      // REQUIRED
-            medReq.Subject = bisoprololForRenate.Subject;                           
-
+            medReq.Subject = bisoprololForRenate.Subject;
             medReq.Medication = new()
             {
                 Concept = new()
                 {
                     Coding = new()
-                {
-                    new Coding()
                     {
-                        Code = "2420396",
-                        System = "https://termgit.elga.gv.at/CodeSystem/asp-liste",
-                        Display = "Bisoprolol Arcana 5 mg Filmtabletten"
+                        new Coding()
+                        {
+                            Code = "2420396",
+                            System = "https://termgit.elga.gv.at/CodeSystem/asp-liste",
+                            Display = "Bisoprolol Arcana 5 mg Filmtabletten"
+                        }
                     }
-                }
                 }
             };
 

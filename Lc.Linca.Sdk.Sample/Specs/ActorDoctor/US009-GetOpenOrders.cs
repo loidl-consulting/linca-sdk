@@ -10,8 +10,6 @@
  ***********************************************************************************/
 
 using Hl7.Fhir.Model;
-using Lc.Linca.Sdk;
-using Lc.Linca.Sdk.Client;
 
 namespace Lc.Linca.Sdk.Specs.ActorDoctor;
 

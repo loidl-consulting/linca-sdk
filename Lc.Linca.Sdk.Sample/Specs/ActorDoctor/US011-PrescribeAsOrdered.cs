@@ -60,7 +60,6 @@ internal class US011_PrescribeAsOrdered : Spec
                 return false;
             }
 
-
             prescription.BasedOn.Add(new()
             {
                 Reference = $"LINCAProposalMedicationRequest/{LinkedCareSampleClient.CareInformationSystemScaffold.Data.OrderProposalIdRenateLasix}"
@@ -69,7 +68,6 @@ internal class US011_PrescribeAsOrdered : Spec
             prescription.Status = MedicationRequest.MedicationrequestStatus.Active;    // REQUIRED
             prescription.Intent = MedicationRequest.MedicationRequestIntent.Order;     // REQUIRED
             prescription.Subject = orderProposalRenate!.Subject;
-
             prescription.Medication = new()
             {
                 Concept = new()
@@ -106,12 +104,12 @@ internal class US011_PrescribeAsOrdered : Spec
                     }
                 },
                 DoseAndRate = new()
-            {
-                new Dosage.DoseAndRateComponent()
                 {
-                    Dose = new Quantity(value: 1, unit: "St")
+                    new Dosage.DoseAndRateComponent()
+                    {
+                        Dose = new Quantity(value: 1, unit: "St")
+                    }
                 }
-            }
             });
 
             // prescription.InformationSource will be copied from resource in basedOn by the Fhir server
@@ -155,7 +153,6 @@ internal class US011_PrescribeAsOrdered : Spec
                 Console.WriteLine($"Linca PrescriptionMedicationRequestBundle transmitted, created Linca PrescriptionMedicationRequests");
 
                 BundleHelper.ShowOrderChains(results);  
-
             }
             else
             {

@@ -9,12 +9,8 @@
  * The Linked Care project is co-funded by the Austrian FFG
  ***********************************************************************************/
 
-using Hl7.Fhir.Model.Extensions;
 using Hl7.Fhir.Model;
-using Lc.Linca.Sdk.Client;
-using Lc.Linca.Sdk;
-using Newtonsoft.Json.Linq;
-using static Lc.Linca.Sdk.Scaffolds.CareInformationSystem;
+using Hl7.Fhir.Model.Extensions;
 
 namespace Lc.Linca.Sdk.Specs.ActorDoctor;
 
@@ -56,14 +52,14 @@ internal class US015_CreateInitialPrescription : Spec
             Concept = new()
             {
                 Coding = new()
+                {
+                    new Coding()
                     {
-                        new Coding()
-                        {
-                            Code = "1256718",
-                            System = "https://termgit.elga.gv.at/CodeSystem/asp-liste",
-                            Display = "Sotacor 80 mg Tabletten"
-                        }
+                        Code = "1256718",
+                        System = "https://termgit.elga.gv.at/CodeSystem/asp-liste",
+                        Display = "Sotacor 80 mg Tabletten"
                     }
+                }
             }
         };
 
@@ -145,14 +141,14 @@ internal class US015_CreateInitialPrescription : Spec
             Concept = new()
             {
                 Coding = new()
+                {
+                    new Coding()
                     {
-                        new Coding()
-                        {
-                            Code = "4450562",
-                            System = "https://termgit.elga.gv.at/CodeSystem/asp-liste",
-                            Display = "Luxerm 160 mg/g Creme"
-                        }
+                        Code = "4450562",
+                        System = "https://termgit.elga.gv.at/CodeSystem/asp-liste",
+                        Display = "Luxerm 160 mg/g Creme"
                     }
+                }
             }
         };
 

@@ -45,7 +45,6 @@ internal class US007_GetOrderStatus : Spec
             (results, received) = LincaDataExchange.GetProposalStatus(Connection, $"{LinkedCareSampleClient.CareInformationSystemScaffold.Data.LcIdVogelsang}");
         }
 
-
         if (received)
         {
             Console.WriteLine("Get proposal-status succeeded");

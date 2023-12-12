@@ -31,8 +31,6 @@ internal class US001_MedOrderSingleArticle : Spec
 
     public US001_MedOrderSingleArticle(LincaConnection conn) : base(conn)
     {
-
-
         Steps = new Step[]
         {
             new("Create client record", CreateClientRecord),
@@ -191,10 +189,8 @@ internal class US001_MedOrderSingleArticle : Spec
         };
 
         action.Type.Coding.Add(new() { Code = "create" });
-
         ro.Action.Add( action );
 
-       
         (var createdRO, var canCue, var outcome) = LincaDataExchange.CreateRequestOrchestration(Connection, ro);
 
         if (canCue)

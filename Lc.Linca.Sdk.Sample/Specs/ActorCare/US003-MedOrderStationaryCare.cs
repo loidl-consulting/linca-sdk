@@ -12,8 +12,6 @@
 using Hl7.Fhir.Model;
 using Hl7.Fhir.Support;
 using Lc.Linca.Sdk.Client;
-using Lc.Linca.Sdk.Scaffolds;
-using System;
 using System.Globalization;
 
 namespace Lc.Linca.Sdk.Specs.ActorCare;
@@ -29,12 +27,11 @@ internal class US003_MedOrderStationaryCare : Spec
         and specifies in advance the pharmacy Apotheke 'Zum frühen Vogel' that ought 
         to prepare the order";
 
-    protected Patient createdGuenter = new Patient();
-    protected Patient createdPatrizia = new Patient();
+    protected Patient createdGuenter = new();
+    protected Patient createdPatrizia = new();
     protected MedicationRequest medReq1 = new();
     protected MedicationRequest medReq2 = new();
     protected MedicationRequest medReq3 = new();
-
 
     public US003_MedOrderStationaryCare(LincaConnection conn) : base(conn) 
     {
@@ -91,7 +88,6 @@ internal class US003_MedOrderStationaryCare : Spec
 
     private bool CreateClientRecord2()
     {
-
         var patient = new Patient();
 
         patient.Name.Add(new()
@@ -138,7 +134,7 @@ internal class US003_MedOrderStationaryCare : Spec
         RequestOrchestration ro = new()
         {
             Status = RequestStatus.Active,      // REQUIRED
-            Intent = RequestIntent.Proposal,       // REQUIRED
+            Intent = RequestIntent.Proposal,    // REQUIRED
             Subject = new ResourceReference()   // REQUIRED
             {
                 Identifier = new()
@@ -207,14 +203,14 @@ internal class US003_MedOrderStationaryCare : Spec
             Concept = new()
             {
                 Coding = new()
+                {
+                    new Coding()
                     {
-                        new Coding()
-                        {
-                            Code = "0018589",
-                            System = "https://termgit.elga.gv.at/CodeSystem/asp-liste",
-                            Display = "Effortil 7,5 mg/ml - Tropfen"
-                        }
+                        Code = "0018589",
+                        System = "https://termgit.elga.gv.at/CodeSystem/asp-liste",
+                        Display = "Effortil 7,5 mg/ml - Tropfen"
                     }
+                }
             }
         };
 
@@ -275,14 +271,14 @@ internal class US003_MedOrderStationaryCare : Spec
             Concept = new()
             {
                 Coding = new()
+                {
+                    new Coding()
                     {
-                        new Coding()
-                        {
-                            Code = "4460951",
-                            System = "https://termgit.elga.gv.at/CodeSystem/asp-liste",
-                            Display = "Granpidam 20 mg Filmtabletten"
-                        }
+                        Code = "4460951",
+                        System = "https://termgit.elga.gv.at/CodeSystem/asp-liste",
+                        Display = "Granpidam 20 mg Filmtabletten"
                     }
+                }
             }
         };
 
@@ -345,14 +341,14 @@ internal class US003_MedOrderStationaryCare : Spec
             Concept = new()
             {
                 Coding = new()
+                {
+                    new Coding()
                     {
-                        new Coding()
-                        {
-                            Code = "0028903",
-                            System = "https://termgit.elga.gv.at/CodeSystem/asp-liste",
-                            Display = "Isoptin 80 mg - Dragees"
-                        }
+                        Code = "0028903",
+                        System = "https://termgit.elga.gv.at/CodeSystem/asp-liste",
+                        Display = "Isoptin 80 mg - Dragees"
                     }
+                }
             }
         };
 

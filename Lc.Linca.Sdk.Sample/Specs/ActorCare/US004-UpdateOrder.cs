@@ -10,8 +10,6 @@
  ***********************************************************************************/
 
 using Hl7.Fhir.Model;
-using Hl7.Fhir.Specification;
-using Hl7.Fhir.Utility;
 using Lc.Linca.Sdk.Client;
 
 namespace Lc.Linca.Sdk.Specs.ActorCare;
@@ -28,13 +26,12 @@ internal class US004_UpdateOrder : Spec
 
     protected MedicationRequest medReq1 = new();
 
-    public US004_UpdateOrder(LincaConnection conn) : base(conn) {
-
+    public US004_UpdateOrder(LincaConnection conn) : base(conn)
+    {
         Steps = new Step[]
         {
             new("Post ProposalMedicationRequest with update informations", PostProposalMedicationRequestUpdate)
         };
-
     }
 
     private bool PostProposalMedicationRequestUpdate()
@@ -47,7 +44,20 @@ internal class US004_UpdateOrder : Spec
         {
             List<MedicationRequest> proposals = BundleHelper.FilterProposalsToPrescribe(results);
 
-            MedicationRequest? proposalForUpdate = proposals.Find(x => x.Medication.Concept.Coding.First().Display.Contains("Effortil") && x.Subject.Reference.Contains($"{LinkedCareSampleClient.CareInformationSystemScaffold.Data.ClientIdGuenter}"));
+            MedicationRequest? proposalForUpdate = proposals.Find(
+                x => 
+                x
+                .Medication
+                .Concept
+                .Coding
+                .First()
+                .Display
+                .Contains("Effortil") 
+                && x
+                .Subject
+                .Reference
+                .Contains($"{LinkedCareSampleClient.CareInformationSystemScaffold.Data.ClientIdGuenter}")
+            );
 
             if (proposalForUpdate != null )
             {
@@ -69,8 +79,8 @@ internal class US004_UpdateOrder : Spec
             });
 
             medReq1.Status = MedicationRequest.MedicationrequestStatus.Active;      // REQUIRED
-            medReq1.Intent = MedicationRequest.MedicationRequestIntent.Proposal;     // REQUIRED
-            medReq1.Subject = new ResourceReference()                                // REQUIRED
+            medReq1.Intent = MedicationRequest.MedicationRequestIntent.Proposal;    // REQUIRED
+            medReq1.Subject = new ResourceReference()                               // REQUIRED
             {
                 Reference = $"HL7ATCorePatient/{LinkedCareSampleClient.CareInformationSystemScaffold.Data.ClientIdGuenter}"     // relative path to Linca Fhir patient resource
             };
@@ -163,5 +173,4 @@ internal class US004_UpdateOrder : Spec
             return false; 
         }
     }
-    
 }

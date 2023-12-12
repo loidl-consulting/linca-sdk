@@ -1,5 +1,4 @@
 ﻿using System.Text.Json;
-using System.Text.Json.Serialization;
 
 namespace Lc.Linca.Sdk.Scaffolds;
 
@@ -13,7 +12,9 @@ internal abstract class ActorSoftwareScaffold
 {
     internal PseudoStore Data;
 
+#pragma warning disable IDE1006 // Naming Styles
     protected string db { init; get; }
+#pragma warning restore IDE1006 // Naming Styles
 
     protected internal ActorSoftwareScaffold(string db)
     {

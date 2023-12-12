@@ -26,8 +26,6 @@ internal class US000_InternalTestPutPatient : Spec
 
     public US000_InternalTestPutPatient(LincaConnection conn) : base(conn)
     {
-
-
         Steps = new Step[]
         {
             new("Create client record with externally assigned id", CreateClientRecord),
@@ -76,10 +74,10 @@ internal class US000_InternalTestPutPatient : Spec
        
         if (canCue)
         {
-                Console.WriteLine($"Client information with external id transmitted, id {createdPatient.Id}");
+            Console.WriteLine($"Client information with external id transmitted, id {createdPatient.Id}");
 
-                LinkedCareSampleClient.CareInformationSystemScaffold.Data.ClientIdRenate = createdPatient.Id;
-                LinkedCareSampleClient.CareInformationSystemScaffold.PseudoDatabaseStore();
+            LinkedCareSampleClient.CareInformationSystemScaffold.Data.ClientIdRenate = createdPatient.Id;
+            LinkedCareSampleClient.CareInformationSystemScaffold.PseudoDatabaseStore();
         }
         else
         {

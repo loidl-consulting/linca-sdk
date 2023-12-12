@@ -10,9 +10,7 @@
  ***********************************************************************************/
 
 using Hl7.Fhir.Model;
-using Lc.Linca.Sdk;
 using Lc.Linca.Sdk.Client;
-using static System.Net.Mime.MediaTypeNames;
 
 namespace Lc.Linca.Sdk.Specs.ActorPharmacy;
 
@@ -49,7 +47,7 @@ internal class US019_PartialDispense : Spec
             LinkedCareSampleClient.CareInformationSystemScaffold.Data.PrescriptionIdRenateLuxerm = prescriptions.Find(x => x.Medication.Concept.Coding.First().Display.Contains("Luxerm"))!.Id;
             LinkedCareSampleClient.CareInformationSystemScaffold.PseudoDatabaseStore();
 
-            if (! string.IsNullOrEmpty(LinkedCareSampleClient.CareInformationSystemScaffold.Data.PrescriptionIdRenateLuxerm))
+            if (!string.IsNullOrEmpty(LinkedCareSampleClient.CareInformationSystemScaffold.Data.PrescriptionIdRenateLuxerm))
             {
                 dispense.AuthorizingPrescription.Add(new()
                 {
@@ -57,7 +55,7 @@ internal class US019_PartialDispense : Spec
                 });
 
                 dispense.Status = MedicationDispense.MedicationDispenseStatusCodes.Completed;
-                dispense.Subject = new ResourceReference()                                
+                dispense.Subject = new ResourceReference()
                 {
                     Identifier = new Identifier()
                     {
@@ -72,14 +70,14 @@ internal class US019_PartialDispense : Spec
                     Concept = new()
                     {
                         Coding = new()
-                    {
-                        new Coding()
                         {
-                            Code = "4450562",
-                            System = "https://termgit.elga.gv.at/CodeSystem/asp-liste",
-                            Display = "Luxerm 160 mg/g Creme"
+                            new Coding()
+                            {
+                                Code = "4450562",
+                                System = "https://termgit.elga.gv.at/CodeSystem/asp-liste",
+                                Display = "Luxerm 160 mg/g Creme"
+                            }
                         }
-                    }
                     }
                 };
 
@@ -104,9 +102,9 @@ internal class US019_PartialDispense : Spec
                 dispense.Type = new()
                 {
                     Coding = new()
-            {
-                new Coding(system: "http://terminology.hl7.org/CodeSystem/v3-ActCode", code: "FFP")
-            }
+                    {
+                        new Coding(system: "http://terminology.hl7.org/CodeSystem/v3-ActCode", code: "FFP")
+                    }
                 };
 
                 (var postedMD, var canCue, var outcome) = LincaDataExchange.CreateMedicationDispense(Connection, dispense);

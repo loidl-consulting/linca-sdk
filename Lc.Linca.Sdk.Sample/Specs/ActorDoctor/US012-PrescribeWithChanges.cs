@@ -11,7 +11,6 @@
 
 using Hl7.Fhir.Model;
 using Hl7.Fhir.Model.Extensions;
-using Hl7.Fhir.Utility;
 using Lc.Linca.Sdk.Client;
 
 namespace Lc.Linca.Sdk.Specs.ActorDoctor;

@@ -30,9 +30,9 @@ internal class US018_Dispense : Spec
     public US018_Dispense(LincaConnection conn) : base(conn)
     {
         Steps = new Step[]
-            {
+        {
             new("Create MedicationDispense", CreateMedicationDispenseRecord)
-            };
+        };
 
     }
 
@@ -94,13 +94,12 @@ internal class US018_Dispense : Spec
                         Bounds = new Duration
                         {
                             Value = 1,
-                            Code = "d",
-
+                            Code = "d"
                         },
                         Frequency = 1,
                         Period = 1,
                         PeriodUnit = Timing.UnitsOfTime.D
-                    },
+                    }
                 }
             });
 
@@ -120,9 +119,9 @@ internal class US018_Dispense : Spec
             dispense.Type = new()
             {
                 Coding = new()
-            {
-                new Coding(system: "http://terminology.hl7.org/CodeSystem/v3-ActCode", code: "FFC")
-            }
+                {
+                    new Coding(system: "http://terminology.hl7.org/CodeSystem/v3-ActCode", code: "FFC")
+                }
             };
 
             (var postedMD, var canCue, var outcome) = LincaDataExchange.CreateMedicationDispense(Connection, dispense);

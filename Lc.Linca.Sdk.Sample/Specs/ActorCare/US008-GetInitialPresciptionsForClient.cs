@@ -24,7 +24,6 @@ internal class US008_GetInitialPrescriptionsForClient : Spec
         on her mobile device and can pick the new medication at any pharmacy of her choice by presenting the
         corresponding data matrix code";
 
-
     public US008_GetInitialPrescriptionsForClient(LincaConnection conn) : base(conn) 
     {
         Steps = new Step[]
