@@ -77,7 +77,7 @@ internal class US002_MedOrderRepeat : Spec
 
             ro.Action.Add(action);
 
-            (var createdRO, var canCue) = LincaDataExchange.CreateRequestOrchestration(Connection, ro);
+            (var createdRO, var canCue, var outcome) = LincaDataExchange.CreateRequestOrchestration(Connection, ro);
 
             if (canCue)
             {
@@ -89,6 +89,14 @@ internal class US002_MedOrderRepeat : Spec
             else
             {
                 Console.WriteLine($"Failed to transmit Linca Request Orchestration");
+            }
+
+            if (outcome != null)
+            {
+                foreach (var item in outcome.Issue)
+                {
+                    Console.WriteLine($"Outcome Issue Code: '{item.Details.Coding?.FirstOrDefault()?.Code}', Text: '{item.Details.Text}'");
+                }
             }
 
             return canCue;

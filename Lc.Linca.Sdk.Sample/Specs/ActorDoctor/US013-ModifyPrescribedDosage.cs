@@ -101,7 +101,7 @@ internal class US013_ModifyPrescribedDosage : Spec
                 System = "urn:oid:1.2.40.0.10.1.4.3.3"        // OID: Rezeptnummer
             };
 
-            (var postedPMR, var canCue) = LincaDataExchange.CreatePrescriptionMedicationRequest(Connection, prescription);
+            (var postedPMR, var canCue, var outcome) = LincaDataExchange.CreatePrescriptionMedicationRequest(Connection, prescription);
 
             if (canCue)
             {
@@ -110,6 +110,14 @@ internal class US013_ModifyPrescribedDosage : Spec
             else
             {
                 Console.WriteLine($"Failed to transmit Linca PrescriptionMedicationRequest");
+            }
+
+            if (outcome != null)
+            {
+                foreach (var item in outcome.Issue)
+                {
+                    Console.WriteLine($"Outcome Issue Code: '{item.Details.Coding?.FirstOrDefault()?.Code}', Text: '{item.Details.Text}'");
+                }
             }
 
             return canCue;

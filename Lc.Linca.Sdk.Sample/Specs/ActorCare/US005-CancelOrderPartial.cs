@@ -129,7 +129,7 @@ internal class US005_CancelOrder : Spec
                 }
             };
 
-            (var postedOMR, var canCue) = LincaDataExchange.PostProposalMedicationRequest(Connection, medReq2);
+            (var postedOMR, var canCue, var outcome) = LincaDataExchange.PostProposalMedicationRequest(Connection, medReq2);
 
             if (canCue)
             {
@@ -141,6 +141,14 @@ internal class US005_CancelOrder : Spec
             else
             {
                 Console.WriteLine($"Failed to transmit Linca ProposalMedicationRequest");
+            }
+
+            if (outcome != null)
+            {
+                foreach (var item in outcome.Issue)
+                {
+                    Console.WriteLine($"Outcome Issue Code: '{item.Details.Coding?.FirstOrDefault()?.Code}', Text: '{item.Details.Text}'");
+                }
             }
 
             return canCue;

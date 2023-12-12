@@ -204,7 +204,7 @@ internal class US015_CreateInitialPrescription : Spec
         prescriptions.AddResourceEntry(initialPresc1, $"{Connection.ServerBaseUrl}/{LincaEndpoints.LINCAPrescriptionMedicationRequest}");
         prescriptions.AddResourceEntry(initialPresc2, $"{Connection.ServerBaseUrl}/{LincaEndpoints.LINCAPrescriptionMedicationRequest}");
 
-        (Bundle results, var canCue) = LincaDataExchange.CreatePrescriptionBundle(Connection, prescriptions);
+        (Bundle results, var canCue, var outcome) = LincaDataExchange.CreatePrescriptionBundle(Connection, prescriptions);
 
         if (canCue)
         {
@@ -216,6 +216,15 @@ internal class US015_CreateInitialPrescription : Spec
         {
             Console.WriteLine($"Failed to transmit Linca PrescriptionMedicationRequestBundle");
         }
+
+        if (outcome != null)
+        {
+            foreach (var item in outcome.Issue)
+            {
+                Console.WriteLine($"Outcome Issue Code: '{item.Details.Coding?.FirstOrDefault()?.Code}', Text: '{item.Details.Text}'");
+            }
+        }
+
         return canCue;
     }
 }

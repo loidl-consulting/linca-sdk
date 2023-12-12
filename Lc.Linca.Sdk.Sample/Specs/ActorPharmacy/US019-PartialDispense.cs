@@ -109,18 +109,30 @@ internal class US019_PartialDispense : Spec
             }
                 };
 
-                (var postedMD, var canCue) = LincaDataExchange.CreateMedicationDispense(Connection, dispense);
+                (var postedMD, var canCue, var outcome) = LincaDataExchange.CreateMedicationDispense(Connection, dispense);
 
                 if (canCue)
                 {
                     Console.WriteLine($"Linca MedicationDispense (type partial dispense) transmitted, id {postedMD.Id}");
+                }
+                else
+                {
+                    Console.WriteLine($"Failed to transmit Linca MedicationDispense");
+                }
+
+                if (outcome != null)
+                {
+                    foreach (var item in outcome.Issue)
+                    {
+                        Console.WriteLine($"Outcome Issue Code: '{item.Details.Coding?.FirstOrDefault()?.Code}', Text: '{item.Details.Text}'");
+                    }
                 }
 
                 return canCue;
             }
             else
             {
-                Console.WriteLine($"Initial prescription (Luxerm for Renate Rüssel-Oilfant) not found, run US015 first");
+                Console.WriteLine($"Initial prescription (Luxerm for Renate Rüssel-Oilfant) not found");
 
                 return false;
             }

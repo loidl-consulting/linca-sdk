@@ -76,7 +76,8 @@ internal class US001_MedOrderSingleArticle : Spec
         ));
 
         patient.Gender = AdministrativeGender.Female;
-        (var createdPatient, var canCue) = LincaDataExchange.CreatePatient(Connection, patient);
+
+        (var createdPatient, var canCue, var outcome) = LincaDataExchange.CreatePatient(Connection, patient);
        
         if(canCue)
         {
@@ -88,6 +89,14 @@ internal class US001_MedOrderSingleArticle : Spec
         else
         {
             Console.WriteLine($"Failed to transmit client information");
+        }
+
+        if (outcome != null)
+        {
+            foreach (var item in outcome.Issue)
+            {
+                Console.WriteLine($"Outcome Issue Code: '{item.Details.Coding?.FirstOrDefault()?.Code}', Text: '{item.Details.Text}'");
+            }
         }
 
         return canCue;
@@ -186,7 +195,7 @@ internal class US001_MedOrderSingleArticle : Spec
         ro.Action.Add( action );
 
        
-        (var createdRO, var canCue) = LincaDataExchange.CreateRequestOrchestration(Connection, ro);
+        (var createdRO, var canCue, var outcome) = LincaDataExchange.CreateRequestOrchestration(Connection, ro);
 
         if (canCue)
         {
@@ -198,6 +207,14 @@ internal class US001_MedOrderSingleArticle : Spec
         else
         {
             Console.WriteLine($"Failed to transmit Linca Request Orchestration");
+        }
+
+        if (outcome != null)
+        {
+            foreach (var item in outcome.Issue)
+            {
+                Console.WriteLine($"Outcome Issue Code: '{item.Details.Coding?.FirstOrDefault()?.Code}', Text: '{item.Details.Text}'");
+            }
         }
 
         return canCue;

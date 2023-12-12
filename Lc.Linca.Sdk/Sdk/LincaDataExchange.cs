@@ -29,133 +29,92 @@ public static class LincaDataExchange
     /// If a patient record matching that Id is found, it
     /// it will be updated.
     /// </summary>
-    public static (Patient created, bool canCue) CreatePatient(LincaConnection connection, Patient patient)
+    public static (Patient created, bool canCue, OperationOutcome? outcome) CreatePatient(LincaConnection connection, Patient patient)
     {
         (var createdPatient, var canCue, var outcome) = FhirDataExchange<Patient>.CreateResourceWithOutcome(connection, patient);
 
         if(canCue)
         {
-            return (createdPatient, true);
-        }
-        else if (outcome != null)
-        {
-            foreach(var item in outcome.Issue) 
-            {
-                Console.WriteLine($"Outcome Issue Code: '{item.Details.Coding?.FirstOrDefault()?.Code}', Text: '{item.Details.Text}'");
-            }
+            return (createdPatient, true, outcome);
         }
 
-        return (new(), false);
+        return (new(), false, outcome);
     }
 
     /// <summary>
     /// Post a new Linked Care Medication Order
     /// </summary>
-    public static (RequestOrchestration createdRO, bool canCue) CreateRequestOrchestration(LincaConnection connection, RequestOrchestration ro)
+    public static (RequestOrchestration createdRO, bool canCue, OperationOutcome? outcome) CreateRequestOrchestration(LincaConnection connection, RequestOrchestration ro)
     {
         (var createdRO, var canCue, var outcome) = FhirDataExchange<RequestOrchestration>.CreateResourceWithOutcome(connection, ro);
 
         if (canCue)
         {
-            return (createdRO, true);
-        }
-        else if (outcome != null)
-        {
-            foreach (var item in outcome.Issue)
-            {
-                Console.WriteLine($"Outcome Issue Code: '{item.Details.Coding?.FirstOrDefault()?.Code}', Text: '{item.Details.Text}'");
-            }
+            return (createdRO, true, outcome);
         }
 
-        return (new(), false);
+        return (new(), false, outcome);
     }
 
     /// <summary>
     /// Post a new Linked Care proposal order position
     /// </summary>
-    public static (MedicationRequest postedOMR, bool canCue) PostProposalMedicationRequest(LincaConnection connection, MedicationRequest omr)
+    public static (MedicationRequest postedOMR, bool canCue, OperationOutcome? outcome) PostProposalMedicationRequest(LincaConnection connection, MedicationRequest omr)
     {
         (var postedOMR, var canCue, var outcome) = FhirDataExchange<MedicationRequest>.CreateResourceWithOutcome(connection, omr, LincaEndpoints.LINCAProposalMedicationRequest);
 
         if (canCue)
         {
-            return (postedOMR, true);
-        }
-        else if (outcome != null)
-        {
-            foreach (var item in outcome.Issue)
-            {
-                Console.WriteLine($"Outcome Issue Code: '{item.Details.Coding?.FirstOrDefault()?.Code}', Text: '{item.Details.Text}'");
-            }
+            return (postedOMR, true, outcome);
         }
 
-        return (new(), false);
+        return (new(), false, outcome);
     }
 
     /// <summary>
     /// Create a LINCAPrescriptionsMedicationRequest: used to stop or end single order positions
     /// </summary>
-    public static (MedicationRequest postedPMR, bool canCue) CreatePrescriptionMedicationRequest(LincaConnection connection, MedicationRequest pmr)
+    public static (MedicationRequest postedPMR, bool canCue, OperationOutcome? outcome) CreatePrescriptionMedicationRequest(LincaConnection connection, MedicationRequest pmr)
     {
         (var postedPMR, var canCue, var outcome) = FhirDataExchange<MedicationRequest>.CreateResourceWithOutcome(connection, pmr, LincaEndpoints.LINCAPrescriptionMedicationRequest);
 
         if (canCue)
         {
-            return (postedPMR, true);
-        }
-        else if (outcome != null)
-        {
-            foreach (var item in outcome.Issue)
-            {
-                Console.WriteLine($"Outcome Issue Code: '{item.Details.Coding?.FirstOrDefault()?.Code}', Text: '{item.Details.Text}'");
-            }
+            return (postedPMR, true, outcome);
         }
 
-        return (new(), false);
+        return (new(), false, outcome);
     }
 
     /// <summary>
-    /// Create a new LINCA prescription 
+    /// Create one or more new LINCA prescriptions in one transaction Bundle
+    /// all prescriptions in the Bundle must share the same eRezept-Id
     /// </summary>
-    public static (Bundle results, bool canCue) CreatePrescriptionBundle(LincaConnection connection, Bundle prescriptions)
+    public static (Bundle results, bool canCue, OperationOutcome? outcome) CreatePrescriptionBundle(LincaConnection connection, Bundle prescriptions)
     {
         (Bundle createdPrescriptions, bool canCue, var outcome) = FhirDataExchange<Bundle>.CreateResourceBundle(connection, prescriptions, LincaEndpoints.prescription);
 
         if (canCue)
         {
-            return (createdPrescriptions, true);
-        }
-        else if (outcome != null)
-        {
-            foreach (var item in outcome.Issue)
-            {
-                Console.WriteLine($"Outcome Issue Code: '{item.Details.Coding?.FirstOrDefault()?.Code}', Text: '{item.Details.Text}'");
-            }
+            return (createdPrescriptions, true, outcome);
         }
 
-        return (new(), false);
+        return (new(), false, outcome);
     }
 
     /// <summary>
     /// Create a new Linked Care medication dispense
     /// </summary>
-    public static (MedicationDispense postedMD, bool canCue) CreateMedicationDispense(LincaConnection connection, MedicationDispense md)
+    public static (MedicationDispense postedMD, bool canCue, OperationOutcome? outcome) CreateMedicationDispense(LincaConnection connection, MedicationDispense md)
     {
         (var postedMD, var canCue, var outcome) = FhirDataExchange<MedicationDispense>.CreateResourceWithOutcome(connection, md);
 
         if (canCue)
         {
-            return (postedMD, true);
-        }
-        else if (outcome != null)
-        {
-            foreach (var item in outcome.Issue)
-            {
-                Console.WriteLine($"Outcome Issue Code: '{item.Details.Coding?.FirstOrDefault()?.Code}', Text: '{item.Details.Text}'");
-            }
+            return (postedMD, true, outcome);
         }
 
-        return (new(), false);
+        return (new(), false, outcome);
     }
 
     /// <summary>
@@ -167,7 +126,7 @@ public static class LincaDataExchange
     }
 
     /// <summary>
-    /// Get a all order chain links (proposal order positions, prescriptions, dispenses) for the given lc_id
+    /// Get a all order chain links (proposal order positions, prescriptions, and dispenses) for the given lc_id
     /// </summary>
     public static (Bundle results, bool canCue) GetProposalStatus(LincaConnection connection, string id)
     {
@@ -213,7 +172,7 @@ public static class LincaDataExchange
     }
 
     /// <summary>
-    /// Get all Linked Care prescriptions which are connected to the given id (eRezept-Id or LinkedCare-prescriptionId
+    /// Get all Linked Care prescriptions which are connected to the given id (eRezept-Id or LinkedCare-prescriptionId)
     /// </summary>
     public static (Bundle results, bool canCue) GetPrescriptionToDispense(LincaConnection connection, string id)
     {
@@ -229,7 +188,7 @@ public static class LincaDataExchange
     }
 
     /// <summary>
-    /// Get initial prescriptions (and corresponding dispenses) from the last 90 days for the given svnr
+    /// Get initial prescriptions (and corresponding dispenses) from the last 90 days for the given social insurance number (SVNr in Austria)
     /// </summary>
     public static (Bundle results, bool canCue) GetInitialPrescription(LincaConnection connection, string svnr)
     {

@@ -125,7 +125,7 @@ internal class US018_Dispense : Spec
             }
             };
 
-            (var postedMD, var canCue) = LincaDataExchange.CreateMedicationDispense(Connection, dispense);
+            (var postedMD, var canCue, var outcome) = LincaDataExchange.CreateMedicationDispense(Connection, dispense);
 
             if (canCue)
             {
@@ -134,6 +134,14 @@ internal class US018_Dispense : Spec
             else
             {
                 Console.WriteLine($"Failed to transmit Linca MedicationDispense");
+            }
+
+            if (outcome != null)
+            {
+                foreach (var item in outcome.Issue)
+                {
+                    Console.WriteLine($"Outcome Issue Code: '{item.Details.Coding?.FirstOrDefault()?.Code}', Text: '{item.Details.Text}'");
+                }
             }
 
             return canCue;

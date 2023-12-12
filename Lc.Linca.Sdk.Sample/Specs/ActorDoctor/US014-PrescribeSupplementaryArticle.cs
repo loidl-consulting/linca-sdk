@@ -215,7 +215,7 @@ internal class US014_PrescribeSupplementaryArticle : Spec
             prescriptions.AddResourceEntry(prescription, $"{Connection.ServerBaseUrl}/{LincaEndpoints.LINCAPrescriptionMedicationRequest}");
             prescriptions.AddResourceEntry(adhoc, $"{Connection.ServerBaseUrl}/{LincaEndpoints.LINCAPrescriptionMedicationRequest}");
 
-            (Bundle results, var canCue) = LincaDataExchange.CreatePrescriptionBundle(Connection, prescriptions);
+            (Bundle results, var canCue, var outcome) = LincaDataExchange.CreatePrescriptionBundle(Connection, prescriptions);
 
             if (canCue)
             {
@@ -226,6 +226,14 @@ internal class US014_PrescribeSupplementaryArticle : Spec
             else
             {
                 Console.WriteLine($"Failed to transmit Linca PrescriptionMedicationRequest");
+            }
+
+            if (outcome != null)
+            {
+                foreach (var item in outcome.Issue)
+                {
+                    Console.WriteLine($"Outcome Issue Code: '{item.Details.Coding?.FirstOrDefault()?.Code}', Text: '{item.Details.Text}'");
+                }
             }
 
             return canCue;

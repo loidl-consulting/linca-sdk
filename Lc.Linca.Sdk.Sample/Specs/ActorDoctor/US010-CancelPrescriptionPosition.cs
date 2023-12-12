@@ -130,7 +130,7 @@ internal class US010_CancelPrescriptionPosition : Spec
                 }
             };
 
-            (var postedPMR, var canCue) = LincaDataExchange.CreatePrescriptionMedicationRequest(Connection, medReq);
+            (var postedPMR, var canCue, var outcome) = LincaDataExchange.CreatePrescriptionMedicationRequest(Connection, medReq);
 
             if (canCue)
             {
@@ -139,6 +139,14 @@ internal class US010_CancelPrescriptionPosition : Spec
             else
             {
                 Console.WriteLine($"Failed to transmit Linca PrescriptionMedicationRequest");
+            }
+
+            if (outcome != null)
+            {
+                foreach (var item in outcome.Issue)
+                {
+                    Console.WriteLine($"Outcome Issue Code: '{item.Details.Coding?.FirstOrDefault()?.Code}', Text: '{item.Details.Text}'");
+                }
             }
 
             return canCue;

@@ -72,25 +72,26 @@ internal class US000_InternalTestPutPatient : Spec
         ));
 
         patient.Gender = AdministrativeGender.Female;
-        (var createdPatient, var canCue) = LincaDataExchange.CreatePatient(Connection, patient);
+        (var createdPatient, var canCue, var outcome) = LincaDataExchange.CreatePatient(Connection, patient);
        
-        if(canCue)
+        if (canCue)
         {
-            if (createdPatient.Id == patient.Id) 
-            {
                 Console.WriteLine($"Client information with external id transmitted, id {createdPatient.Id}");
 
                 LinkedCareSampleClient.CareInformationSystemScaffold.Data.ClientIdRenate = createdPatient.Id;
                 LinkedCareSampleClient.CareInformationSystemScaffold.PseudoDatabaseStore();
-            }
-            else
-            {
-                Console.WriteLine($"Client information with external id transmitted, but the server assigned the id {createdPatient.Id}");
-            }
         }
         else
         {
-            Console.WriteLine($"Failed to transmit client information");
+            Console.WriteLine($"Failed to transmit client information with external id");
+        }
+
+        if (outcome != null)
+        {
+            foreach (var item in outcome.Issue)
+            {
+                Console.WriteLine($"Outcome Issue Code: '{item.Details.Coding?.FirstOrDefault()?.Code}', Text: '{item.Details.Text}'");
+            }
         }
 
         return canCue;
@@ -123,7 +124,8 @@ internal class US000_InternalTestPutPatient : Spec
         ));
 
         patient.Gender = AdministrativeGender.Other;
-        (var updatedPatient, var canCue) = LincaDataExchange.CreatePatient(Connection, patient);
+
+        (var updatedPatient, var canCue, var outcome) = LincaDataExchange.CreatePatient(Connection, patient);
 
         if (canCue)
         {
@@ -139,6 +141,14 @@ internal class US000_InternalTestPutPatient : Spec
         else
         {
             Console.WriteLine($"Failed to transmit client information");
+        }
+
+        if (outcome != null)
+        {
+            foreach (var item in outcome.Issue)
+            {
+                Console.WriteLine($"Outcome Issue Code: '{item.Details.Coding?.FirstOrDefault()?.Code}', Text: '{item.Details.Text}'");
+            }
         }
 
         return canCue;
