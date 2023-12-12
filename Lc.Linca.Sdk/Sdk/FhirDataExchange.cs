@@ -12,14 +12,14 @@
 using Hl7.Fhir.Model;
 using Hl7.Fhir.Model.Extensions;
 using Hl7.Fhir.Serialization;
-using Hl7.Fhir.Specification;
-using Hl7.Fhir.Support;
 using System.Net;
 
 namespace Lc.Linca.Sdk;
 
 internal static class FhirDataExchange<T> where T : Resource, new()
 {
+    private const int maxReconnectRetries = 5;
+
     /// <summary>
     /// Deprecated, for backward compatibility
     /// </summary>
@@ -43,15 +43,15 @@ internal static class FhirDataExchange<T> where T : Resource, new()
         {
             if (resource is MedicationRequest)
             {
-                Console.WriteLine("Create resource MedicationRequest requires additional parameter overwriteResourceName");
-
-                return (new(), false, null);
+                throw new ArgumentNullException(
+                    nameof(overwriteResourceName),
+                    "Create resource MedicationRequest requires additional parameter overwriteResourceName"
+                );
             }
             else
             {
                 overwriteResourceName = LincaEndpoints.GetProfiledResourceName(resource);
             }
-
         }
 
         if (string.IsNullOrEmpty(resource.Id))
@@ -89,10 +89,9 @@ internal static class FhirDataExchange<T> where T : Resource, new()
         else if (response != null)
         {
             var receivedResourceRaw = new StreamReader
-                (
-                    response.Content.ReadAsStream()
-                ).ReadToEnd();
-
+            (
+                response.Content.ReadAsStream()
+            ).ReadToEnd();
 
             if (new FhirJsonPocoDeserializer().TryDeserializeResource
             (
@@ -147,6 +146,9 @@ internal static class FhirDataExchange<T> where T : Resource, new()
         return (new(), false, null);
     }
 
+    /// <summary>
+    /// Retrieves a bundle as the result of a Fhir operation call
+    /// </summary>
     public static (Bundle received, bool canCue) GetResource(LincaConnection connection, string operationQuery)
     {
         using var getResponse = Receive(connection, operationQuery);
@@ -157,7 +159,6 @@ internal static class FhirDataExchange<T> where T : Resource, new()
             (
                 getResponse.Content.ReadAsStream()
             ).ReadToEnd();
-
 
             if (new FhirJsonPocoDeserializer().TryDeserializeResource
             (
@@ -173,6 +174,9 @@ internal static class FhirDataExchange<T> where T : Resource, new()
         return (new(), false);
     }
 
+    /// <summary>
+    /// Attempts to delete a resource
+    /// </summary>
     public static (OperationOutcome received, bool canCue) DeleteResource(LincaConnection connection, string id, string overwriteResourceName)
     {
         using var response = Send(connection, HttpMethod.Delete, id, overwriteResourceName);
@@ -180,10 +184,9 @@ internal static class FhirDataExchange<T> where T : Resource, new()
         if (response != null)
         {
             var receivedResourceRaw = new StreamReader
-                (
-                    response.Content.ReadAsStream()
-                ).ReadToEnd();
-
+            (
+                response.Content.ReadAsStream()
+            ).ReadToEnd();
 
             if (new FhirJsonPocoDeserializer().TryDeserializeResource
             (
@@ -194,27 +197,21 @@ internal static class FhirDataExchange<T> where T : Resource, new()
             {
                 if (response?.StatusCode == HttpStatusCode.OK)
                 {
-                    return (receivedResource, true) ;
+                    return (receivedResource, true);
                 }
                 else
                 {
                     return (receivedResource, false);
                 }
             }
-            else 
-            { 
-                return (new(), false); 
-            }
         }
-        else
-        {
-            return (new(), false);
-        }
+
+        return (new(), false);
     }
 
     private static HttpResponseMessage? Receive(LincaConnection connection, Uri? fromLocation)
     {
-        for (; ; )
+        for (var attempt = 0; attempt < maxReconnectRetries; ++attempt)
         {
             using var http = connection.GetAuthenticatedClient();
             var getRequest = new HttpRequestMessage
@@ -237,11 +234,13 @@ internal static class FhirDataExchange<T> where T : Resource, new()
 
             return getResponse;
         }
+
+        throw new TimeoutException($"Failed to reconnect after {maxReconnectRetries} attempts");
     }
 
     private static HttpResponseMessage? Receive(LincaConnection connection, string operationQuery)
     {
-        for (; ; )
+        for (var attempt = 0; attempt < maxReconnectRetries; ++attempt)
         {
             using var http = connection.GetAuthenticatedClient();
             var getRequest = new HttpRequestMessage
@@ -264,11 +263,13 @@ internal static class FhirDataExchange<T> where T : Resource, new()
 
             return getResponse;
         }
+
+        throw new TimeoutException($"Failed to reconnect after {maxReconnectRetries} attempts");
     }
 
     private static HttpResponseMessage? Send(LincaConnection connection, HttpMethod method, T resource, string overwriteResourceName)
     {
-        for (; ; )
+        for (var attempt = 0; attempt < maxReconnectRetries; ++attempt)
         {
             using var http = connection.GetAuthenticatedClient();
             HttpRequestMessage request;
@@ -308,11 +309,13 @@ internal static class FhirDataExchange<T> where T : Resource, new()
 
             return response;
         }
+
+        throw new TimeoutException($"Failed to reconnect after {maxReconnectRetries} attempts");
     }
 
     private static HttpResponseMessage? Send(LincaConnection connection, HttpMethod method, string id, string overwriteResourceName)
     {
-        for (; ; )
+        for (var attempt = 0; attempt < maxReconnectRetries; ++attempt)
         {
             using var http = connection.GetAuthenticatedClient();
             var request = new HttpRequestMessage
@@ -335,6 +338,7 @@ internal static class FhirDataExchange<T> where T : Resource, new()
 
             return response;
         }
-    }
 
+        throw new TimeoutException($"Failed to reconnect after {maxReconnectRetries} attempts");
+    }
 }

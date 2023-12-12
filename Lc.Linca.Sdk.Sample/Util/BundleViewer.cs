@@ -10,7 +10,6 @@
  ***********************************************************************************/
 
 using Hl7.Fhir.Model;
-using Hl7.Fhir.Support;
 using Hl7.Fhir.Utility;
 
 namespace Lc.Linca.Sdk;
@@ -22,7 +21,7 @@ public static class BundleHelper
 {
     public static List<MedicationRequest> FilterProposalsToPrescribe(Bundle orderchains)
     {
-        List<MedicationRequest> openProposal = new();
+        List<MedicationRequest> openProposals = new();
         List<MedicationRequest> proposals = new();
         List<MedicationRequest> prescriptions = new();
 
@@ -31,8 +30,8 @@ public static class BundleHelper
             if (item.FullUrl.Contains("LINCAProposal"))
             {
                 proposals.Add((item.Resource as MedicationRequest)!);
-
             }
+
             if (item.FullUrl.Contains("LINCAPrescription"))
             {
                 prescriptions.Add((item.Resource as MedicationRequest)!) ;
@@ -44,12 +43,11 @@ public static class BundleHelper
             if (proposals.Find(x => !x.BasedOn.IsNullOrEmpty() && x.BasedOn.First().Reference.Contains(item.Id)) ==  null
                 && prescriptions.Find(x => !x.BasedOn.IsNullOrEmpty() && x.BasedOn.First().Reference.Contains(item.Id)) == null)
             {
-                openProposal.Add(item);
-            }
-        
+                openProposals.Add(item);
+            }        
         }
 
-        return openProposal;
+        return openProposals;
     }
 
     public static List<MedicationRequest> FilterPrescriptionsToDispense(Bundle orderchains)
@@ -65,6 +63,7 @@ public static class BundleHelper
                 prescriptions.Add((item.Resource as MedicationRequest)!);
 
             }
+
             if (item.FullUrl.Contains("LINCAMedicationDispense"))
             {
                 dispenses.Add((item.Resource as MedicationDispense)!);
@@ -115,6 +114,7 @@ public static class BundleHelper
         {
             Console.WriteLine($"Dispense Id: {item.Id} --> authorizingPrescription: {item.AuthorizingPrescription.First().Reference}");
         }
+
         foreach (var item in prescriptions)
         {
             if (item.BasedOn.Count == 1)
@@ -130,6 +130,7 @@ public static class BundleHelper
                 Console.WriteLine($"Prescription Id: {item.Id} is an initial prescription");
             }
         }
+
         foreach (var item in proposals)
         {
             if (item.BasedOn.Count == 1)
