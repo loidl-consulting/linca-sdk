@@ -11,7 +11,9 @@
 
 using Hl7.Fhir.Model;
 using Hl7.Fhir.Support;
+using Lc.Linca.Sdk.Client;
 using Lc.Linca.Sdk.Scaffolds;
+using System;
 using System.Globalization;
 
 namespace Lc.Linca.Sdk.Specs.ActorCare;
@@ -27,10 +29,11 @@ internal class US003_MedOrderStationaryCare : Spec
         and specifies in advance the pharmacy Apotheke 'Zum frühen Vogel' that ought 
         to prepare the order";
 
-    protected Patient createdGünter = new Patient();
+    protected Patient createdGuenter = new Patient();
     protected Patient createdPatrizia = new Patient();
     protected MedicationRequest medReq1 = new();
     protected MedicationRequest medReq2 = new();
+    protected MedicationRequest medReq3 = new();
 
 
     public US003_MedOrderStationaryCare(LincaConnection conn) : base(conn) 
@@ -61,15 +64,26 @@ internal class US003_MedOrderStationaryCare : Spec
 
         patient.Gender = AdministrativeGender.Male;
 
-        (createdGünter, var canCue) = LincaDataExchange.CreatePatient(Connection, patient);
+        (createdGuenter, var canCue, var outcome) = LincaDataExchange.CreatePatient(Connection, patient);
 
         if (canCue)
         {
-            Console.WriteLine($"Client information transmitted, id {createdGünter.Id}");
+            LinkedCareSampleClient.CareInformationSystemScaffold.Data.ClientIdGuenter = createdGuenter.Id;
+            LinkedCareSampleClient.CareInformationSystemScaffold.PseudoDatabaseStore();
+
+            Console.WriteLine($"Client information transmitted, id {createdGuenter.Id}");
         }
         else
         {
             Console.WriteLine($"Failed to transmit client information");
+        }
+
+        if (outcome != null)
+        {
+            foreach (var item in outcome.Issue)
+            {
+                Console.WriteLine($"Outcome Issue Code: '{item.Details.Coding?.FirstOrDefault()?.Code}', Text: '{item.Details.Text}'");
+            }
         }
 
         return canCue;
@@ -77,6 +91,7 @@ internal class US003_MedOrderStationaryCare : Spec
 
     private bool CreateClientRecord2()
     {
+
         var patient = new Patient();
 
         patient.Name.Add(new()
@@ -91,15 +106,26 @@ internal class US003_MedOrderStationaryCare : Spec
         ));
         patient.Gender = AdministrativeGender.Other;
 
-        (createdPatrizia, var canCue) = LincaDataExchange.CreatePatient(Connection, patient);
+        (createdPatrizia, var canCue, var outcome) = LincaDataExchange.CreatePatient(Connection, patient);
 
         if (canCue)
         {
+            LinkedCareSampleClient.CareInformationSystemScaffold.Data.ClientIdPatrizia = createdPatrizia.Id;
+            LinkedCareSampleClient.CareInformationSystemScaffold.PseudoDatabaseStore();
+
             Console.WriteLine($"Client information transmitted, id {createdPatrizia.Id}");
         }
         else
         {
             Console.WriteLine($"Failed to transmit client information");
+        }
+
+        if (outcome != null)
+        {
+            foreach (var item in outcome.Issue)
+            {
+                Console.WriteLine($"Outcome Issue Code: '{item.Details.Coding?.FirstOrDefault()?.Code}', Text: '{item.Details.Text}'");
+            }
         }
 
         return canCue;
@@ -126,6 +152,7 @@ internal class US003_MedOrderStationaryCare : Spec
 
         ro.Contained.Add(medReq1);
         ro.Contained.Add(medReq2);
+        ro.Contained.Add(medReq3);  
 
         foreach (var item in ro.Contained)
         {
@@ -137,10 +164,13 @@ internal class US003_MedOrderStationaryCare : Spec
             ro.Action.Add(action);
         }
 
-        (var createdRO, var canCue) = LincaDataExchange.CreateRequestOrchestration(Connection, ro);
+        (var createdRO, var canCue, var outcome) = LincaDataExchange.CreateRequestOrchestration(Connection, ro);
 
         if (canCue)
         {
+            LinkedCareSampleClient.CareInformationSystemScaffold.Data.LcIdVogelsang = createdRO.Id;
+            LinkedCareSampleClient.CareInformationSystemScaffold.PseudoDatabaseStore();
+
             Console.WriteLine($"Linca Request Orchestration transmitted, id {createdRO.Id}");
         }
         else
@@ -148,19 +178,30 @@ internal class US003_MedOrderStationaryCare : Spec
             Console.WriteLine($"Failed to transmit Linca Request Orchestration");
         }
 
+        if (outcome != null)
+        {
+            foreach (var item in outcome.Issue)
+            {
+                Console.WriteLine($"Outcome Issue Code: '{item.Details.Coding?.FirstOrDefault()?.Code}', Text: '{item.Details.Text}'");
+            }
+        }
+
         return canCue;
     }
 
     private void PrepareMedicationRequests()
     {
-        // medication request for Günter Gürtelthier
-        medReq1.Id = Guid.NewGuid().ToFhirId();
+        LinkedCareSampleClient.CareInformationSystemScaffold.PseudoDatabaseRetrieve();
+        
+        // medication request 1 for Günter Gürtelthier
+        medReq1.Id = Guid.NewGuid().ToFhirId();                                  // REQUIRED
         medReq1.Status = MedicationRequest.MedicationrequestStatus.Unknown;      // REQUIRED
         medReq1.Intent = MedicationRequest.MedicationRequestIntent.Proposal;     // REQUIRED
         medReq1.Subject = new ResourceReference()                                // REQUIRED
         {
-            Reference = $"HL7ATCorePatient/{createdGünter.Id}"     // relative path to Linca Fhir patient resource
+            Reference = $"HL7ATCorePatient/{LinkedCareSampleClient.CareInformationSystemScaffold.Data.ClientIdGuenter}"     // relative path to Linca Fhir patient resource
         };
+
         medReq1.Medication = new()
         {
             Concept = new()
@@ -176,6 +217,7 @@ internal class US003_MedOrderStationaryCare : Spec
                     }
             }
         };
+
         medReq1.InformationSource.Add(new ResourceReference()  // REQUIRED, cardinality 1..1 in LINCA
         {
             Identifier = new()
@@ -185,6 +227,7 @@ internal class US003_MedOrderStationaryCare : Spec
             },
             Display = "Haus Vogelsang"   // optional
         });
+
         medReq1.Requester = new ResourceReference()  // REQUIRED
         {
             Identifier = new()
@@ -194,6 +237,7 @@ internal class US003_MedOrderStationaryCare : Spec
             },
             Display = "DGKP Walter Specht"
         };
+
         medReq1.Performer.Add(new ResourceReference()   // REQUIRED, cardinality 1..1 in LINCA
         {
             Identifier = new()
@@ -203,7 +247,76 @@ internal class US003_MedOrderStationaryCare : Spec
             },
             Display = "Dr. Silvia Spitzmaus"   // optional
         });
+
         medReq1.DispenseRequest = new()
+        {
+            Dispenser = new()
+            {
+                Identifier = new()
+                {
+                    Value = "2.999.40.0.34.5.1.2",  // OID of designated pharmacy
+                    System = "urn:oid:1.2.40.0.34.5.2"  // Code-System: eHVD
+                },
+                Display = "Apotheke 'Zum frühen Vogel'"
+            }
+        };
+
+        // medication request 2 for Günter Gürtelthier
+        medReq2.Id = Guid.NewGuid().ToFhirId();                                  // REQUIRED
+        medReq2.Status = MedicationRequest.MedicationrequestStatus.Unknown;      // REQUIRED
+        medReq2.Intent = MedicationRequest.MedicationRequestIntent.Proposal;     // REQUIRED
+        medReq2.Subject = new ResourceReference()                                // REQUIRED
+        {
+            Reference = $"HL7ATCorePatient/{LinkedCareSampleClient.CareInformationSystemScaffold.Data.ClientIdGuenter}"     // relative path to Linca Fhir patient resource
+        };
+
+        medReq2.Medication = new()
+        {
+            Concept = new()
+            {
+                Coding = new()
+                    {
+                        new Coding()
+                        {
+                            Code = "4460951",
+                            System = "https://termgit.elga.gv.at/CodeSystem/asp-liste",
+                            Display = "Granpidam 20 mg Filmtabletten"
+                        }
+                    }
+            }
+        };
+
+        medReq2.InformationSource.Add(new ResourceReference()  // REQUIRED, cardinality 1..1 in LINCA
+        {
+            Identifier = new()
+            {
+                Value = "2.999.40.0.34.1.1.1",  // OID of the ordering care organization
+                System = "urn:oid:1.2.40.0.34.5.2"  // Code-System: eHVD
+            },
+            Display = "Haus Vogelsang"   // optional
+        });
+
+        medReq2.Requester = new ResourceReference()  // REQUIRED
+        {
+            Identifier = new()
+            {
+                Value = "ECHT_SPECHT",               // e.g., org internal username or handsign of Susanne Allzeit
+                System = "urn:oid:2.999.40.0.34.1.1.1"  // Code-System: Care-Org Pflegedienst Immerdar
+            },
+            Display = "DGKP Walter Specht"
+        };
+
+        medReq2.Performer.Add(new ResourceReference()   // REQUIRED, cardinality 1..1 in LINCA
+        {
+            Identifier = new()
+            {
+                Value = "2.999.40.0.34.3.1.3",  // OID of designated practitioner 
+                System = "urn:oid:1.2.40.0.34.5.2"  // Code-System: eHVD
+            },
+            Display = "Dr. Silvia Spitzmaus"   // optional
+        });
+
+        medReq2.DispenseRequest = new()
         {
             Dispenser = new()
             {
@@ -219,14 +332,15 @@ internal class US003_MedOrderStationaryCare : Spec
         /***********************************************************************************/
 
         // medication request for Patricia Platypus
-        medReq2.Id = Guid.NewGuid().ToFhirId();
-        medReq2.Status = MedicationRequest.MedicationrequestStatus.Unknown;      // REQUIRED
-        medReq2.Intent = MedicationRequest.MedicationRequestIntent.Proposal;     // REQUIRED
-        medReq2.Subject = new ResourceReference()                                // REQUIRED
+        medReq3.Id = Guid.NewGuid().ToFhirId();                                  // REQUIRED
+        medReq3.Status = MedicationRequest.MedicationrequestStatus.Unknown;      // REQUIRED
+        medReq3.Intent = MedicationRequest.MedicationRequestIntent.Proposal;     // REQUIRED
+        medReq3.Subject = new ResourceReference()                                // REQUIRED
         {
-            Reference = $"HL7ATCorePatient/{createdPatrizia.Id}"     // relative path to Linca Fhir patient resource
+            Reference = $"HL7ATCorePatient/{LinkedCareSampleClient.CareInformationSystemScaffold.Data.ClientIdPatrizia}"     // relative path to Linca Fhir patient resource
         };
-        medReq2.Medication = new()
+
+        medReq3.Medication = new()
         {
             Concept = new()
             {
@@ -241,7 +355,8 @@ internal class US003_MedOrderStationaryCare : Spec
                     }
             }
         };
-        medReq2.InformationSource.Add(new ResourceReference()  // REQUIRED, cardinality 1..1 in LINCA
+
+        medReq3.InformationSource.Add(new ResourceReference()  // REQUIRED, cardinality 1..1 in LINCA
         {
             Identifier = new()
             {
@@ -250,7 +365,8 @@ internal class US003_MedOrderStationaryCare : Spec
             },
             Display = "Haus Vogelsang"   // optional
         });
-        medReq2.Requester = new ResourceReference()  // REQUIRED
+
+        medReq3.Requester = new ResourceReference()  // REQUIRED
         {
             Identifier = new()
             {
@@ -259,7 +375,8 @@ internal class US003_MedOrderStationaryCare : Spec
             },
             Display = "DGKP Walter Specht"
         };
-        medReq2.Performer.Add(new ResourceReference()   // REQUIRED, cardinality 1..1 in LINCA
+
+        medReq3.Performer.Add(new ResourceReference()   // REQUIRED, cardinality 1..1 in LINCA
         {
             Identifier = new()
             {
@@ -268,7 +385,8 @@ internal class US003_MedOrderStationaryCare : Spec
             },
             Display = "Dr. Kunibert Kreuzotter"   // optional
         });
-        medReq2.DispenseRequest = new()
+
+        medReq3.DispenseRequest = new()
         {
             Dispenser = new()
             {

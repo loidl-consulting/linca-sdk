@@ -36,7 +36,7 @@ internal abstract class Spec
                 .Where(t => t.BaseType == typeof(Spec))
                 .OrderBy(t => t.Name);
             
-            return specs.Select(t => (++i, t.Name, t.AsType()));
+            return specs.Select(t => (i++, t.Name, t.AsType()));
         }
     }
 

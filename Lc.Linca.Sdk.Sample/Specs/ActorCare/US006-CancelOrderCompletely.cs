@@ -9,6 +9,8 @@
  * The Linked Care project is co-funded by the Austrian FFG
  ***********************************************************************************/
 
+using Lc.Linca.Sdk.Client;
+
 namespace Lc.Linca.Sdk.Specs.ActorCare;
 
 internal class US006_CancelOrderCompletely : Spec
@@ -25,5 +27,25 @@ internal class US006_CancelOrderCompletely : Spec
             has already issued a prescription. And positions for which the designated practitioner has not yet issued a prescription, 
             will be promoted to the status 'cancelled' by the LINCA system";
 
-    public US006_CancelOrderCompletely(LincaConnection conn) : base(conn) { }
+    public US006_CancelOrderCompletely(LincaConnection conn) : base(conn) 
+    {
+        Steps = new Step[]
+        {
+            new("Cancel order(s) completely", DeleteRequestOrchestration)
+        };
+    }
+
+    private bool DeleteRequestOrchestration()
+    {
+        LinkedCareSampleClient.CareInformationSystemScaffold.PseudoDatabaseRetrieve();
+
+        (var oo, var deleted) = LincaDataExchange.DeleteRequestOrchestration(Connection, $"{LinkedCareSampleClient.CareInformationSystemScaffold.Data.LcIdVogelsang}");
+
+        foreach (var item in oo.Issue)
+        {
+            Console.WriteLine($"Details: {item.Details.Text}");
+        }
+
+        return deleted;
+    }
 }

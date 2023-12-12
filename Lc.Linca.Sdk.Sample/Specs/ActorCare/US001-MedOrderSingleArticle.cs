@@ -76,7 +76,8 @@ internal class US001_MedOrderSingleArticle : Spec
         ));
 
         patient.Gender = AdministrativeGender.Female;
-        (var createdPatient, var canCue) = LincaDataExchange.CreatePatient(Connection, patient);
+
+        (var createdPatient, var canCue, var outcome) = LincaDataExchange.CreatePatient(Connection, patient);
        
         if(canCue)
         {
@@ -87,7 +88,15 @@ internal class US001_MedOrderSingleArticle : Spec
         }
         else
         {
-            Console.WriteLine("Failed to transmit client information");
+            Console.WriteLine($"Failed to transmit client information");
+        }
+
+        if (outcome != null)
+        {
+            foreach (var item in outcome.Issue)
+            {
+                Console.WriteLine($"Outcome Issue Code: '{item.Details.Coding?.FirstOrDefault()?.Code}', Text: '{item.Details.Text}'");
+            }
         }
 
         return canCue;
@@ -161,7 +170,7 @@ internal class US001_MedOrderSingleArticle : Spec
         RequestOrchestration ro = new()
         {
             Status = RequestStatus.Active,      // REQUIRED
-            Intent = RequestIntent.Proposal,       // REQUIRED
+            Intent = RequestIntent.Proposal,    // REQUIRED
             Subject = new ResourceReference()   // REQUIRED
             {
                 Identifier = new()
@@ -177,22 +186,35 @@ internal class US001_MedOrderSingleArticle : Spec
 
         var action = new RequestOrchestration.ActionComponent()
         {
-            //Type = 
+            Type = new(),
             Resource = new ResourceReference($"#{medReq.Id}")
         };
+
+        action.Type.Coding.Add(new() { Code = "create" });
 
         ro.Action.Add( action );
 
        
-        (var createdRO, var canCue) = LincaDataExchange.CreateRequestOrchestration(Connection, ro);
+        (var createdRO, var canCue, var outcome) = LincaDataExchange.CreateRequestOrchestration(Connection, ro);
 
         if (canCue)
         {
+            LinkedCareSampleClient.CareInformationSystemScaffold.Data.LcIdImmerdar001 = createdRO.Id;
+            LinkedCareSampleClient.CareInformationSystemScaffold.PseudoDatabaseStore();
+
             Console.WriteLine($"Linca Request Orchestration transmitted, id {createdRO.Id}");
         }
         else
         {
             Console.WriteLine($"Failed to transmit Linca Request Orchestration");
+        }
+
+        if (outcome != null)
+        {
+            foreach (var item in outcome.Issue)
+            {
+                Console.WriteLine($"Outcome Issue Code: '{item.Details.Coding?.FirstOrDefault()?.Code}', Text: '{item.Details.Text}'");
+            }
         }
 
         return canCue;

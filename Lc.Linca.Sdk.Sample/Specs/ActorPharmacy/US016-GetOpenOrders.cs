@@ -9,9 +9,11 @@
  * The Linked Care project is co-funded by the Austrian FFG
  ***********************************************************************************/
 
+using Hl7.Fhir.Model;
+
 namespace Lc.Linca.Sdk.Specs.ActorPharmacy;
 
-internal class US014_GetOpenOrders : Spec
+internal class US016_GetOpenOrders : Spec
 {
     public const string UserStory = @"
         Pharmacist Mag. Andreas Amsel, owner of the pharmacy Apotheke 'Zum frühen Vogel' has 
@@ -23,5 +25,29 @@ internal class US014_GetOpenOrders : Spec
             and his software can interpret the returned LINCA order position chains, 
             and visually present and import the order and all its positions";
 
-    public US014_GetOpenOrders(LincaConnection conn) : base(conn) { }
+    public US016_GetOpenOrders(LincaConnection conn) : base(conn)
+    {
+        Steps = new Step[]
+        {
+            new ("Get prescriptions to dispense", GetPrescriptionsToDispense)
+        };
+    }
+
+    private bool GetPrescriptionsToDispense()
+    {
+        (Bundle results, bool received) = LincaDataExchange.GetPrescriptionsToDispense(Connection);
+
+        if (received)
+        {
+            Console.WriteLine($"Get prescriptions-to-dispense succeeded");
+
+            BundleHelper.ShowOrderChains(results);
+        }
+        else
+        {
+            Console.WriteLine($"Get prespcriptions-to-dispense failed");
+        }
+
+        return received;
+    }
 }

@@ -20,8 +20,8 @@ internal static class LinkedCareSampleClient
     /// <summary>
     /// In SDK, this always points to the development system
     /// </summary>
-    internal const string FhirServerBaseUrl = "https://fhir5-d.linkedcare.at";
-    //internal const string FhirServerBaseUrl = "https://localhost:8084";
+    //internal const string FhirServerBaseUrl = "https://fhir5-d.linkedcare.at";
+    internal const string FhirServerBaseUrl = "https://localhost:8084";
 
     internal static CareInformationSystem CareInformationSystemScaffold = new();
     internal static PractitionerInformationSystem PractitionerInformationSystemScaffold = new();
@@ -41,6 +41,7 @@ internal static class LinkedCareSampleClient
         {
             do
             {
+                PrintConnectedSequences();
                 var specToRun = SelectSpecToRun();
                 if (specToRun == null)
                 {
@@ -201,7 +202,7 @@ internal static class LinkedCareSampleClient
         Console.SetCursorPosition(caretLeft, Console.CursorTop);
         var selectedNumber = Console.ReadLine();
         Console.Clear();
-        if (short.TryParse(selectedNumber, out var storyNumber) && storyNumber > 0 && storyNumber <= availableSpecs.Count)
+        if (short.TryParse(selectedNumber, out var storyNumber) && storyNumber >= 0 && storyNumber <= availableSpecs.Count)
         {
             return availableSpecs.FirstOrDefault(s => s.number == storyNumber).spec;
         }
@@ -223,5 +224,20 @@ internal static class LinkedCareSampleClient
         }
 
         return false;
+    }
+
+    private static void PrintConnectedSequences()
+    {
+        Console.WriteLine("Aufeinander abgestimmte Sequenzen von [User Stories] und (Testzertifikaten):");
+        Console.WriteLine("[01](Pflege Immerdar) ->[11](Dr. Würm)        ->[18](Apo 'Klappernder Storch)");
+        Console.WriteLine("[00](Pflege Immerdar) ->[02](Pflege Immerdar) ->[10](Dr. Kreuzotter)");
+        Console.WriteLine("[15](Dr. Würm)        ->[08](Pflege Immerdar) ->[19](Apotheke 'Zum frühen Vogel') ->[08](Pflege Immerdar)");
+        Console.WriteLine("[03](Haus Vogelsang)  ->[04](Haus Vogelsang)  ->[12](Ordination Dr. Spitzmaus)    ->[13](Dr. Spitzmaus) ->[17](Apo 'Zum frühen Vogel') ->[07](Haus Vogelsang)");
+        Console.WriteLine("[03](Haus Vogelsang)  ->[14](Dr. Spitzmaus)   ->[07](Haus Vogelsang)");
+        Console.WriteLine("[03](Haus Vogelsang)  ->[09](Dr. Spitzmaus)   ->[12](Dr. Spitzmaus)  ->[13](Dr. Spitzmaus) ->[07](Haus Vogelsang) ->[16](Apo Zum frühen Vogel') ->[07](Haus Vogelsang)");
+        Console.WriteLine("[03](Haus Vogelsang)  ->[06](Haus Vogelsang)  ->[07](Haus Vogelsang)");
+        Console.WriteLine("[03](Haus Vogelsang)  ->[04](Haus Vogelsang)  ->[06](Haus Vogelsang) ->[07](Haus Vogelsang)");
+        Console.WriteLine("[03](Haus Vogelsang)  ->[04](Haus Vogelsang)  ->[05](Haus Vogelsang) ->[06](Haus Vogelsang) ->[07](Haus Vogelsang)");
+        Console.WriteLine("");
     }
 }
