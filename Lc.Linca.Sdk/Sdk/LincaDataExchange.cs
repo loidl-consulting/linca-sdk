@@ -20,6 +20,16 @@ namespace Lc.Linca.Sdk;
 public static class LincaDataExchange
 {
     /// <summary>
+    /// Deprecated, for backward compatibility
+    /// </summary>
+    public static (Patient created, bool canCue) CreatePatient(LincaConnection connection, Patient resource)
+    {
+        (var created, var cancue, _) = CreatePatientWithOutcome(connection, resource);
+
+        return (created, cancue);
+    }
+
+    /// <summary>
     /// Create a new patient record on the FHIR server,
     /// and return the Id that has been assigned.
     /// If the Id is included in the submitted resource,
@@ -29,7 +39,7 @@ public static class LincaDataExchange
     /// If a patient record matching that Id is found, it
     /// it will be updated.
     /// </summary>
-    public static (Patient created, bool canCue, OperationOutcome? outcome) CreatePatient(LincaConnection connection, Patient patient)
+    public static (Patient created, bool canCue, OperationOutcome? outcome) CreatePatientWithOutcome(LincaConnection connection, Patient patient)
     {
         (var createdPatient, var canCue, var outcome) = FhirDataExchange<Patient>.CreateResourceWithOutcome(connection, patient);
 
@@ -42,9 +52,19 @@ public static class LincaDataExchange
     }
 
     /// <summary>
+    /// Deprecated, for backward compatibility
+    /// </summary>
+    public static (RequestOrchestration createdRO, bool canCue) CreateRequestOrchestration(LincaConnection connection, RequestOrchestration ro)
+    {
+        (var created, var cancue, _) = CreateRequestOrchestrationWithOutcome(connection, ro);
+
+        return (created, cancue);
+    }
+
+    /// <summary>
     /// Post a new Linked Care Medication Order
     /// </summary>
-    public static (RequestOrchestration createdRO, bool canCue, OperationOutcome? outcome) CreateRequestOrchestration(LincaConnection connection, RequestOrchestration ro)
+    public static (RequestOrchestration createdRO, bool canCue, OperationOutcome? outcome) CreateRequestOrchestrationWithOutcome(LincaConnection connection, RequestOrchestration ro)
     {
         (var createdRO, var canCue, var outcome) = FhirDataExchange<RequestOrchestration>.CreateResourceWithOutcome(connection, ro);
 

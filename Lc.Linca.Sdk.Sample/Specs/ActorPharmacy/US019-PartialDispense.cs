@@ -43,9 +43,21 @@ internal class US019_PartialDispense : Spec
         if (received)
         {
             List<MedicationRequest> prescriptions = BundleHelper.FilterPrescriptionsToDispense(results);
+            MedicationRequest? prescription = prescriptions.Find(x => x.Medication.Concept.Coding.First().Display.Contains("Luxerm"));
 
-            LinkedCareSampleClient.CareInformationSystemScaffold.Data.PrescriptionIdRenateLuxerm = prescriptions.Find(x => x.Medication.Concept.Coding.First().Display.Contains("Luxerm"))!.Id;
-            LinkedCareSampleClient.CareInformationSystemScaffold.PseudoDatabaseStore();
+            if (prescription != null)
+            {
+                LinkedCareSampleClient.CareInformationSystemScaffold.Data.PrescriptionIdRenateLuxerm = prescription.Id;
+                LinkedCareSampleClient.CareInformationSystemScaffold.PseudoDatabaseStore();
+            }
+            else
+            {
+                Console.WriteLine("Prescription for Renate Rüssel-Olifant not found, cannot create dispense");
+
+                return false;
+            }
+
+
 
             if (!string.IsNullOrEmpty(LinkedCareSampleClient.CareInformationSystemScaffold.Data.PrescriptionIdRenateLuxerm))
             {

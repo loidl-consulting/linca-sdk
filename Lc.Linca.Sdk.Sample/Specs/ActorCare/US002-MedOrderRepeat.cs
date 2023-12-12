@@ -75,7 +75,7 @@ internal class US002_MedOrderRepeat : Spec
 
             ro.Action.Add(action);
 
-            (var createdRO, var canCue, var outcome) = LincaDataExchange.CreateRequestOrchestration(Connection, ro);
+            (var createdRO, var canCue, var outcome) = LincaDataExchange.CreateRequestOrchestrationWithOutcome(Connection, ro);
 
             if (canCue)
             {

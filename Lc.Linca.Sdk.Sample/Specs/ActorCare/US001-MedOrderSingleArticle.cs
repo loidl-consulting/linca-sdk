@@ -75,7 +75,7 @@ internal class US001_MedOrderSingleArticle : Spec
 
         patient.Gender = AdministrativeGender.Female;
 
-        (var createdPatient, var canCue, var outcome) = LincaDataExchange.CreatePatient(Connection, patient);
+        (var createdPatient, var canCue, var outcome) = LincaDataExchange.CreatePatientWithOutcome(Connection, patient);
        
         if(canCue)
         {
@@ -191,7 +191,7 @@ internal class US001_MedOrderSingleArticle : Spec
         action.Type.Coding.Add(new() { Code = "create" });
         ro.Action.Add( action );
 
-        (var createdRO, var canCue, var outcome) = LincaDataExchange.CreateRequestOrchestration(Connection, ro);
+        (var createdRO, var canCue, var outcome) = LincaDataExchange.CreateRequestOrchestrationWithOutcome(Connection, ro);
 
         if (canCue)
         {

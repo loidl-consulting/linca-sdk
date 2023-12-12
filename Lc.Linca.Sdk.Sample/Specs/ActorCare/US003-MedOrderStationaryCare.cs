@@ -61,7 +61,7 @@ internal class US003_MedOrderStationaryCare : Spec
 
         patient.Gender = AdministrativeGender.Male;
 
-        (createdGuenter, var canCue, var outcome) = LincaDataExchange.CreatePatient(Connection, patient);
+        (createdGuenter, var canCue, var outcome) = LincaDataExchange.CreatePatientWithOutcome(Connection, patient);
 
         if (canCue)
         {
@@ -102,7 +102,7 @@ internal class US003_MedOrderStationaryCare : Spec
         ));
         patient.Gender = AdministrativeGender.Other;
 
-        (createdPatrizia, var canCue, var outcome) = LincaDataExchange.CreatePatient(Connection, patient);
+        (createdPatrizia, var canCue, var outcome) = LincaDataExchange.CreatePatientWithOutcome(Connection, patient);
 
         if (canCue)
         {
@@ -160,7 +160,7 @@ internal class US003_MedOrderStationaryCare : Spec
             ro.Action.Add(action);
         }
 
-        (var createdRO, var canCue, var outcome) = LincaDataExchange.CreateRequestOrchestration(Connection, ro);
+        (var createdRO, var canCue, var outcome) = LincaDataExchange.CreateRequestOrchestrationWithOutcome(Connection, ro);
 
         if (canCue)
         {

@@ -70,7 +70,7 @@ internal class US000_InternalTestPutPatient : Spec
         ));
 
         patient.Gender = AdministrativeGender.Female;
-        (var createdPatient, var canCue, var outcome) = LincaDataExchange.CreatePatient(Connection, patient);
+        (var createdPatient, var canCue, var outcome) = LincaDataExchange.CreatePatientWithOutcome(Connection, patient);
        
         if (canCue)
         {
@@ -123,7 +123,7 @@ internal class US000_InternalTestPutPatient : Spec
 
         patient.Gender = AdministrativeGender.Other;
 
-        (var updatedPatient, var canCue, var outcome) = LincaDataExchange.CreatePatient(Connection, patient);
+        (var updatedPatient, var canCue, var outcome) = LincaDataExchange.CreatePatientWithOutcome(Connection, patient);
 
         if (canCue)
         {
