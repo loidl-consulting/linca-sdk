@@ -10,6 +10,7 @@
  ***********************************************************************************/
 
 using Hl7.Fhir.Model;
+using Hl7.Fhir.Support;
 using Hl7.Fhir.Model.Extensions;
 using Lc.Linca.Sdk.Client;
 
@@ -98,6 +99,14 @@ internal class US012_PrescribeWithChanges : Spec
             // prescription.InformationSource.Add(new ResourceReference()  // will be copied from reference in basedOn
             // prescription.Requester = new ResourceReference()  //will be copied from reference in basedOn
             // prescription.DispenseRequest.Dispenser // will be copied from reference in basedOn, if available
+
+            prescription.DispenseRequest = new();
+            prescription.DispenseRequest.DispenserInstruction.Add(new Annotation() { Text = "Ersatzweise Generikum abgeben" });
+            prescription.DispenseRequest.ValidityPeriod = new()
+            {
+                Start = DateTime.Today.ToFhirDate(),
+                End = DateTime.Today.AddMonths(1).ToFhirDate()
+            };
 
             prescription.Performer.Add(new ResourceReference()   // REQUIRED, cardinality 1..1 in LINCA
             {

@@ -97,7 +97,7 @@ internal static class FhirDataExchange<T> where T : Resource, new()
             (
                 receivedResourceRaw,
                 out Resource? parsedResource,
-                out var _
+                out var issues
             ) && parsedResource is OperationOutcome outcome)
             {
                 return (new(), false, outcome);
