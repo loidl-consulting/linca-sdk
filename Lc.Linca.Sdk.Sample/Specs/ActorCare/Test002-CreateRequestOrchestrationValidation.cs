@@ -36,9 +36,11 @@ internal class Test002_CreateRequestOrchestrationValidation : Spec
             new("Create RequestOrchestration: LCVAL08 status missing", RequestOrchestrationErrorLCVAL08),
             new("Create RequestOrchestration: LCVAL09 subject missing", RequestOrchestrationErrorLCVAL09),
             new("Create RequestOrchestration: LCVAL10 intent not allowed", RequestOrchestrationErrorLCVAL10),
-            //new("Create RequestOrchestration: LCVAL11 status not allowed", RequestOrchestrationErrorLCVAL11),
-            //new("Create RequestOrchestration: LCVAL12 OID in subject invalid", RequestOrchestrationErrorLCVAL12),
-            //new("Create RequestOrchestration: LCVAL13 contained resource missing", RequestOrchestrationErrorLCVAL13),
+            new("Create RequestOrchestration: LCVAL11 status not allowed", RequestOrchestrationErrorLCVAL11),
+            new("Create RequestOrchestration: LCVAL12 OID in subject invalid", RequestOrchestrationErrorLCVAL12),
+            new("Create RequestOrchestration: LCVAL13 contained resource missing", RequestOrchestrationErrorLCVAL13),
+            new("Create RequestOrchestration: LCVAL64 contained resource not referenced", RequestOrchestrationErrorLCVAL64),
+            new("Create RequestOrchstration successfully", CreateRequestOrchestrationSuccess)
         };
     }
 
@@ -232,6 +234,166 @@ internal class Test002_CreateRequestOrchestrationValidation : Spec
         return !canCue;
     }
 
+    private bool RequestOrchestrationErrorLCVAL11()
+    {
+        ro.Intent = RequestIntent.Proposal;  // REQUIRED
+        ro.Status = RequestStatus.Draft; // REQUIRED is value Active
+
+        (var createdRO, var canCue, var outcome) = LincaDataExchange.CreateRequestOrchestrationWithOutcome(Connection, ro);
+
+        if (canCue)
+        {
+            Console.WriteLine("Validation did not work properly: OperationOutcome excpected");
+        }
+        else
+        {
+            Console.WriteLine("Validation result:");
+        }
+
+        if (outcome != null)
+        {
+            foreach (var item in outcome.Issue)
+            {
+                Console.WriteLine($"Outcome Issue Code: '{item.Details.Coding?.FirstOrDefault()?.Code}', Text: '{item.Details.Text}'");
+            }
+        }
+
+        return !canCue;
+    }
+
+    private bool RequestOrchestrationErrorLCVAL12()
+    {
+        ro.Status = RequestStatus.Active; // REQUIRED
+
+        ro.Subject = new ResourceReference()   // REQUIRED
+        {
+            Identifier = new()
+            {
+                Value = "2.999.40.0.34.1.1.",  // OID misses the last digit
+                System = "urn:oid:1.2.40.0.34.5.2"  // Code-System: eHVD
+            },
+            Display = null   // optional
+        };
+
+        (var createdRO, var canCue, var outcome) = LincaDataExchange.CreateRequestOrchestrationWithOutcome(Connection, ro);
+
+        if (canCue)
+        {
+            Console.WriteLine("Validation did not work properly: OperationOutcome excpected");
+        }
+        else
+        {
+            Console.WriteLine("Validation result:");
+        }
+
+        if (outcome != null)
+        {
+            foreach (var item in outcome.Issue)
+            {
+                Console.WriteLine($"Outcome Issue Code: '{item.Details.Coding?.FirstOrDefault()?.Code}', Text: '{item.Details.Text}'");
+            }
+        }
+
+        return !canCue;
+    }
+
+    private bool RequestOrchestrationErrorLCVAL13()
+    {
+        ro.Subject = new ResourceReference()   // REQUIRED
+        {
+            Identifier = new()
+            {
+                Value = "2.999.40.0.34.1.1.3",  // OID of the ordering care organization from certificate
+                System = "urn:oid:1.2.40.0.34.5.2"  // Code-System: eHVD
+            },
+            Display = "Pflegedienst Immerdar"   // optional
+        };
+
+        ro.Contained.Clear(); 
+
+        (var createdRO, var canCue, var outcome) = LincaDataExchange.CreateRequestOrchestrationWithOutcome(Connection, ro);
+
+        if (canCue)
+        {
+            Console.WriteLine("Validation did not work properly: OperationOutcome excpected");
+        }
+        else
+        {
+            Console.WriteLine("Validation result:");
+        }
+
+        if (outcome != null)
+        {
+            foreach (var item in outcome.Issue)
+            {
+                Console.WriteLine($"Outcome Issue Code: '{item.Details.Coding?.FirstOrDefault()?.Code}', Text: '{item.Details.Text}'");
+            }
+        }
+
+        return !canCue;
+    }
+
+    private bool RequestOrchestrationErrorLCVAL64()
+    {
+        ro.Contained.Add(medReq);
+
+        ro.Action.Clear();
+
+        (var createdRO, var canCue, var outcome) = LincaDataExchange.CreateRequestOrchestrationWithOutcome(Connection, ro);
+
+        if (canCue)
+        {
+            Console.WriteLine("Validation did not work properly: OperationOutcome excpected");
+        }
+        else
+        {
+            Console.WriteLine("Validation result:");
+        }
+
+        if (outcome != null)
+        {
+            foreach (var item in outcome.Issue)
+            {
+                Console.WriteLine($"Outcome Issue Code: '{item.Details.Coding?.FirstOrDefault()?.Code}', Text: '{item.Details.Text}'");
+            }
+        }
+
+        return !canCue;
+    }
+
+    private bool CreateRequestOrchestrationSuccess()
+    {
+        var action = new RequestOrchestration.ActionComponent()
+        {
+            Type = new(),
+            Resource = new ResourceReference($"#{medReq.Id}")
+        };
+
+        action.Type.Coding.Add(new() { Code = "create" });
+
+        ro.Action.Add(action);
+
+        (var createdRO, var canCue, var outcome) = LincaDataExchange.CreateRequestOrchestrationWithOutcome(Connection, ro);
+
+        if (canCue)
+        {
+            Console.WriteLine($"Linca Request Orchestration with id '{createdRO.Id}' successfully created");
+        }
+        else
+        {
+            Console.WriteLine("Validation failed, result:");
+        }
+
+        if (outcome != null)
+        {
+            foreach (var item in outcome.Issue)
+            {
+                Console.WriteLine($"Outcome Issue Code: '{item.Details.Coding?.FirstOrDefault()?.Code}', Text: '{item.Details.Text}'");
+            }
+        }
+
+        return canCue;
+    }
     private void PrepareOrderMedicationRequest()
     {
         medReq.Id = Guid.NewGuid().ToFhirId();                                  // REQUIRED

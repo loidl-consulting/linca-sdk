@@ -296,6 +296,7 @@ internal static class FhirDataExchange<T> where T : Resource, new()
             request.Content = new StringContent(fhirJson);
             request.Content.Headers.ContentType = Constants.FhirJson;
             request.Headers.Accept.Add(Constants.FhirJson);
+            
             var response = http.Send(request);
 
             if (response.StatusCode == HttpStatusCode.Unauthorized)
