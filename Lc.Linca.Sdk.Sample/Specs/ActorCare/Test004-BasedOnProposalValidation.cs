@@ -10,6 +10,7 @@
  ***********************************************************************************/
 
 using Hl7.Fhir.Model;
+using Hl7.Fhir.Model.Extensions;
 using Hl7.Fhir.Support;
 using Lc.Linca.Sdk.Client;
 using Lc.Linca.Sdk.Scaffolds;
@@ -45,6 +46,8 @@ internal class Test004_BasedOnProposalValidation : Spec
             new("Create Proposal based on existing proposal, LCVAL 20: status invalid", ProposalMedicationRequestUpdateLCVAL20),
             new("Create Proposal based on existing proposal, LCVAL 31: refString invalid", ProposalMedicationRequestUpdateLCVAL31),
             new("Create Proposal based on existing proposal, LCVAL 32: refId not found", ProposalMedicationRequestUpdateLCVAL32),
+            new("Create Proposal based on existing proposal, LCVAL 34: informationSource not unique", ProposalMedicationRequestUpdateLCVAL34),
+             new("Create Proposal based on existing proposal, LCVAL 36: supportingInformation differs", ProposalMedicationRequestUpdateLCVAL36),
             new("Create Proposal based on existing proposal successfully", ProposalMedicationRequestUpdateSuccess),
             new("Create Proposal based on existing proposal, LCVAL 33: ref in basedOn is not latest chain link", ProposalMedicationRequestUpdateLCVAL33),
         };
@@ -489,15 +492,139 @@ internal class Test004_BasedOnProposalValidation : Spec
         }
     }
 
-    private bool ProposalMedicationRequestUpdateSuccess()
+    private bool ProposalMedicationRequestUpdateLCVAL34()
     {
         if (createdMedReq != null)
         {
             updateMedReq!.BasedOn.Clear();
             updateMedReq!.BasedOn.Add(new ResourceReference()
             {
-                Reference = $"LINCAProposalMedicationRequest/{createdMedReq.Id}" 
+                Reference = $"LINCAProposalMedicationRequest/{createdMedReq.Id}"
             });
+
+            updateMedReq!.InformationSource.Add( medReq.Requester ); // Error: add requester as second informationSource
+
+            (var postedOMR, var canCue, var outcome) = LincaDataExchange.PostProposalMedicationRequest(Connection, updateMedReq!);
+
+            if (canCue)
+            {
+                Console.WriteLine("Validation did not work properly: OperationOutcome excpected");
+            }
+            else
+            {
+                Console.WriteLine($"ValidationResult");
+            }
+
+            if (outcome != null)
+            {
+                foreach (var item in outcome.Issue)
+                {
+                    Console.WriteLine($"Outcome Issue Code: '{item.Details.Coding?.FirstOrDefault()?.Code}', Text: '{item.Details.Text}'");
+                }
+            }
+
+            return !canCue;
+
+        }
+        else
+        {
+            Console.WriteLine("Basic ProposalMedicationRequest is missing");
+
+            return false;
+        }
+    }
+
+    private bool ProposalMedicationRequestUpdateLCVAL36()
+    {
+        if (createdMedReq != null)
+        {
+            updateMedReq!.InformationSource.Clear();
+            updateMedReq.InformationSource.Add(new ResourceReference()  // REQUIRED, cardinality 1..1 in LINCA
+            {
+                Identifier = new()
+                {
+                    Value = "2.999.40.0.34.1.1.3",  // OID of the ordering care organization
+                    System = "urn:oid:1.2.40.0.34.5.2"  // Code-System: eHVD
+                },
+                Display = "Pflegedienst Immerdar"   // optional
+            });
+
+            updateMedReq.SupportingInformation.Clear();
+            updateMedReq.SupportingInformation.Add(new ResourceReference()
+            {
+                Reference = $"{LincaEndpoints.LINCARequestOrchestration}/{Guid.NewGuid().ToFhirId()}"
+            });
+
+            (var postedOMR, var canCue, var outcome) = LincaDataExchange.PostProposalMedicationRequest(Connection, updateMedReq!);
+
+            if (canCue)
+            {
+                Console.WriteLine("Validation did not work properly: OperationOutcome excpected");
+            }
+            else
+            {
+                Console.WriteLine($"ValidationResult");
+            }
+
+            if (outcome != null)
+            {
+                foreach (var item in outcome.Issue)
+                {
+                    Console.WriteLine($"Outcome Issue Code: '{item.Details.Coding?.FirstOrDefault()?.Code}', Text: '{item.Details.Text}'");
+                }
+            }
+
+            return !canCue;
+
+        }
+        else
+        {
+            Console.WriteLine("Basic ProposalMedicationRequest is missing");
+
+            return false;
+        }
+    }
+
+    private bool ProposalMedicationRequestUpdateLCVAL37()
+    {
+        if (createdMedReq != null)
+        {
+            updateMedReq!.SupportingInformation.Clear();
+
+            (var postedOMR, var canCue, var outcome) = LincaDataExchange.PostProposalMedicationRequest(Connection, updateMedReq!);
+
+            if (canCue)
+            {
+                Console.WriteLine("Validation did not work properly: OperationOutcome excpected");
+            }
+            else
+            {
+                Console.WriteLine($"ValidationResult");
+            }
+
+            if (outcome != null)
+            {
+                foreach (var item in outcome.Issue)
+                {
+                    Console.WriteLine($"Outcome Issue Code: '{item.Details.Coding?.FirstOrDefault()?.Code}', Text: '{item.Details.Text}'");
+                }
+            }
+
+            return !canCue;
+
+        }
+        else
+        {
+            Console.WriteLine("Basic ProposalMedicationRequest is missing");
+
+            return false;
+        }
+    }
+    private bool ProposalMedicationRequestUpdateSuccess()
+    {
+        if (createdMedReq != null)
+        {
+            updateMedReq!.SupportingInformation.Clear();
 
             (var postedOMR, var canCue, var outcome) = LincaDataExchange.PostProposalMedicationRequest(Connection, updateMedReq!);
 
