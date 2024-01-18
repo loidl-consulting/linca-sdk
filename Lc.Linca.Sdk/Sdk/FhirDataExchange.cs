@@ -115,7 +115,7 @@ internal static class FhirDataExchange<T> where T : Resource, new()
     public static (T created, bool canCue, OperationOutcome? outcome) CreateResourceBundle(LincaConnection connection, T resource, string operation)
     {
         using var response = Send(connection, HttpMethod.Post, resource, operation);
-        if (response?.StatusCode == HttpStatusCode.Created)
+        if (response?.StatusCode == HttpStatusCode.Created || response?.StatusCode == HttpStatusCode.BadRequest)
         {
             if (response != null)
             {

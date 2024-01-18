@@ -23,7 +23,7 @@ internal class Test004_BasedOnProposalValidation : Spec
 {
     public const string UserStory = @"
         First create a RequestOrchestration with one contained proposal, 
-        then try to post updates for that proposal and invoke all error codes for that case.
+        then try to post updates for that proposal and invoke all error codes for that use case.
         Run this testcase with the certificate of Pflegedienst Immerdar";
 
     protected Patient createdPatient = new();
@@ -264,7 +264,7 @@ internal class Test004_BasedOnProposalValidation : Spec
             }
             else
             {
-                Console.WriteLine($"ValidationResult");
+                Console.WriteLine($"Validation Result");
             }
 
             if (outcome != null)
@@ -585,41 +585,6 @@ internal class Test004_BasedOnProposalValidation : Spec
         }
     }
 
-    private bool ProposalMedicationRequestUpdateLCVAL37()
-    {
-        if (createdMedReq != null)
-        {
-            updateMedReq!.SupportingInformation.Clear();
-
-            (var postedOMR, var canCue, var outcome) = LincaDataExchange.PostProposalMedicationRequest(Connection, updateMedReq!);
-
-            if (canCue)
-            {
-                Console.WriteLine("Validation did not work properly: OperationOutcome excpected");
-            }
-            else
-            {
-                Console.WriteLine($"ValidationResult");
-            }
-
-            if (outcome != null)
-            {
-                foreach (var item in outcome.Issue)
-                {
-                    Console.WriteLine($"Outcome Issue Code: '{item.Details.Coding?.FirstOrDefault()?.Code}', Text: '{item.Details.Text}'");
-                }
-            }
-
-            return !canCue;
-
-        }
-        else
-        {
-            Console.WriteLine("Basic ProposalMedicationRequest is missing");
-
-            return false;
-        }
-    }
     private bool ProposalMedicationRequestUpdateSuccess()
     {
         if (createdMedReq != null)
