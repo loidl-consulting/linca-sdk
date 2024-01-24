@@ -365,11 +365,10 @@ internal class Test006_CreateBasedOnPrescriptionWithChanges : Spec
             Identifier = new()
             {
                 Value = "2.999.40.0.34.3.1.3",  // OID of designated practitioner 
-                System = "urn:oid:1.2.40.0.34.5.2"  // Code-System: eHVD
+                System = "urn:oid:1.2.40.0.34.5."  // Validation Error
             },
-            Display = "Vertretung von Dr. Silvia Spitzmaus"   // Validation Error
+            Display = "Vertretung von Dr. Silvia Spitzmaus"   
         });
-
 
         Bundle prescriptions = new()
         {
@@ -788,6 +787,7 @@ internal class Test006_CreateBasedOnPrescriptionWithChanges : Spec
     private bool CreatePrescriptionRecordSuccess()
     {
             prescription.SupportingInformation.Clear();
+            prescription.Performer.First().Display = "";
 
             Bundle prescriptions = new()
             {
