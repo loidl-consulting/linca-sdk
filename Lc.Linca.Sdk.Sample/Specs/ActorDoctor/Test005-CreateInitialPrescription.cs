@@ -40,6 +40,7 @@ internal class Test005_CreateInitialPrescriptionBundle : Spec
             new ("Create initial prescription bundle, LCVAL68, subject cannot differ in Bundle", InitialPrescriptionLCVAL68),
             new ("Create initial prescription bundle, LCVAL69, groupIdentifier cannot differ in Bundle", InitialPrescriptionLCVAL69),
             new ("Create initial prescription bundle, LCVAL70, initial prescription cannot have lc_id", InitialPrescriptionLCVAL70),
+            new ("Create initial prescription bundle, LCVAL71, initial prescriptions must be sent in Bundle", InitialPrescriptionLCVAL71),
             new ("Create Bundle of initial prescriptions successfully", CreateInitialPrescriptionSuccess)
             };
     }
@@ -774,7 +775,32 @@ internal class Test005_CreateInitialPrescriptionBundle : Spec
         return !canCue;
     }
 
+    private bool InitialPrescriptionLCVAL71()
+    {
+        (var postedPMR, var canCue, var outcome) = LincaDataExchange.CreatePrescriptionMedicationRequest(Connection, initialPresc1);
 
+        //(Bundle results, var canCue, var outcome) = LincaDataExchange.CreatePrescriptionBundle(Connection, prescriptions);
+
+        if (canCue)
+        {
+            Console.WriteLine("Validation did not work properly: OperationOutcome excpected");
+            Console.WriteLine($"Created PrescriptionMedicationRequest with Id {postedPMR.Id}");
+        }
+        else
+        {
+            Console.WriteLine("Validation result:");
+        }
+
+        if (outcome != null)
+        {
+            foreach (var item in outcome.Issue)
+            {
+                Console.WriteLine($"Outcome Issue Code: '{item.Details.Coding?.FirstOrDefault()?.Code}', Text: '{item.Details.Text}'");
+            }
+        }
+
+        return !canCue;
+    }
     private bool CreateInitialPrescriptionSuccess()
     {
         // Linca Prescription Medication Request for drug 2
