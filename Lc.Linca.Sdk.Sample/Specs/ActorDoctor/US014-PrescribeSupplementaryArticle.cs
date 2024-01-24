@@ -11,6 +11,7 @@
 
 using Hl7.Fhir.Model;
 using Hl7.Fhir.Model.Extensions;
+using Hl7.Fhir.Support;
 using Lc.Linca.Sdk.Client;
 
 namespace Lc.Linca.Sdk.Specs.ActorDoctor;
@@ -151,6 +152,8 @@ internal class US014_PrescribeSupplementaryArticle : Spec
                 Reference = $"HL7ATCorePatient/{LinkedCareSampleClient.CareInformationSystemScaffold.Data.ClientIdGuenter}"     // relative path to Linca Fhir patient resource, copy from order
             };
 
+            //adhoc.SupportingInformation = null; //LCVAL60
+            //adhoc.SupportingInformation.Add(new() { Reference = $"{LincaEndpoints.LINCARequestOrchestration}/{Guid.NewGuid().ToFhirId()}" }); // LCVAL61
             adhoc.SupportingInformation = proposal.SupportingInformation;
 
             adhoc.Medication = new()

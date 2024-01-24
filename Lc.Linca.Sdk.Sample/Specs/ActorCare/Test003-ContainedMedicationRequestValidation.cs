@@ -49,6 +49,7 @@ internal class Test003_ContainedProposalMedicationRequestValidation : Spec
             new("Create RO with Contained Proposal: LCVAL28 patient in subject not found", ContainedProposalErrorLCVAL28),
             new("Create RO with Contained Proposal: LCVAL29 performer empty", ContainedProposalErrorLCVAL29),
             new("Create RO with Contained Proposal: LCVAL30 performer OID not valid", ContainedProposalErrorLCVAL30),
+            new("Create RO with Contained Proposal: LCVAL56 dispenser.value missing", ContainedProposalErrorLCVAL56),
             new("Create RO with Contained Proposal: LCVAL65 dispenser OID not valid", ContainedProposalErrorLCVAL65),
             new("Create RequestOrchstration with contained proposal successfully", CreateRequestOrchestrationSuccess)
         };
@@ -658,6 +659,45 @@ internal class Test003_ContainedProposalMedicationRequestValidation : Spec
             },
             Display = "Haus Sonnenschein"   // optional
         });
+
+        RequestOrchestrationUpdateContained(); // add the proposal to contained
+
+        (var createdRO, var canCue, var outcome) = LincaDataExchange.CreateRequestOrchestrationWithOutcome(Connection, ro);
+
+        if (canCue)
+        {
+            Console.WriteLine("Validation did not work properly: OperationOutcome excpected");
+        }
+        else
+        {
+            Console.WriteLine("Validation result:");
+        }
+
+        if (outcome != null)
+        {
+            foreach (var item in outcome.Issue)
+            {
+                Console.WriteLine($"Outcome Issue Code: '{item.Details.Coding?.FirstOrDefault()?.Code}', Text: '{item.Details.Text}'");
+            }
+        }
+
+        return !canCue;
+    }
+
+    private bool ContainedProposalErrorLCVAL56()
+    {
+        medReq.Performer.Clear();
+        medReq.Performer.Add(new ResourceReference()   // REQUIRED, cardinality 1..1 in LINCA
+        {
+            Identifier = new()
+            {
+                Value = "2.999.40.0.34.3.1.2",  // OID of designated practitioner 
+                System = "urn:oid:1.2.40.0.34.5.2"  // Code-System: eHVD
+            },
+            Display = "Dr. Kunibert Kreuzotter"   // optional
+        });
+
+        medReq.DispenseRequest.Dispenser.Identifier.Value = null; // this is a doctor, not a pharmacy
 
         RequestOrchestrationUpdateContained(); // add the proposal to contained
 
