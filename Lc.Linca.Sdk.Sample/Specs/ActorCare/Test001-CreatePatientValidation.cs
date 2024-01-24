@@ -23,7 +23,8 @@ namespace Lc.Linca.Sdk.Specs.ActorCare;
 internal class Test001_CreatePatientValidation : Spec
 {
     public const string UserStory = @"
-    Testcase 001: Invoke all Patient validation errors and create one Patient successfully. 
+    Testcase 001: Invoke all Patient validation errors and create one Patient successfully.
+    Run this testcase with the certificate of Pflegedienst Immerdar "";
     ";
 
     protected MedicationRequest medReq = new();
