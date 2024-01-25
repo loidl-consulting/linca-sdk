@@ -20,7 +20,7 @@ using System.Xml.Linq;
 
 namespace Lc.Linca.Sdk.Specs.ActorCare;
 
-internal class Test001_CreatePatientValidation : Spec
+internal class Test001_Immerdar_CreatePatientValidation : Spec
 {
     public const string UserStory = @"
     Testcase 001: Invoke all Patient validation errors and create one Patient successfully.
@@ -29,7 +29,7 @@ internal class Test001_CreatePatientValidation : Spec
 
     protected MedicationRequest medReq = new();
 
-    public Test001_CreatePatientValidation(LincaConnection conn) : base(conn)
+    public Test001_Immerdar_CreatePatientValidation(LincaConnection conn) : base(conn)
     {
         Steps = new Step[]
         {
