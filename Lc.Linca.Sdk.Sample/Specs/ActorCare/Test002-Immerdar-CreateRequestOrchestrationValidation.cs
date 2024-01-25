@@ -17,7 +17,7 @@ using System.Globalization;
 
 namespace Lc.Linca.Sdk.Specs.ActorCare;
 
-internal class Test002_CreateRequestOrchestrationValidation : Spec
+internal class Test002_Immerdar_CreateRequestOrchestrationValidation : Spec
 {
     protected Patient createdPatient = new();
     protected MedicationRequest medReq = new();
@@ -27,7 +27,7 @@ internal class Test002_CreateRequestOrchestrationValidation : Spec
         Validate RequestOrchestration, with correct LincaProposalMedicationRequest, if contained. 
         Run this testcase with the certificate of Pflegedienst Immerdar ";
 
-    public Test002_CreateRequestOrchestrationValidation(LincaConnection conn) : base(conn)
+    public Test002_Immerdar_CreateRequestOrchestrationValidation(LincaConnection conn) : base(conn)
     {
         Steps = new Step[]
         {

@@ -19,7 +19,7 @@ using System.Security.Cryptography;
 
 namespace Lc.Linca.Sdk.Specs.ActorCare;
 
-internal class Test004_BasedOnProposalValidation : Spec
+internal class Test004_Immerdar_BasedOnProposalValidation : Spec
 {
     public const string UserStory = @"
         First create a RequestOrchestration with one contained proposal, 
@@ -34,7 +34,7 @@ internal class Test004_BasedOnProposalValidation : Spec
     protected MedicationRequest? updateMedReq = new();
     
 
-    public Test004_BasedOnProposalValidation(LincaConnection conn) : base(conn)
+    public Test004_Immerdar_BasedOnProposalValidation(LincaConnection conn) : base(conn)
     {
         Steps = new Step[]
         {

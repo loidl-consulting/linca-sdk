@@ -15,7 +15,7 @@ using Hl7.Fhir.Support;
 
 namespace Lc.Linca.Sdk.Specs.ActorDoctor;
 
-internal class Test005_CreateInitialPrescriptionBundle : Spec
+internal class Test006_Wuerm_CreateInitialPrescriptionBundle : Spec
 {
     public const string UserStory = @"
         Run this testcase with the certificate of Dr. Wibke Würm";
@@ -23,7 +23,7 @@ internal class Test005_CreateInitialPrescriptionBundle : Spec
     MedicationRequest initialPresc1 = new();
     MedicationRequest initialPresc2 = new();
 
-    public Test005_CreateInitialPrescriptionBundle(LincaConnection conn) : base(conn)
+    public Test006_Wuerm_CreateInitialPrescriptionBundle(LincaConnection conn) : base(conn)
     {
         Steps = new Step[]
             {

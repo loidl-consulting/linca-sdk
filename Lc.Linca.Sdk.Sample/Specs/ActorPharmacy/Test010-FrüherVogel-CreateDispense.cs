@@ -16,16 +16,16 @@ using Lc.Linca.Sdk.Client;
 
 namespace Lc.Linca.Sdk.Specs.ActorPharmacy;
 
-internal class Test008_CreateDispense : Spec
+internal class Test010_FrueherVogel_CreateDispense : Spec
 {
     protected MedicationDispense dispense = new();
     protected MedicationRequest? prescriptionGuenterUltralan;
 
     public const string UserStory = @"
-        First, run Test006 and Test007 with the certificate of Dr. Spitzmaus. 
+        First, run Test007 and Test008 with the certificate of Dr. Spitzmaus. 
         Run this testcase with the certificate of Apotheke 'Zum frühen Vogel'. ";
 
-    public Test008_CreateDispense(LincaConnection conn) : base(conn)
+    public Test010_FrueherVogel_CreateDispense(LincaConnection conn) : base(conn)
     {
         Steps = new Step[]
         {

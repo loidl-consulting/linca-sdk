@@ -16,15 +16,15 @@ using Lc.Linca.Sdk.Client;
 
 namespace Lc.Linca.Sdk.Specs.ActorDoctor;
 
-internal class Test007_CreatePrescriptionToPriorPrescription : Spec
+internal class Test008_Spitzmaus_CreatePrescriptionToPriorPrescription : Spec
 {
     protected MedicationRequest prescription = new();
 
     public const string UserStory = @"
-        It might be necessary to run Test006 with the certificate of Dr. Spitzmaus first. 
+        It might be necessary to run Test007 with the certificate of Dr. Spitzmaus first. 
         Run this testcase with the certificate of Dr. Silvia Spitzmaus.";
 
-    public Test007_CreatePrescriptionToPriorPrescription(LincaConnection conn) : base(conn) 
+    public Test008_Spitzmaus_CreatePrescriptionToPriorPrescription(LincaConnection conn) : base(conn) 
     {
         Steps = new Step[]
         {

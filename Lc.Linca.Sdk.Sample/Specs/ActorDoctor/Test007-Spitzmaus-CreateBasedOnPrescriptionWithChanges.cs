@@ -16,15 +16,15 @@ using Lc.Linca.Sdk.Client;
 
 namespace Lc.Linca.Sdk.Specs.ActorDoctor;
 
-internal class Test006_CreateBasedOnPrescriptionWithChanges : Spec
+internal class Test007_Spitzmaus_CreateBasedOnPrescriptionWithChanges : Spec
 {
     protected MedicationRequest prescription = new();
 
     public const string UserStory = @"
-        It might be necessary to run UserStory US003 with the certificate of Haus Vogelsang first. 
+        It might be necessary to run Test001 with the certificate of Haus Vogelsang first. 
         Run this testcase with the certificate of Dr. Silvia Spitzmaus.";
 
-    public Test006_CreateBasedOnPrescriptionWithChanges(LincaConnection conn) : base(conn) 
+    public Test007_Spitzmaus_CreateBasedOnPrescriptionWithChanges(LincaConnection conn) : base(conn) 
     {
         Steps = new Step[]
         {
