@@ -29,6 +29,7 @@ internal class Test010_FrueherVogel_CreateDispense : Spec
     {
         Steps = new Step[]
         {
+            new("Create MedicationDispense, LCVAL49, cast failed", CreateMedicationDispenseLCVAL49),
             new("Create MedicationDispense, LCVAL50, authorizingPrescription is missing", CreateMedicationDispenseLCVAL50A),
             new("Create MedicationDispense, LCVAL50, authorizingPrescription is not unique", CreateMedicationDispenseLCVAL50B),
             new("Create MedicationDispense, LCVAL51, refstring in authorizingPrescription not valid", CreateMedicationDispenseLCVAL51),
@@ -42,6 +43,33 @@ internal class Test010_FrueherVogel_CreateDispense : Spec
             new("Create MedicationDispense successfully", CreateMedicationDispenseSuccess),
             new("Create MedicationDispense, LCVAL53, authorizingPrescription is not latest", CreateMedicationDispenseLCVAL53)
         };
+    }
+
+    private bool CreateMedicationDispenseLCVAL49()
+    {
+        var patient = new Patient();
+
+        (var postedMD, var canCue, var outcome) = LincaDataExchange.PostPatientToDispenseEndpoint(Connection, patient);
+
+        if (canCue)
+        {
+            Console.WriteLine("Validation did not work properly: OperationOutcome excpected");
+            Console.WriteLine($"Created Linca MedicationDispense with id {postedMD.Id}");
+        }
+        else
+        {
+            Console.WriteLine("Validation result:");
+        }
+
+        if (outcome != null)
+        {
+            foreach (var item in outcome.Issue)
+            {
+                Console.WriteLine($"Outcome Issue Code: '{item.Details.Coding?.FirstOrDefault()?.Code}', Text: '{item.Details.Text}'");
+            }
+        }
+
+        return !canCue;
     }
 
     private bool CreateMedicationDispenseLCVAL50A()

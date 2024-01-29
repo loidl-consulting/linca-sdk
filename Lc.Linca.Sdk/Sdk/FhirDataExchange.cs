@@ -109,6 +109,69 @@ internal static class FhirDataExchange<T> where T : Resource, new()
     }
 
     /// <summary>
+    /// Posts an R5 resource to the FHIR server, reads back the 
+    /// REST entity location from the response, and returns the
+    /// new resource obtained from there
+    /// </summary>
+    public static (T created, bool canCue, OperationOutcome? outcome) CreateResourceWithOutcomeNotTypeSafe(LincaConnection connection, T resource, string lincaResourceName)
+    {
+        HttpResponseMessage? response;
+
+        if (string.IsNullOrEmpty(resource.Id))
+        {
+            response = Send(connection, HttpMethod.Post, resource, lincaResourceName);
+        }
+        else
+        {
+            response = Send(connection, HttpMethod.Put, resource, lincaResourceName);
+        }
+
+        if (response?.StatusCode == HttpStatusCode.Created)
+        {
+            using var getResponse = Receive(connection, response.Headers.Location);
+            response.Dispose();
+
+            if (getResponse != null)
+            {
+                var createdResourceRaw = new StreamReader
+                (
+                    getResponse.Content.ReadAsStream()
+                ).ReadToEnd();
+
+                if (new FhirJsonPocoDeserializer().TryDeserializeResource
+                (
+                    createdResourceRaw,
+                    out Resource? parsedResource,
+                    out var _
+                ) && parsedResource is T createdResource)
+                {
+                    return (createdResource, true, null);
+                }
+            }
+        }
+        else if (response != null)
+        {
+            var receivedResourceRaw = new StreamReader
+            (
+                response.Content.ReadAsStream()
+            ).ReadToEnd();
+
+            if (new FhirJsonPocoDeserializer().TryDeserializeResource
+            (
+                receivedResourceRaw,
+                out Resource? parsedResource,
+                out var issues
+            ) && parsedResource is OperationOutcome outcome)
+            {
+                return (new(), false, outcome);
+            }
+        }
+
+        return (new(), false, null);
+
+    }
+
+    /// <summary>
     /// Posts a Bundle of R5 resources to the FHIR server, and returns the
     /// new resource obtained as answer
     /// </summary>

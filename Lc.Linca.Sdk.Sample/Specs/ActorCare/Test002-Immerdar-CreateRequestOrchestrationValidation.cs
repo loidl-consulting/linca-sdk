@@ -39,6 +39,7 @@ internal class Test002_Immerdar_CreateRequestOrchestrationValidation : Spec
             new("Create RequestOrchestration: LCVAL11 status not allowed", RequestOrchestrationErrorLCVAL11),
             new("Create RequestOrchestration: LCVAL12 OID in subject invalid", RequestOrchestrationErrorLCVAL12),
             new("Create RequestOrchestration: LCVAL13 contained resource missing", RequestOrchestrationErrorLCVAL13),
+            new("Create RequestOrchestration: LCVAL14 cast failed", RequestOrchestrationErrorLCVAL14),
             new("Create RequestOrchestration: LCVAL64 contained resource not referenced", RequestOrchestrationErrorLCVAL64),
             new("Create RequestOrchstration successfully", CreateRequestOrchestrationSuccess)
         };
@@ -312,6 +313,32 @@ internal class Test002_Immerdar_CreateRequestOrchestrationValidation : Spec
         ro.Contained.Clear(); 
 
         (var createdRO, var canCue, var outcome) = LincaDataExchange.CreateRequestOrchestrationWithOutcome(Connection, ro);
+
+        if (canCue)
+        {
+            Console.WriteLine("Validation did not work properly: OperationOutcome excpected");
+        }
+        else
+        {
+            Console.WriteLine("Validation result:");
+        }
+
+        if (outcome != null)
+        {
+            foreach (var item in outcome.Issue)
+            {
+                Console.WriteLine($"Outcome Issue Code: '{item.Details.Coding?.FirstOrDefault()?.Code}', Text: '{item.Details.Text}'");
+            }
+        }
+
+        return !canCue;
+    }
+
+    private bool RequestOrchestrationErrorLCVAL14()
+    {
+        var mr = new MedicationRequest();
+
+        (var createdRO, var canCue, var outcome) = LincaDataExchange.PostProposalToOrchestrationEndpoint(Connection, mr);
 
         if (canCue)
         {

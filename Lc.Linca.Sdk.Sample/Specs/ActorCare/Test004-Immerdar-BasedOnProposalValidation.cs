@@ -47,7 +47,8 @@ internal class Test004_Immerdar_BasedOnProposalValidation : Spec
             new("Create Proposal based on existing proposal, LCVAL 31: refString invalid", ProposalMedicationRequestUpdateLCVAL31),
             new("Create Proposal based on existing proposal, LCVAL 32: refId not found", ProposalMedicationRequestUpdateLCVAL32),
             new("Create Proposal based on existing proposal, LCVAL 34: informationSource not unique", ProposalMedicationRequestUpdateLCVAL34),
-             new("Create Proposal based on existing proposal, LCVAL 36: supportingInformation differs", ProposalMedicationRequestUpdateLCVAL36),
+            new("Create Proposal based on existing proposal, LCVAL 35: cast failed", ProposalMedicationRequestUpdateLCVAL35),
+            new("Create Proposal based on existing proposal, LCVAL 36: supportingInformation differs", ProposalMedicationRequestUpdateLCVAL36),
             new("Create Proposal based on existing proposal successfully", ProposalMedicationRequestUpdateSuccess),
             new("Create Proposal based on existing proposal, LCVAL 33: ref in basedOn is not latest chain link", ProposalMedicationRequestUpdateLCVAL33),
         };
@@ -505,6 +506,42 @@ internal class Test004_Immerdar_BasedOnProposalValidation : Spec
             updateMedReq!.InformationSource.Add( medReq.Requester ); // Error: add requester as second informationSource
 
             (var postedOMR, var canCue, var outcome) = LincaDataExchange.PostProposalMedicationRequest(Connection, updateMedReq!);
+
+            if (canCue)
+            {
+                Console.WriteLine("Validation did not work properly: OperationOutcome excpected");
+            }
+            else
+            {
+                Console.WriteLine($"ValidationResult");
+            }
+
+            if (outcome != null)
+            {
+                foreach (var item in outcome.Issue)
+                {
+                    Console.WriteLine($"Outcome Issue Code: '{item.Details.Coding?.FirstOrDefault()?.Code}', Text: '{item.Details.Text}'");
+                }
+            }
+
+            return !canCue;
+
+        }
+        else
+        {
+            Console.WriteLine("Basic ProposalMedicationRequest is missing");
+
+            return false;
+        }
+    }
+
+    private bool ProposalMedicationRequestUpdateLCVAL35()
+    {
+        if (createdMedReq != null)
+        {
+            var dispense = new MedicationDispense();
+
+            (var postedOMR, var canCue, var outcome) = LincaDataExchange.PostDispenseToProposalEndpoint(Connection, dispense);
 
             if (canCue)
             {
