@@ -52,81 +52,6 @@ public static class LincaDataExchange
     }
 
     /// <summary>
-    /// This is for testing purposes only
-    /// </summary>
-    public static (Patient created, bool canCue, OperationOutcome? outcome) PostPatientToProposalMedicationRequest(LincaConnection connection, Patient patient)
-    {
-        (var createdResource, var canCue, var outcome) = FhirDataExchange<Patient>.CreateResourceWithOutcomeNotTypeSafe(connection, patient, LincaEndpoints.LINCAProposalMedicationRequest);
-
-        if (canCue)
-        {
-            return (createdResource, true, outcome);
-        }
-
-        return (new(), false, outcome);
-    }
-
-    /// <summary>
-    /// This is for testing purposes only
-    /// </summary>
-    public static (RequestOrchestration created, bool canCue, OperationOutcome? outcome) PostRequestOrchestrationToPatientEndpoint(LincaConnection connection, RequestOrchestration ro)
-    {
-        (var createdResource, var canCue, var outcome) = FhirDataExchange<RequestOrchestration>.CreateResourceWithOutcomeNotTypeSafe(connection, ro, LincaEndpoints.HL7ATCorePatient);
-
-        if (canCue)
-        {
-            return (createdResource, true, outcome);
-        }
-
-        return (new(), false, outcome);
-    }
-
-    /// <summary>
-    /// This is for testing purposes only
-    /// </summary>
-    public static (MedicationRequest created, bool canCue, OperationOutcome? outcome) PostProposalToOrchestrationEndpoint(LincaConnection connection, MedicationRequest mr)
-    {
-        (var createdResource, var canCue, var outcome) = FhirDataExchange<MedicationRequest>.CreateResourceWithOutcomeNotTypeSafe(connection, mr, LincaEndpoints.LINCARequestOrchestration);
-
-        if (canCue)
-        {
-            return (createdResource, true, outcome);
-        }
-
-        return (new(), false, outcome);
-    }
-
-    /// <summary>
-    /// This is for testing purposes only
-    /// </summary>
-    public static (MedicationDispense created, bool canCue, OperationOutcome? outcome) PostDispenseToProposalEndpoint(LincaConnection connection, MedicationDispense dispense)
-    {
-        (var createdResource, var canCue, var outcome) = FhirDataExchange<MedicationDispense>.CreateResourceWithOutcomeNotTypeSafe(connection, dispense, LincaEndpoints.LINCAProposalMedicationRequest);
-
-        if (canCue)
-        {
-            return (createdResource, true, outcome);
-        }
-
-        return (new(), false, outcome);
-    }
-
-    /// <summary>
-    /// This is for testing purposes only
-    /// </summary>
-    public static (Patient created, bool canCue, OperationOutcome? outcome) PostPatientToDispenseEndpoint(LincaConnection connection, Patient patient)
-    {
-        (var createdResource, var canCue, var outcome) = FhirDataExchange<Patient>.CreateResourceWithOutcomeNotTypeSafe(connection, patient, LincaEndpoints.LINCAMedicationDispense);
-
-        if (canCue)
-        {
-            return (createdResource, true, outcome);
-        }
-
-        return (new(), false, outcome);
-    }
-
-    /// <summary>
     /// Deprecated, for backward compatibility
     /// </summary>
     public static (RequestOrchestration createdRO, bool canCue) CreateRequestOrchestration(LincaConnection connection, RequestOrchestration ro)
@@ -221,15 +146,6 @@ public static class LincaDataExchange
     }
 
     /// <summary>
-    /// Cancellation of a Linked Care Medication Dispense:
-    /// sets the status of the dispense to 'entered-in-error'
-    /// </summary>
-    public static (OperationOutcome oo, bool deleted) DeleteMedicationDispense(LincaConnection connection, string id)
-    {
-        return FhirDataExchange<MedicationDispense>.DeleteResource(connection, id, LincaEndpoints.LINCAMedicationDispense);
-    }
-
-    /// <summary>
     /// Get a all order chain links (proposal order positions, prescriptions, and dispenses) for the given lc_id
     /// </summary>
     public static (Bundle results, bool canCue) GetProposalStatus(LincaConnection connection, string id)
@@ -251,21 +167,6 @@ public static class LincaDataExchange
     public static (Bundle results, bool canCue) GetProposalsToPrescribe(LincaConnection connection)
     {
         (Bundle proposalChains, bool canCue) = FhirDataExchange<Bundle>.GetResource(connection, LincaEndpoints.proposals_to_prescribe);
-
-        if (canCue)
-        {
-            return (proposalChains, true);
-        }
-
-        return (new(), false);
-    }
-
-    /// <summary>
-    /// Get a all order chain links starting within the last 90 days for the requesting doctor (OID in certificate)
-    /// </summary>
-    public static (Bundle results, bool canCue) GetWithAnyOperationName(LincaConnection connection, string testOperationName)
-    {
-        (Bundle proposalChains, bool canCue) = FhirDataExchange<Bundle>.GetResource(connection, testOperationName);
 
         if (canCue)
         {
@@ -320,5 +221,119 @@ public static class LincaDataExchange
         }
 
         return (new(), false);
+    }
+
+    /// <summary>
+    /// This is for testing purposes only
+    /// </summary>
+    public static (Patient created, bool canCue, OperationOutcome? outcome) PostPatientToProposalMedicationRequest(LincaConnection connection, Patient patient)
+    {
+        (var createdResource, var canCue, var outcome) = FhirDataExchange<Patient>.CreateResourceWithOutcomeNotTypeSafe(connection, patient, LincaEndpoints.LINCAProposalMedicationRequest);
+
+        if (canCue)
+        {
+            return (createdResource, true, outcome);
+        }
+
+        return (new(), false, outcome);
+    }
+
+    /// <summary>
+    /// Cancellation of a Linked Care Medication Dispense:
+    /// sets the status of the dispense to 'entered-in-error'
+    /// </summary>
+    public static (OperationOutcome oo, bool deleted) DeleteMedicationDispense(LincaConnection connection, string id)
+    {
+        return FhirDataExchange<MedicationDispense>.DeleteResource(connection, id, LincaEndpoints.LINCAMedicationDispense);
+    }
+
+    /// <summary>
+    /// Get a all order chain links (proposal order positions, prescriptions, and dispenses) for the given lc_id
+    /// </summary>
+    public static (RequestOrchestration created, bool canCue, OperationOutcome? outcome) PostRequestOrchestrationToPatientEndpoint(LincaConnection connection, RequestOrchestration ro)
+    {
+        (var createdResource, var canCue, var outcome) = FhirDataExchange<RequestOrchestration>.CreateResourceWithOutcomeNotTypeSafe(connection, ro, LincaEndpoints.HL7ATCorePatient);
+
+        if (canCue)
+        {
+            return (createdResource, true, outcome);
+        }
+
+        return (new(), false, outcome);
+    }
+
+    /// <summary>
+    /// This is for testing purposes only
+    /// </summary>
+    public static (MedicationRequest created, bool canCue, OperationOutcome? outcome) PostProposalToOrchestrationEndpoint(LincaConnection connection, MedicationRequest mr)
+    {
+        (var createdResource, var canCue, var outcome) = FhirDataExchange<MedicationRequest>.CreateResourceWithOutcomeNotTypeSafe(connection, mr, LincaEndpoints.LINCARequestOrchestration);
+
+        if (canCue)
+        {
+            return (createdResource, true, outcome);
+        }
+
+        return (new(), false, outcome);
+    }
+
+    /// <summary>
+    /// This is for testing purposes only
+    /// </summary>
+    public static (MedicationDispense created, bool canCue, OperationOutcome? outcome) PostDispenseToProposalEndpoint(LincaConnection connection, MedicationDispense dispense)
+    {
+        (var createdResource, var canCue, var outcome) = FhirDataExchange<MedicationDispense>.CreateResourceWithOutcomeNotTypeSafe(connection, dispense, LincaEndpoints.LINCAProposalMedicationRequest);
+
+        if (canCue)
+        {
+            return (createdResource, true, outcome);
+        }
+
+        return (new(), false, outcome);
+    }
+
+    /// <summary>
+    /// This is for testing purposes only
+    /// </summary>
+    public static (Patient created, bool canCue, OperationOutcome? outcome) PostPatientToDispenseEndpoint(LincaConnection connection, Patient patient)
+    {
+        (var createdResource, var canCue, var outcome) = FhirDataExchange<Patient>.CreateResourceWithOutcomeNotTypeSafe(connection, patient, LincaEndpoints.LINCAMedicationDispense);
+
+        if (canCue)
+        {
+            return (createdResource, true, outcome);
+        }
+
+        return (new(), false, outcome);
+    }
+
+    /// <summary>
+    /// This is for testing purposes only
+    /// </summary>
+    public static (Bundle results, bool canCue) GetWithAnyOperationName(LincaConnection connection, string testOperationName)
+    {
+        (Bundle proposalChains, bool canCue) = FhirDataExchange<Bundle>.GetResource(connection, testOperationName);
+
+        if (canCue)
+        {
+            return (proposalChains, true);
+        }
+
+        return (new(), false);
+    }
+
+    /// <summary>
+    /// This is for testing purposes only
+    /// </summary>
+    public static (Bundle results, bool canCue, OperationOutcome? outcome) PostToAnyOperationOrResourceName(LincaConnection connection, Bundle prescriptions, string postTo)
+    {
+        (Bundle createdPrescriptions, bool canCue, var outcome) = FhirDataExchange<Bundle>.CreateResourceBundle(connection, prescriptions, postTo);
+
+        if (canCue)
+        {
+            return (createdPrescriptions, true, outcome);
+        }
+
+        return (new(), false, outcome);
     }
 }

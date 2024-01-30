@@ -19,6 +19,7 @@ namespace Lc.Linca.Sdk.Specs.ActorDoctor;
 internal class Test009_Spitzmaus_SupplementaryPrescription : Spec
 {
     public const string UserStory = @"
+        It might be necessary to run Test000 with the certificate of Haus Vogelsang first. 
         Run this test with the certificate of Dr. Silvia Spitzmaus";
 
     MedicationRequest? proposal;
