@@ -228,16 +228,10 @@ internal static class LinkedCareSampleClient
 
     private static void PrintConnectedSequences()
     {
-        Console.WriteLine("Aufeinander abgestimmte Sequenzen von [User Stories] und (Testzertifikaten):");
-        Console.WriteLine("[01](Pflege Immerdar) ->[11](Dr. Würm)        ->[18](Apo 'Klappernder Storch)");
-        Console.WriteLine("[00](Pflege Immerdar) ->[02](Pflege Immerdar) ->[10](Dr. Kreuzotter)");
-        Console.WriteLine("[15](Dr. Würm)        ->[08](Pflege Immerdar) ->[19](Apotheke 'Zum frühen Vogel') ->[08](Pflege Immerdar)");
-        Console.WriteLine("[03](Haus Vogelsang)  ->[04](Haus Vogelsang)  ->[12](Ordination Dr. Spitzmaus)    ->[13](Dr. Spitzmaus) ->[17](Apo 'Zum frühen Vogel') ->[07](Haus Vogelsang)");
-        Console.WriteLine("[03](Haus Vogelsang)  ->[14](Dr. Spitzmaus)   ->[07](Haus Vogelsang)");
-        Console.WriteLine("[03](Haus Vogelsang)  ->[09](Dr. Spitzmaus)   ->[12](Dr. Spitzmaus)  ->[13](Dr. Spitzmaus) ->[07](Haus Vogelsang) ->[16](Apo Zum frühen Vogel') ->[07](Haus Vogelsang)");
-        Console.WriteLine("[03](Haus Vogelsang)  ->[06](Haus Vogelsang)  ->[07](Haus Vogelsang)");
-        Console.WriteLine("[03](Haus Vogelsang)  ->[04](Haus Vogelsang)  ->[06](Haus Vogelsang) ->[07](Haus Vogelsang)");
-        Console.WriteLine("[03](Haus Vogelsang)  ->[04](Haus Vogelsang)  ->[05](Haus Vogelsang) ->[06](Haus Vogelsang) ->[07](Haus Vogelsang)");
+        Console.WriteLine("Folgende Abhängigkeiten bestehen zwischen den Testfällen [00] [07] [08] [09] [10]:");
+        Console.WriteLine("[00] (Zertifikat Haus Vogelsang -> [07] (Zertifikat Dr. Spitzmaus) -> [08] (Zertifikat Dr. Spitzmaus) -> [10] (Apotheke Zum Fruehen Vogel)");
+        Console.WriteLine("[00] (Zertifikat Haus Vogelsang -> [09] (Zertifikat Dr. Spitzmaus)");
+        Console.WriteLine("Alle anderen Testfälle können voneinander unabhängig mit dem entsprechenden Zertifikat ausgeführt werden");
         Console.WriteLine("");
     }
 }

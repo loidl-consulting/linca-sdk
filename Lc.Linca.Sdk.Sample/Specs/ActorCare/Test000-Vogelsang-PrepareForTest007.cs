@@ -19,13 +19,7 @@ namespace Lc.Linca.Sdk.Specs.ActorCare;
 internal class Test000_Vogelsang_PrepareForTest007 : Spec
 {
     public const string UserStory = @"
-        User Walter Specht (DGKP) is a caregiver in the inpatient care facility Haus Vogelsang. 
-        He needs to collectively order prescription medication for several clients, amongst others 
-        for Günter Gürtelthier and Patrizia Platypus. Patrizia's practitioner is 
-        Dr. Kunibert Kreuzotter, Günter's practitioner is Dr. Silvia Spitzmaus. 
-        Walter Specht places an order for all needed client prescription medication on LINCA 
-        and specifies in advance the pharmacy Apotheke 'Zum frühen Vogel' that ought 
-        to prepare the order";
+        Run this testcase with the certificate of Haus Vogelsang as preparation for Test007.";
 
     protected Patient createdGuenter = new();
     protected Patient createdPatrizia = new();

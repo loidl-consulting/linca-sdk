@@ -21,7 +21,7 @@ internal class Test007_Spitzmaus_CreateBasedOnPrescriptionWithChanges : Spec
     protected MedicationRequest prescription = new();
 
     public const string UserStory = @"
-        It might be necessary to run Test001 with the certificate of Haus Vogelsang first. 
+        It might be necessary to run Test000 with the certificate of Haus Vogelsang first. 
         Run this testcase with the certificate of Dr. Silvia Spitzmaus.";
 
     public Test007_Spitzmaus_CreateBasedOnPrescriptionWithChanges(LincaConnection conn) : base(conn) 
