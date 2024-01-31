@@ -120,7 +120,6 @@ public static class LincaConnector
 
             return new();
         }
-
         var tokenEndpoint = JToken.Parse(smartRaw)[Constants.OAuthKeyTokenEndpoint]?.Value<string>() ?? string.Empty;
 
         /* 3. obtain a JWT for the subsequent REST interactions */

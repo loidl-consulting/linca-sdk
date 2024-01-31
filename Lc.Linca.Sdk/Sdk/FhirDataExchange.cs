@@ -43,10 +43,13 @@ internal static class FhirDataExchange<T> where T : Resource, new()
         {
             if (resource is MedicationRequest)
             {
-                throw new ArgumentNullException(
-                    nameof(overwriteResourceName),
-                    "Create resource MedicationRequest requires additional parameter overwriteResourceName"
-                );
+                OperationOutcome exceptionOutcome = new() { Issue = new() };
+                exceptionOutcome.Issue.Add(new OperationOutcome.IssueComponent()
+                {
+                    Details = new CodeableConcept(null, null, "Create resource MedicationRequest requires additional parameter overwriteResourceName")
+                });
+
+                return (new(), false, exceptionOutcome);
             }
             else
             {
@@ -63,7 +66,7 @@ internal static class FhirDataExchange<T> where T : Resource, new()
             response = Send(connection, HttpMethod.Put, resource, overwriteResourceName);
         }
         
-        if (response?.StatusCode == HttpStatusCode.Created)
+        if (response?.IsSuccessStatusCode ?? false)
         {
             using var getResponse = Receive(connection, response.Headers.Location);
             response.Dispose();
@@ -102,6 +105,16 @@ internal static class FhirDataExchange<T> where T : Resource, new()
             {
                 return (new(), false, outcome);
             }
+            else
+            {
+                OperationOutcome exceptionOutcome = new() { Issue = new() };
+                exceptionOutcome.Issue.Add(new OperationOutcome.IssueComponent()
+                {
+                    Details = new CodeableConcept(null, response.StatusCode.ToString(), response.RequestMessage?.ToString())
+                });
+
+                return (new(), false, exceptionOutcome);
+            }
         }
 
         return (new(), false, null);
@@ -115,31 +128,39 @@ internal static class FhirDataExchange<T> where T : Resource, new()
     public static (T created, bool canCue, OperationOutcome? outcome) CreateResourceBundle(LincaConnection connection, T resource, string operation)
     {
         using var response = Send(connection, HttpMethod.Post, resource, operation);
-        if (response?.StatusCode == HttpStatusCode.Created)
-        {
-            if (response != null)
-            {
-                var createdResourceRaw = new StreamReader
-                (
-                    response.Content.ReadAsStream()
-                ).ReadToEnd();
 
-                if (new FhirJsonPocoDeserializer().TryDeserializeResource
-                (
-                    createdResourceRaw,
-                    out Resource? parsedResource,
-                    out var _
-                ))
+        if (response != null)
+        {
+            var createdResourceRaw = new StreamReader
+            (
+                response.Content.ReadAsStream()
+            ).ReadToEnd();
+
+            if (new FhirJsonPocoDeserializer().TryDeserializeResource
+            (
+                createdResourceRaw,
+                out Resource? parsedResource,
+                out var _
+            ))
+            {
+                if (parsedResource is T createdResource)
                 {
-                    if (parsedResource is T createdResource)
-                    {
-                        return (createdResource, true, null);
-                    }
-                    if (parsedResource is  OperationOutcome outcome)
-                    {
-                        return (new(), false, outcome);
-                    }
+                    return (createdResource, true, null);
                 }
+                if (parsedResource is OperationOutcome outcome)
+                {
+                    return (new(), false, outcome);
+                }
+            }
+            else
+            {
+                OperationOutcome exceptionOutcome = new() { Issue = new() };
+                exceptionOutcome.Issue.Add(new OperationOutcome.IssueComponent()
+                {
+                    Details = new CodeableConcept(null, response.StatusCode.ToString(), response.RequestMessage?.ToString())
+                });
+
+                return (new(), false, exceptionOutcome);
             }
         }
 
@@ -203,6 +224,16 @@ internal static class FhirDataExchange<T> where T : Resource, new()
                 {
                     return (receivedResource, false);
                 }
+            }
+            else
+            {
+                OperationOutcome exceptionOutcome = new() { Issue = new() };
+                exceptionOutcome.Issue.Add(new OperationOutcome.IssueComponent()
+                {
+                    Details = new CodeableConcept(null, response.StatusCode.ToString(), response.RequestMessage?.ToString())
+                });
+
+                return (exceptionOutcome, false);
             }
         }
 
