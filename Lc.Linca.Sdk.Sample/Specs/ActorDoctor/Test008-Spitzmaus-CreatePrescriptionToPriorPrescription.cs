@@ -125,15 +125,7 @@ internal class Test008_Spitzmaus_CreatePrescriptionToPriorPrescription : Spec
                 Console.WriteLine("Validation result:");
             }
 
-            if (outcome != null)
-            {
-                foreach (var item in outcome.Issue)
-                {
-                    Console.WriteLine($"Outcome Issue Code: '{item.Details.Coding?.FirstOrDefault()?.Code}', Text: '{item.Details.Text}'");
-                }
-            }
-
-            return !canCue;
+            return OutcomeHelper.PrintOutcomeAndCheckLCVAL(outcome, "LCVAL36");
         }
         else 
         {
@@ -162,15 +154,7 @@ internal class Test008_Spitzmaus_CreatePrescriptionToPriorPrescription : Spec
             Console.WriteLine("Validation result:");
         }
 
-        if (outcome != null)
-        {
-            foreach (var item in outcome.Issue)
-            {
-                Console.WriteLine($"Outcome Issue Code: '{item.Details.Coding?.FirstOrDefault()?.Code}', Text: '{item.Details.Text}'");
-            }
-        }
-
-        return !canCue;
+        return OutcomeHelper.PrintOutcomeAndCheckLCVAL(outcome, "LCVAL38");
 
     }
 
@@ -195,15 +179,7 @@ internal class Test008_Spitzmaus_CreatePrescriptionToPriorPrescription : Spec
             Console.WriteLine("Validation result:");
         }
 
-        if (outcome != null)
-        {
-            foreach (var item in outcome.Issue)
-            {
-                Console.WriteLine($"Outcome Issue Code: '{item.Details.Coding?.FirstOrDefault()?.Code}', Text: '{item.Details.Text}'");
-            }
-        }
-
-        return !canCue;
+        return OutcomeHelper.PrintOutcomeAndCheckLCVAL(outcome, "LCVAL39");
 
     }
 
@@ -228,15 +204,7 @@ internal class Test008_Spitzmaus_CreatePrescriptionToPriorPrescription : Spec
             Console.WriteLine("Validation result:");
         }
 
-        if (outcome != null)
-        {
-            foreach (var item in outcome.Issue)
-            {
-                Console.WriteLine($"Outcome Issue Code: '{item.Details.Coding?.FirstOrDefault()?.Code}', Text: '{item.Details.Text}'");
-            }
-        }
-
-        return !canCue;
+        return OutcomeHelper.PrintOutcomeAndCheckLCVAL(outcome, "LCVAL40");
 
     }
 
@@ -263,15 +231,7 @@ internal class Test008_Spitzmaus_CreatePrescriptionToPriorPrescription : Spec
             Console.WriteLine("Validation result:");
         }
 
-        if (outcome != null)
-        {
-            foreach (var item in outcome.Issue)
-            {
-                Console.WriteLine($"Outcome Issue Code: '{item.Details.Coding?.FirstOrDefault()?.Code}', Text: '{item.Details.Text}'");
-            }
-        }
-
-        return !canCue;
+        return OutcomeHelper.PrintOutcomeAndCheckLCVAL(outcome, "LCVAL42");
 
     }
 
@@ -294,15 +254,7 @@ internal class Test008_Spitzmaus_CreatePrescriptionToPriorPrescription : Spec
             Console.WriteLine("Validation result:");
         }
 
-        if (outcome != null)
-        {
-            foreach (var item in outcome.Issue)
-            {
-                Console.WriteLine($"Outcome Issue Code: '{item.Details.Coding?.FirstOrDefault()?.Code}', Text: '{item.Details.Text}'");
-            }
-        }
-
-        return !canCue;
+        return OutcomeHelper.PrintOutcomeAndCheckLCVAL(outcome, "LCVAL43");
 
     }
 
@@ -325,15 +277,7 @@ internal class Test008_Spitzmaus_CreatePrescriptionToPriorPrescription : Spec
             Console.WriteLine("Validation result:");
         }
 
-        if (outcome != null)
-        {
-            foreach (var item in outcome.Issue)
-            {
-                Console.WriteLine($"Outcome Issue Code: '{item.Details.Coding?.FirstOrDefault()?.Code}', Text: '{item.Details.Text}'");
-            }
-        }
-
-        return !canCue;
+        return OutcomeHelper.PrintOutcomeAndCheckLCVAL(outcome, "LCVAL44");
 
     }
 
@@ -359,15 +303,7 @@ internal class Test008_Spitzmaus_CreatePrescriptionToPriorPrescription : Spec
             Console.WriteLine("Validation result:");
         }
 
-        if (outcome != null)
-        {
-            foreach (var item in outcome.Issue)
-            {
-                Console.WriteLine($"Outcome Issue Code: '{item.Details.Coding?.FirstOrDefault()?.Code}', Text: '{item.Details.Text}'");
-            }
-        }
-
-        return !canCue;
+        return OutcomeHelper.PrintOutcomeAndCheckLCVAL(outcome, "LCVAL45");
 
     }
 
@@ -403,15 +339,7 @@ internal class Test008_Spitzmaus_CreatePrescriptionToPriorPrescription : Spec
             Console.WriteLine("Validation result:");
         }
 
-        if (outcome != null)
-        {
-            foreach (var item in outcome.Issue)
-            {
-                Console.WriteLine($"Outcome Issue Code: '{item.Details.Coding?.FirstOrDefault()?.Code}', Text: '{item.Details.Text}'");
-            }
-        }
-
-        return !canCue;
+        return OutcomeHelper.PrintOutcomeAndCheckLCVAL(outcome, "LCVAL46");
 
     }
 
@@ -444,15 +372,7 @@ internal class Test008_Spitzmaus_CreatePrescriptionToPriorPrescription : Spec
             Console.WriteLine("Validation result:");
         }
 
-        if (outcome != null)
-        {
-            foreach (var item in outcome.Issue)
-            {
-                Console.WriteLine($"Outcome Issue Code: '{item.Details.Coding?.FirstOrDefault()?.Code}', Text: '{item.Details.Text}'");
-            }
-        }
-
-        return !canCue;
+        return OutcomeHelper.PrintOutcomeAndCheckLCVAL(outcome, "LCVAL58");
 
     }
 
@@ -475,15 +395,7 @@ internal class Test008_Spitzmaus_CreatePrescriptionToPriorPrescription : Spec
             Console.WriteLine("Validation result:");
         }
 
-        if (outcome != null)
-        {
-            foreach (var item in outcome.Issue)
-            {
-                Console.WriteLine($"Outcome Issue Code: '{item.Details.Coding?.FirstOrDefault()?.Code}', Text: '{item.Details.Text}'");
-            }
-        }
-
-        return !canCue;
+        return OutcomeHelper.PrintOutcomeAndCheckLCVAL(outcome, "LCVAL48");
 
     }
 
@@ -502,13 +414,7 @@ internal class Test008_Spitzmaus_CreatePrescriptionToPriorPrescription : Spec
             Console.WriteLine($"Failed to transmit Linca PrescriptionMedicationRequest");
         }
 
-        if (outcome != null)
-        {
-            foreach (var item in outcome.Issue)
-            {
-                Console.WriteLine($"Outcome Issue Code: '{item.Details.Coding?.FirstOrDefault()?.Code}', Text: '{item.Details.Text}'");
-            }
-        }
+        OutcomeHelper.PrintOutcome(outcome);
 
         return canCue;
     }
@@ -529,15 +435,7 @@ internal class Test008_Spitzmaus_CreatePrescriptionToPriorPrescription : Spec
             Console.WriteLine("Validation result:");
         }
 
-        if (outcome != null)
-        {
-            foreach (var item in outcome.Issue)
-            {
-                Console.WriteLine($"Outcome Issue Code: '{item.Details.Coding?.FirstOrDefault()?.Code}', Text: '{item.Details.Text}'");
-            }
-        }
-
-        return !canCue;
+        return OutcomeHelper.PrintOutcomeAndCheckLCVAL(outcome, "LCVAL41");
 
     }
 }

@@ -61,15 +61,7 @@ internal class Test010_FrueherVogel_CreateDispense : Spec
             Console.WriteLine("Validation result:");
         }
 
-        if (outcome != null)
-        {
-            foreach (var item in outcome.Issue)
-            {
-                Console.WriteLine($"Outcome Issue Code: '{item.Details.Coding?.FirstOrDefault()?.Code}', Text: '{item.Details.Text}'");
-            }
-        }
-
-        return !canCue;
+        return OutcomeHelper.PrintOutcomeAndCheckLCVAL(outcome, "LCVAL49");
     }
 
     private bool CreateMedicationDispenseLCVAL50A()
@@ -141,15 +133,7 @@ internal class Test010_FrueherVogel_CreateDispense : Spec
                 Console.WriteLine("Validation result:");
             }
 
-            if (outcome != null)
-            {
-                foreach (var item in outcome.Issue)
-                {
-                    Console.WriteLine($"Outcome Issue Code: '{item.Details.Coding?.FirstOrDefault()?.Code}', Text: '{item.Details.Text}'");
-                }
-            }
-
-            return !canCue;
+            return OutcomeHelper.PrintOutcomeAndCheckLCVAL(outcome, "LCVAL50");
         }
         else
         {
@@ -182,15 +166,7 @@ internal class Test010_FrueherVogel_CreateDispense : Spec
             Console.WriteLine("Validation result:");
         }
 
-        if (outcome != null)
-        {
-            foreach (var item in outcome.Issue)
-            {
-                Console.WriteLine($"Outcome Issue Code: '{item.Details.Coding?.FirstOrDefault()?.Code}', Text: '{item.Details.Text}'");
-            }
-        }
-
-        return !canCue;
+        return OutcomeHelper.PrintOutcomeAndCheckLCVAL(outcome, "LCVAL50");
     }
 
     private bool CreateMedicationDispenseLCVAL51()
@@ -213,15 +189,7 @@ internal class Test010_FrueherVogel_CreateDispense : Spec
             Console.WriteLine("Validation result:");
         }
 
-        if (outcome != null)
-        {
-            foreach (var item in outcome.Issue)
-            {
-                Console.WriteLine($"Outcome Issue Code: '{item.Details.Coding?.FirstOrDefault()?.Code}', Text: '{item.Details.Text}'");
-            }
-        }
-
-        return !canCue;
+        return OutcomeHelper.PrintOutcomeAndCheckLCVAL(outcome, "LCVAL51");
     }
 
     private bool CreateMedicationDispenseLCVAL52()
@@ -244,15 +212,7 @@ internal class Test010_FrueherVogel_CreateDispense : Spec
             Console.WriteLine("Validation result:");
         }
 
-        if (outcome != null)
-        {
-            foreach (var item in outcome.Issue)
-            {
-                Console.WriteLine($"Outcome Issue Code: '{item.Details.Coding?.FirstOrDefault()?.Code}', Text: '{item.Details.Text}'");
-            }
-        }
-
-        return !canCue;
+        return OutcomeHelper.PrintOutcomeAndCheckLCVAL(outcome, "LCVAL52");
     }
 
     private bool CreateMedicationDispenseLCVAL54()
@@ -277,15 +237,7 @@ internal class Test010_FrueherVogel_CreateDispense : Spec
             Console.WriteLine("Validation result:");
         }
 
-        if (outcome != null)
-        {
-            foreach (var item in outcome.Issue)
-            {
-                Console.WriteLine($"Outcome Issue Code: '{item.Details.Coding?.FirstOrDefault()?.Code}', Text: '{item.Details.Text}'");
-            }
-        }
-
-        return !canCue;
+        return OutcomeHelper.PrintOutcomeAndCheckLCVAL(outcome, "LCVAL54");
     }
 
     private bool CreateMedicationDispenseLCVAL29()
@@ -306,15 +258,7 @@ internal class Test010_FrueherVogel_CreateDispense : Spec
             Console.WriteLine("Validation result:");
         }
 
-        if (outcome != null)
-        {
-            foreach (var item in outcome.Issue)
-            {
-                Console.WriteLine($"Outcome Issue Code: '{item.Details.Coding?.FirstOrDefault()?.Code}', Text: '{item.Details.Text}'");
-            }
-        }
-
-        return !canCue;
+        return OutcomeHelper.PrintOutcomeAndCheckLCVAL(outcome, "LCVAL29");
     }
 
     private bool CreateMedicationDispenseLCVAL57()
@@ -344,15 +288,7 @@ internal class Test010_FrueherVogel_CreateDispense : Spec
             Console.WriteLine("Validation result:");
         }
 
-        if (outcome != null)
-        {
-            foreach (var item in outcome.Issue)
-            {
-                Console.WriteLine($"Outcome Issue Code: '{item.Details.Coding?.FirstOrDefault()?.Code}', Text: '{item.Details.Text}'");
-            }
-        }
-
-        return !canCue;
+        return OutcomeHelper.PrintOutcomeAndCheckLCVAL(outcome, "LCVAL57");
     }
 
     private bool CreateMedicationDispenseLCVAL66()
@@ -382,15 +318,7 @@ internal class Test010_FrueherVogel_CreateDispense : Spec
             Console.WriteLine("Validation result:");
         }
 
-        if (outcome != null)
-        {
-            foreach (var item in outcome.Issue)
-            {
-                Console.WriteLine($"Outcome Issue Code: '{item.Details.Coding?.FirstOrDefault()?.Code}', Text: '{item.Details.Text}'");
-            }
-        }
-
-        return !canCue;
+        return OutcomeHelper.PrintOutcomeAndCheckLCVAL(outcome, "LCVAL66");
     }
 
     private bool CreateMedicationDispenseLCVAL26()
@@ -422,15 +350,7 @@ internal class Test010_FrueherVogel_CreateDispense : Spec
             Console.WriteLine("Validation result:");
         }
 
-        if (outcome != null)
-        {
-            foreach (var item in outcome.Issue)
-            {
-                Console.WriteLine($"Outcome Issue Code: '{item.Details.Coding?.FirstOrDefault()?.Code}', Text: '{item.Details.Text}'");
-            }
-        }
-
-        return !canCue;
+        return OutcomeHelper.PrintOutcomeAndCheckLCVAL(outcome, "LCVAL26");
     }
 
     private bool CreateMedicationDispenseLCVAL45()
@@ -465,15 +385,7 @@ internal class Test010_FrueherVogel_CreateDispense : Spec
             Console.WriteLine("Validation result:");
         }
 
-        if (outcome != null)
-        {
-            foreach (var item in outcome.Issue)
-            {
-                Console.WriteLine($"Outcome Issue Code: '{item.Details.Coding?.FirstOrDefault()?.Code}', Text: '{item.Details.Text}'");
-            }
-        }
-
-        return !canCue;
+        return OutcomeHelper.PrintOutcomeAndCheckLCVAL(outcome, "LCVAL45");
     }
 
     private bool CreateMedicationDispenseSuccess()
@@ -492,13 +404,7 @@ internal class Test010_FrueherVogel_CreateDispense : Spec
             Console.WriteLine("Failed to create MedicationDispense");
         }
 
-        if (outcome != null)
-        {
-            foreach (var item in outcome.Issue)
-            {
-                Console.WriteLine($"Outcome Issue Code: '{item.Details.Coding?.FirstOrDefault()?.Code}', Text: '{item.Details.Text}'");
-            }
-        }
+        OutcomeHelper.PrintOutcome(outcome);
 
         return canCue;
     }
@@ -517,15 +423,7 @@ internal class Test010_FrueherVogel_CreateDispense : Spec
             Console.WriteLine("Validation result:");
         }
 
-        if (outcome != null)
-        {
-            foreach (var item in outcome.Issue)
-            {
-                Console.WriteLine($"Outcome Issue Code: '{item.Details.Coding?.FirstOrDefault()?.Code}', Text: '{item.Details.Text}'");
-            }
-        }
-
-        return !canCue;
+        return OutcomeHelper.PrintOutcomeAndCheckLCVAL(outcome, "LCVAL53");
     }
 
 }

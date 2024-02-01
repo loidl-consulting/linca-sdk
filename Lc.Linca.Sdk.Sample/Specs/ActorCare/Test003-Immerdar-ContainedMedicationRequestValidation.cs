@@ -94,13 +94,7 @@ internal class Test003_Immerdar_ContainedProposalMedicationRequestValidation : S
             Console.WriteLine("Create patient failed");
         }
 
-        if (outcome != null)
-        {
-            foreach (var item in outcome.Issue)
-            {
-                Console.WriteLine($"Outcome Issue Code: '{item.Details.Coding?.FirstOrDefault()?.Code}', Text: '{item.Details.Text}'");
-            }
-        }
+        OutcomeHelper.PrintOutcome(outcome);
 
         return canCue;
     }
@@ -159,15 +153,7 @@ internal class Test003_Immerdar_ContainedProposalMedicationRequestValidation : S
             Console.WriteLine("Validation result:");
         }
 
-        if (outcome != null)
-        {
-            foreach (var item in outcome.Issue)
-            {
-                Console.WriteLine($"Outcome Issue Code: '{item.Details.Coding?.FirstOrDefault()?.Code}', Text: '{item.Details.Text}'");
-            }
-        }
-
-        return !canCue;
+        return OutcomeHelper.PrintOutcomeAndCheckLCVAL(outcome, "LCVAL07");
     }
 
     private bool ContainedProposalErrorLCVAL08()
@@ -188,15 +174,7 @@ internal class Test003_Immerdar_ContainedProposalMedicationRequestValidation : S
             Console.WriteLine("Validation result:");
         }
 
-        if (outcome != null)
-        {
-            foreach (var item in outcome.Issue)
-            {
-                Console.WriteLine($"Outcome Issue Code: '{item.Details.Coding?.FirstOrDefault()?.Code}', Text: '{item.Details.Text}'");
-            }
-        }
-
-        return !canCue;
+        return OutcomeHelper.PrintOutcomeAndCheckLCVAL(outcome, "LCVAL08");
     }
 
     private bool ContainedProposalErrorLCVAL09()
@@ -217,15 +195,7 @@ internal class Test003_Immerdar_ContainedProposalMedicationRequestValidation : S
             Console.WriteLine("Validation result:");
         }
 
-        if (outcome != null)
-        {
-            foreach (var item in outcome.Issue)
-            {
-                Console.WriteLine($"Outcome Issue Code: '{item.Details.Coding?.FirstOrDefault()?.Code}', Text: '{item.Details.Text}'");
-            }
-        }
-
-        return !canCue;
+        return OutcomeHelper.PrintOutcomeAndCheckLCVAL(outcome, "LCVAL09");
     }
 
     private bool ContainedProposalErrorLCVAL15()
@@ -246,15 +216,7 @@ internal class Test003_Immerdar_ContainedProposalMedicationRequestValidation : S
             Console.WriteLine("Validation result:");
         }
 
-        if (outcome != null)
-        {
-            foreach (var item in outcome.Issue)
-            {
-                Console.WriteLine($"Outcome Issue Code: '{item.Details.Coding?.FirstOrDefault()?.Code}', Text: '{item.Details.Text}'");
-            }
-        }
-
-        return !canCue;
+        return OutcomeHelper.PrintOutcomeAndCheckLCVAL(outcome, "LCVAL15");
     }
 
     private bool ContainedProposalErrorLCVAL16()
@@ -276,15 +238,7 @@ internal class Test003_Immerdar_ContainedProposalMedicationRequestValidation : S
             Console.WriteLine("Validation result:");
         }
 
-        if (outcome != null)
-        {
-            foreach (var item in outcome.Issue)
-            {
-                Console.WriteLine($"Outcome Issue Code: '{item.Details.Coding?.FirstOrDefault()?.Code}', Text: '{item.Details.Text}'");
-            }
-        }
-
-        return !canCue;
+        return OutcomeHelper.PrintOutcomeAndCheckLCVAL(outcome, "LCVAL16");
     }
 
     private bool ContainedProposalErrorLCVAL17()
@@ -306,15 +260,7 @@ internal class Test003_Immerdar_ContainedProposalMedicationRequestValidation : S
             Console.WriteLine("Validation result:");
         }
 
-        if (outcome != null)
-        {
-            foreach (var item in outcome.Issue)
-            {
-                Console.WriteLine($"Outcome Issue Code: '{item.Details.Coding?.FirstOrDefault()?.Code}', Text: '{item.Details.Text}'");
-            }
-        }
-
-        return !canCue;
+        return OutcomeHelper.PrintOutcomeAndCheckLCVAL(outcome, "LCVAL17");
     }
 
     private bool ContainedProposalErrorLCVAL19()
@@ -335,15 +281,7 @@ internal class Test003_Immerdar_ContainedProposalMedicationRequestValidation : S
             Console.WriteLine("Validation result:");
         }
 
-        if (outcome != null)
-        {
-            foreach (var item in outcome.Issue)
-            {
-                Console.WriteLine($"Outcome Issue Code: '{item.Details.Coding?.FirstOrDefault()?.Code}', Text: '{item.Details.Text}'");
-            }
-        }
-
-        return !canCue;
+        return OutcomeHelper.PrintOutcomeAndCheckLCVAL(outcome, "LCVAL19");
     }
 
     private bool ContainedProposalErrorLCVAL21()
@@ -364,15 +302,7 @@ internal class Test003_Immerdar_ContainedProposalMedicationRequestValidation : S
             Console.WriteLine("Validation result:");
         }
 
-        if (outcome != null)
-        {
-            foreach (var item in outcome.Issue)
-            {
-                Console.WriteLine($"Outcome Issue Code: '{item.Details.Coding?.FirstOrDefault()?.Code}', Text: '{item.Details.Text}'");
-            }
-        }
-
-        return !canCue;
+        return OutcomeHelper.PrintOutcomeAndCheckLCVAL(outcome, "LCVAL21");
     }
 
     private bool ContainedProposalErrorLCVAL22()
@@ -393,15 +323,7 @@ internal class Test003_Immerdar_ContainedProposalMedicationRequestValidation : S
             Console.WriteLine("Validation result:");
         }
 
-        if (outcome != null)
-        {
-            foreach (var item in outcome.Issue)
-            {
-                Console.WriteLine($"Outcome Issue Code: '{item.Details.Coding?.FirstOrDefault()?.Code}', Text: '{item.Details.Text}'");
-            }
-        }
-
-        return !canCue;
+        return OutcomeHelper.PrintOutcomeAndCheckLCVAL(outcome, "LCVAL22");
     }
 
     private bool ContainedProposalErrorLCVAL23()
@@ -422,15 +344,7 @@ internal class Test003_Immerdar_ContainedProposalMedicationRequestValidation : S
             Console.WriteLine("Validation result:");
         }
 
-        if (outcome != null)
-        {
-            foreach (var item in outcome.Issue)
-            {
-                Console.WriteLine($"Outcome Issue Code: '{item.Details.Coding?.FirstOrDefault()?.Code}', Text: '{item.Details.Text}'");
-            }
-        }
-
-        return !canCue;
+        return OutcomeHelper.PrintOutcomeAndCheckLCVAL(outcome, "LCVAL23");
     }
 
     private bool ContainedProposalErrorLCVAL24()
@@ -458,15 +372,7 @@ internal class Test003_Immerdar_ContainedProposalMedicationRequestValidation : S
             Console.WriteLine("Validation result:");
         }
 
-        if (outcome != null)
-        {
-            foreach (var item in outcome.Issue)
-            {
-                Console.WriteLine($"Outcome Issue Code: '{item.Details.Coding?.FirstOrDefault()?.Code}', Text: '{item.Details.Text}'");
-            }
-        }
-
-        return !canCue;
+        return OutcomeHelper.PrintOutcomeAndCheckLCVAL(outcome, "LCVAL24");
     }
 
     private bool ContainedProposalErrorLCVAL25()
@@ -497,15 +403,7 @@ internal class Test003_Immerdar_ContainedProposalMedicationRequestValidation : S
             Console.WriteLine("Validation result:");
         }
 
-        if (outcome != null)
-        {
-            foreach (var item in outcome.Issue)
-            {
-                Console.WriteLine($"Outcome Issue Code: '{item.Details.Coding?.FirstOrDefault()?.Code}', Text: '{item.Details.Text}'");
-            }
-        }
-
-        return !canCue;
+        return OutcomeHelper.PrintOutcomeAndCheckLCVAL(outcome, "LCVAL25");
     }
 
     private bool ContainedProposalErrorLCVAL26()
@@ -535,15 +433,7 @@ internal class Test003_Immerdar_ContainedProposalMedicationRequestValidation : S
             Console.WriteLine("Validation result:");
         }
 
-        if (outcome != null)
-        {
-            foreach (var item in outcome.Issue)
-            {
-                Console.WriteLine($"Outcome Issue Code: '{item.Details.Coding?.FirstOrDefault()?.Code}', Text: '{item.Details.Text}'");
-            }
-        }
-
-        return !canCue;
+        return OutcomeHelper.PrintOutcomeAndCheckLCVAL(outcome, "LCVAL26");
     }
 
     private bool ContainedProposalErrorLCVAL27()
@@ -579,15 +469,7 @@ internal class Test003_Immerdar_ContainedProposalMedicationRequestValidation : S
             Console.WriteLine("Validation result:");
         }
 
-        if (outcome != null)
-        {
-            foreach (var item in outcome.Issue)
-            {
-                Console.WriteLine($"Outcome Issue Code: '{item.Details.Coding?.FirstOrDefault()?.Code}', Text: '{item.Details.Text}'");
-            }
-        }
-
-        return !canCue;
+        return OutcomeHelper.PrintOutcomeAndCheckLCVAL(outcome, "LCVAL27");
     }
 
     private bool ContainedProposalErrorLCVAL28()
@@ -607,15 +489,7 @@ internal class Test003_Immerdar_ContainedProposalMedicationRequestValidation : S
             Console.WriteLine("Validation result:");
         }
 
-        if (outcome != null)
-        {
-            foreach (var item in outcome.Issue)
-            {
-                Console.WriteLine($"Outcome Issue Code: '{item.Details.Coding?.FirstOrDefault()?.Code}', Text: '{item.Details.Text}'");
-            }
-        }
-
-        return !canCue;
+        return OutcomeHelper.PrintOutcomeAndCheckLCVAL(outcome, "LCVAL28");
     }
 
     private bool ContainedProposalErrorLCVAL29()
@@ -637,15 +511,7 @@ internal class Test003_Immerdar_ContainedProposalMedicationRequestValidation : S
             Console.WriteLine("Validation result:");
         }
 
-        if (outcome != null)
-        {
-            foreach (var item in outcome.Issue)
-            {
-                Console.WriteLine($"Outcome Issue Code: '{item.Details.Coding?.FirstOrDefault()?.Code}', Text: '{item.Details.Text}'");
-            }
-        }
-
-        return !canCue;
+        return OutcomeHelper.PrintOutcomeAndCheckLCVAL(outcome, "LCVAL29");
     }
 
     private bool ContainedProposalErrorLCVAL30()
@@ -673,15 +539,7 @@ internal class Test003_Immerdar_ContainedProposalMedicationRequestValidation : S
             Console.WriteLine("Validation result:");
         }
 
-        if (outcome != null)
-        {
-            foreach (var item in outcome.Issue)
-            {
-                Console.WriteLine($"Outcome Issue Code: '{item.Details.Coding?.FirstOrDefault()?.Code}', Text: '{item.Details.Text}'");
-            }
-        }
-
-        return !canCue;
+        return OutcomeHelper.PrintOutcomeAndCheckLCVAL(outcome, "LCVAL30");
     }
 
     private bool ContainedProposalErrorLCVAL56()
@@ -712,15 +570,7 @@ internal class Test003_Immerdar_ContainedProposalMedicationRequestValidation : S
             Console.WriteLine("Validation result:");
         }
 
-        if (outcome != null)
-        {
-            foreach (var item in outcome.Issue)
-            {
-                Console.WriteLine($"Outcome Issue Code: '{item.Details.Coding?.FirstOrDefault()?.Code}', Text: '{item.Details.Text}'");
-            }
-        }
-
-        return !canCue;
+        return OutcomeHelper.PrintOutcomeAndCheckLCVAL(outcome, "LCVAL56");
     }
 
     private bool ContainedProposalErrorLCVAL65()
@@ -751,15 +601,7 @@ internal class Test003_Immerdar_ContainedProposalMedicationRequestValidation : S
             Console.WriteLine("Validation result:");
         }
 
-        if (outcome != null)
-        {
-            foreach (var item in outcome.Issue)
-            {
-                Console.WriteLine($"Outcome Issue Code: '{item.Details.Coding?.FirstOrDefault()?.Code}', Text: '{item.Details.Text}'");
-            }
-        }
-
-        return !canCue;
+        return OutcomeHelper.PrintOutcomeAndCheckLCVAL(outcome, "LCVAL65");
     }
 
     private bool CreateRequestOrchestrationSuccess()
@@ -779,13 +621,7 @@ internal class Test003_Immerdar_ContainedProposalMedicationRequestValidation : S
             Console.WriteLine("Validation failed, result:");
         }
 
-        if (outcome != null)
-        {
-            foreach (var item in outcome.Issue)
-            {
-                Console.WriteLine($"Outcome Issue Code: '{item.Details.Coding?.FirstOrDefault()?.Code}', Text: '{item.Details.Text}'");
-            }
-        }
+        OutcomeHelper.PrintOutcome(outcome);
 
         return canCue;
     }

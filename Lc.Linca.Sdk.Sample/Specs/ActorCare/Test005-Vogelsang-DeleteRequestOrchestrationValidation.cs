@@ -41,7 +41,7 @@ internal class Test005_Vogelsang_DeleteRequestOrchestrationValidation : Spec
             new("Cancel the same proposal again, LCVAL33, not latest chain link", PostProposalMedicationRequestCancelLCVAL33),
             new("Delete RequestOrchestration, LCVAL62, one proposal already processed", DeleteRequestOrchestrationLCVAL62),
             new("Place orders for two patients with pharmacy specified", CreateAnotherRequestOrchestrationRecord),
-            new("Delete RequestOrchestration, all proposals are cancelled", DeleteRequestOrchestrationLCVAL62),
+            new("Delete RequestOrchestration completely with success", DeleteRequestOrchestrationSuccess),
             new("Delete RequestOrchestration, LCVAL63, RequestOrchestration has already been revoked", DeleteRequestOrchestrationLCVAL63)
 
         };
@@ -76,13 +76,7 @@ internal class Test005_Vogelsang_DeleteRequestOrchestrationValidation : Spec
             Console.WriteLine($"Failed to transmit client information");
         }
 
-        if (outcome != null)
-        {
-            foreach (var item in outcome.Issue)
-            {
-                Console.WriteLine($"Outcome Issue Code: '{item.Details.Coding?.FirstOrDefault()?.Code}', Text: '{item.Details.Text}'");
-            }
-        }
+        OutcomeHelper.PrintOutcome(outcome);
 
         return canCue;
     }
@@ -114,13 +108,7 @@ internal class Test005_Vogelsang_DeleteRequestOrchestrationValidation : Spec
             Console.WriteLine($"Failed to transmit client information");
         }
 
-        if (outcome != null)
-        {
-            foreach (var item in outcome.Issue)
-            {
-                Console.WriteLine($"Outcome Issue Code: '{item.Details.Coding?.FirstOrDefault()?.Code}', Text: '{item.Details.Text}'");
-            }
-        }
+        OutcomeHelper.PrintOutcome(outcome);
 
         return canCue;
     }
@@ -169,13 +157,7 @@ internal class Test005_Vogelsang_DeleteRequestOrchestrationValidation : Spec
             Console.WriteLine($"Failed to transmit Linca Request Orchestration");
         }
 
-        if (outcome != null)
-        {
-            foreach (var item in outcome.Issue)
-            {
-                Console.WriteLine($"Outcome Issue Code: '{item.Details.Coding?.FirstOrDefault()?.Code}', Text: '{item.Details.Text}'");
-            }
-        }
+        OutcomeHelper.PrintOutcome(outcome);
 
         return canCue;
     }
@@ -221,13 +203,7 @@ internal class Test005_Vogelsang_DeleteRequestOrchestrationValidation : Spec
                 Console.WriteLine($"Failed to transmit Linca ProposalMedicationRequest");
             }
 
-            if (outcome != null)
-            {
-                foreach (var item in outcome.Issue)
-                {
-                    Console.WriteLine($"Outcome Issue Code: '{item.Details.Coding?.FirstOrDefault()?.Code}', Text: '{item.Details.Text}'");
-                }
-            }
+            OutcomeHelper.PrintOutcome(outcome);
 
             return canCue;
         }
@@ -252,27 +228,14 @@ internal class Test005_Vogelsang_DeleteRequestOrchestrationValidation : Spec
             Console.WriteLine("Validation result:");
         }
 
-        if (outcome != null)
-        {
-            foreach (var item in outcome.Issue)
-            {
-                Console.WriteLine($"Outcome Issue Code: '{item.Details.Coding?.FirstOrDefault()?.Code}', Text: '{item.Details.Text}'");
-            }
-        }
-
-        return ! canCue;
+        return OutcomeHelper.PrintOutcomeAndCheckLCVAL(outcome, "LCVAL33");
     }
 
     private bool DeleteRequestOrchestrationLCVAL62()
     {
         (var oo, var deleted) = LincaDataExchange.DeleteRequestOrchestration(Connection, $"{createdRO.Id}");
 
-        foreach (var item in oo.Issue)
-        {
-            Console.WriteLine($"Outcome Issue Code: '{item.Details.Coding?.FirstOrDefault()?.Code}', Text: '{item.Details.Text}'");
-        }
-
-        return deleted;
+        return OutcomeHelper.PrintOutcomeAndCheckLCVAL(oo, "LCVAL62");
     }
 
     private bool CreateAnotherRequestOrchestrationRecord()
@@ -319,26 +282,24 @@ internal class Test005_Vogelsang_DeleteRequestOrchestrationValidation : Spec
             Console.WriteLine($"Failed to transmit Linca Request Orchestration");
         }
 
-        if (outcome != null)
-        {
-            foreach (var item in outcome.Issue)
-            {
-                Console.WriteLine($"Outcome Issue Code: '{item.Details.Coding?.FirstOrDefault()?.Code}', Text: '{item.Details.Text}'");
-            }
-        }
+        OutcomeHelper.PrintOutcome(outcome);
 
         return canCue;
+    }
+
+    private bool DeleteRequestOrchestrationSuccess()
+    {
+        (var oo, var deleted) = LincaDataExchange.DeleteRequestOrchestration(Connection, $"{createdRO.Id}");
+
+        OutcomeHelper.PrintOutcome(oo);
+
+        return deleted;
     }
     private bool DeleteRequestOrchestrationLCVAL63()
     {
         (var oo, var deleted) = LincaDataExchange.DeleteRequestOrchestration(Connection, $"{createdRO.Id}");
 
-        foreach (var item in oo.Issue)
-        {
-            Console.WriteLine($"Outcome Issue Code: '{item.Details.Coding?.FirstOrDefault()?.Code}', Text: '{item.Details.Text}'");
-        }
-
-        return ! deleted;
+        return OutcomeHelper.PrintOutcomeAndCheckLCVAL(oo, "LCVAL63");
     }
 
     private void PrepareMedicationRequests()

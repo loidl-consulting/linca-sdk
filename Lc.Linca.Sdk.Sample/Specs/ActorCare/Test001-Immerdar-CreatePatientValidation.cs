@@ -14,9 +14,6 @@ using Hl7.Fhir.Support;
 using Lc.Linca.Sdk.Client;
 using Lc.Linca.Sdk.Scaffolds;
 using System.Globalization;
-using static Lc.Linca.Sdk.Scaffolds.CareInformationSystem;
-using System.Reflection;
-using System.Xml.Linq;
 
 namespace Lc.Linca.Sdk.Specs.ActorCare;
 
@@ -73,7 +70,7 @@ internal class Test001_Immerdar_CreatePatientValidation : Spec
 
         (var createdPatient, var canCue, var outcome) = LincaDataExchange.CreatePatientWithOutcome(Connection, patient);
        
-        if(canCue)
+        if (canCue)
         {
             Console.WriteLine("Validation did not work properly: OperationOutcome excpected");
         }
@@ -82,15 +79,7 @@ internal class Test001_Immerdar_CreatePatientValidation : Spec
             Console.WriteLine("Validation result:");
         }
 
-        if (outcome != null)
-        {
-            foreach (var item in outcome.Issue)
-            {
-                Console.WriteLine($"Outcome Issue Code: '{item.Details.Coding?.FirstOrDefault()?.Code}', Text: '{item.Details.Text}'");
-            }
-        }
-
-        return !canCue;
+        return OutcomeHelper.PrintOutcomeAndCheckLCVAL(outcome, "LCVAL01");
     }
 
     private bool ClientRecordErrorLCVAL02()
@@ -131,15 +120,7 @@ internal class Test001_Immerdar_CreatePatientValidation : Spec
             Console.WriteLine("Validation result:");
         }
 
-        if (outcome != null)
-        {
-            foreach (var item in outcome.Issue)
-            {
-                Console.WriteLine($"Outcome Issue Code: '{item.Details.Coding?.FirstOrDefault()?.Code}', Text: '{item.Details.Text}'");
-            }
-        }
-
-        return !canCue;
+        return OutcomeHelper.PrintOutcomeAndCheckLCVAL(outcome, "LCVAL02");
     }
 
     private bool ClientRecordErrorLCVAL03()
@@ -185,15 +166,7 @@ internal class Test001_Immerdar_CreatePatientValidation : Spec
             Console.WriteLine("Validation result:");
         }
 
-        if (outcome != null)
-        {
-            foreach (var item in outcome.Issue)
-            {
-                Console.WriteLine($"Outcome Issue Code: '{item.Details.Coding?.FirstOrDefault()?.Code}', Text: '{item.Details.Text}'");
-            }
-        }
-
-        return !canCue;
+        return OutcomeHelper.PrintOutcomeAndCheckLCVAL(outcome, "LCVAL03");
     }
 
     private bool ClientRecordErrorLCVAL04()
@@ -229,15 +202,7 @@ internal class Test001_Immerdar_CreatePatientValidation : Spec
             Console.WriteLine("Validation result:");
         }
 
-        if (outcome != null)
-        {
-            foreach (var item in outcome.Issue)
-            {
-                Console.WriteLine($"Outcome Issue Code: '{item.Details.Coding?.FirstOrDefault()?.Code}', Text: '{item.Details.Text}'");
-            }
-        }
-
-        return !canCue;
+        return OutcomeHelper.PrintOutcomeAndCheckLCVAL(outcome, "LCVAL04");
     }
 
     private bool ClientRecordErrorLCVAL05()
@@ -272,15 +237,7 @@ internal class Test001_Immerdar_CreatePatientValidation : Spec
             Console.WriteLine("Validation result:");
         }
 
-        if (outcome != null)
-        {
-            foreach (var item in outcome.Issue)
-            {
-                Console.WriteLine($"Outcome Issue Code: '{item.Details.Coding?.FirstOrDefault()?.Code}', Text: '{item.Details.Text}'");
-            }
-        }
-
-        return !canCue;
+        return OutcomeHelper.PrintOutcomeAndCheckLCVAL(outcome, "LCVAL05");
     }
 
     private bool ClientRecordErrorLCVALMultiple()
@@ -298,13 +255,7 @@ internal class Test001_Immerdar_CreatePatientValidation : Spec
             Console.WriteLine("Validation result:");
         }
 
-        if (outcome != null)
-        {
-            foreach (var item in outcome.Issue)
-            {
-                Console.WriteLine($"Outcome Issue Code: '{item.Details.Coding?.FirstOrDefault()?.Code}', Text: '{item.Details.Text}'");
-            }
-        }
+        OutcomeHelper.PrintOutcome(outcome);
 
         return !canCue;
     }
@@ -346,13 +297,7 @@ internal class Test001_Immerdar_CreatePatientValidation : Spec
             Console.WriteLine("Create patient failed");
         }
 
-        if (outcome != null)
-        {
-            foreach (var item in outcome.Issue)
-            {
-                Console.WriteLine($"Outcome Issue Code: '{item.Details.Coding?.FirstOrDefault()?.Code}', Text: '{item.Details.Text}'");
-            }
-        }
+        OutcomeHelper.PrintOutcome(outcome);
 
         return canCue;
     }
@@ -372,16 +317,6 @@ internal class Test001_Immerdar_CreatePatientValidation : Spec
             Console.WriteLine("Validation result:");
         }
 
-        if (outcome != null)
-        {
-            foreach (var item in outcome.Issue)
-            {
-                Console.WriteLine($"Outcome Issue Code: '{item.Details.Coding?.FirstOrDefault()?.Code}', Text: '{item.Details.Text}'");
-            }
-        }
-
-        return ! canCue;
+        return OutcomeHelper.PrintOutcomeAndCheckLCVAL(outcome, "LCVAL06");
     }
-
-
 }

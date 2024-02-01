@@ -69,13 +69,7 @@ internal class Test000_Vogelsang_PrepareForTest007 : Spec
             Console.WriteLine($"Failed to transmit client information");
         }
 
-        if (outcome != null)
-        {
-            foreach (var item in outcome.Issue)
-            {
-                Console.WriteLine($"Outcome Issue Code: '{item.Details.Coding?.FirstOrDefault()?.Code}', Text: '{item.Details.Text}'");
-            }
-        }
+        OutcomeHelper.PrintOutcome( outcome );
 
         return canCue;
     }
@@ -110,13 +104,7 @@ internal class Test000_Vogelsang_PrepareForTest007 : Spec
             Console.WriteLine($"Failed to transmit client information");
         }
 
-        if (outcome != null)
-        {
-            foreach (var item in outcome.Issue)
-            {
-                Console.WriteLine($"Outcome Issue Code: '{item.Details.Coding?.FirstOrDefault()?.Code}', Text: '{item.Details.Text}'");
-            }
-        }
+        OutcomeHelper.PrintOutcome(outcome);
 
         return canCue;
     }
@@ -168,13 +156,7 @@ internal class Test000_Vogelsang_PrepareForTest007 : Spec
             Console.WriteLine($"Failed to transmit Linca Request Orchestration");
         }
 
-        if (outcome != null)
-        {
-            foreach (var item in outcome.Issue)
-            {
-                Console.WriteLine($"Outcome Issue Code: '{item.Details.Coding?.FirstOrDefault()?.Code}', Text: '{item.Details.Text}'");
-            }
-        }
+        OutcomeHelper.PrintOutcome(outcome);
 
         return canCue;
     }
