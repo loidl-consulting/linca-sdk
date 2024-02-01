@@ -92,13 +92,7 @@ internal class Test004_Immerdar_BasedOnProposalValidation : Spec
             Console.WriteLine("Create patient failed");
         }
 
-        if (outcome != null)
-        {
-            foreach (var item in outcome.Issue)
-            {
-                Console.WriteLine($"Outcome Issue Code: '{item.Details.Coding?.FirstOrDefault()?.Code}', Text: '{item.Details.Text}'");
-            }
-        }
+        OutcomeHelper.PrintOutcome(outcome);
 
         return canCue;
     }
@@ -239,13 +233,7 @@ internal class Test004_Immerdar_BasedOnProposalValidation : Spec
             Console.WriteLine("Validation failed, result:");
         }
 
-        if (outcome != null)
-        {
-            foreach (var item in outcome.Issue)
-            {
-                Console.WriteLine($"Outcome Issue Code: '{item.Details.Coding?.FirstOrDefault()?.Code}', Text: '{item.Details.Text}'");
-            }
-        }
+        OutcomeHelper.PrintOutcome(outcome);
 
         return canCue;
     }
@@ -268,15 +256,7 @@ internal class Test004_Immerdar_BasedOnProposalValidation : Spec
                 Console.WriteLine($"Validation Result");
             }
 
-            if (outcome != null)
-            {
-                foreach (var item in outcome.Issue)
-                {
-                    Console.WriteLine($"Outcome Issue Code: '{item.Details.Coding?.FirstOrDefault()?.Code}', Text: '{item.Details.Text}'");
-                }
-            }
-
-            return !canCue;
+            return OutcomeHelper.PrintOutcomeAndCheckLCVAL(outcome, "LCVAL18");
 
         }
         else
@@ -312,15 +292,7 @@ internal class Test004_Immerdar_BasedOnProposalValidation : Spec
                 Console.WriteLine($"ValidationResult");
             }
 
-            if (outcome != null)
-            {
-                foreach (var item in outcome.Issue)
-                {
-                    Console.WriteLine($"Outcome Issue Code: '{item.Details.Coding?.FirstOrDefault()?.Code}', Text: '{item.Details.Text}'");
-                }
-            }
-
-            return !canCue;
+            return OutcomeHelper.PrintOutcomeAndCheckLCVAL(outcome, "LCVAL18");
 
         }
         else
@@ -354,15 +326,7 @@ internal class Test004_Immerdar_BasedOnProposalValidation : Spec
                 Console.WriteLine($"ValidationResult");
             }
 
-            if (outcome != null)
-            {
-                foreach (var item in outcome.Issue)
-                {
-                    Console.WriteLine($"Outcome Issue Code: '{item.Details.Coding?.FirstOrDefault()?.Code}', Text: '{item.Details.Text}'");
-                }
-            }
-
-            return !canCue;
+            return OutcomeHelper.PrintOutcomeAndCheckLCVAL(outcome, "LCVAL19");
 
         }
         else
@@ -392,15 +356,7 @@ internal class Test004_Immerdar_BasedOnProposalValidation : Spec
                 Console.WriteLine($"ValidationResult");
             }
 
-            if (outcome != null)
-            {
-                foreach (var item in outcome.Issue)
-                {
-                    Console.WriteLine($"Outcome Issue Code: '{item.Details.Coding?.FirstOrDefault()?.Code}', Text: '{item.Details.Text}'");
-                }
-            }
-
-            return !canCue;
+            return OutcomeHelper.PrintOutcomeAndCheckLCVAL(outcome, "LCVAL20");
 
         }
         else
@@ -434,15 +390,7 @@ internal class Test004_Immerdar_BasedOnProposalValidation : Spec
                 Console.WriteLine($"ValidationResult");
             }
 
-            if (outcome != null)
-            {
-                foreach (var item in outcome.Issue)
-                {
-                    Console.WriteLine($"Outcome Issue Code: '{item.Details.Coding?.FirstOrDefault()?.Code}', Text: '{item.Details.Text}'");
-                }
-            }
-
-            return !canCue;
+            return OutcomeHelper.PrintOutcomeAndCheckLCVAL(outcome, "LCVAL31");
 
         }
         else
@@ -474,15 +422,7 @@ internal class Test004_Immerdar_BasedOnProposalValidation : Spec
                 Console.WriteLine($"ValidationResult");
             }
 
-            if (outcome != null)
-            {
-                foreach (var item in outcome.Issue)
-                {
-                    Console.WriteLine($"Outcome Issue Code: '{item.Details.Coding?.FirstOrDefault()?.Code}', Text: '{item.Details.Text}'");
-                }
-            }
-
-            return !canCue;
+            return OutcomeHelper.PrintOutcomeAndCheckLCVAL(outcome, "LCVAL32");
 
         }
         else
@@ -516,15 +456,7 @@ internal class Test004_Immerdar_BasedOnProposalValidation : Spec
                 Console.WriteLine($"ValidationResult");
             }
 
-            if (outcome != null)
-            {
-                foreach (var item in outcome.Issue)
-                {
-                    Console.WriteLine($"Outcome Issue Code: '{item.Details.Coding?.FirstOrDefault()?.Code}', Text: '{item.Details.Text}'");
-                }
-            }
-
-            return !canCue;
+            return OutcomeHelper.PrintOutcomeAndCheckLCVAL(outcome, "LCVAL34");
 
         }
         else
@@ -552,15 +484,7 @@ internal class Test004_Immerdar_BasedOnProposalValidation : Spec
                 Console.WriteLine($"ValidationResult");
             }
 
-            if (outcome != null)
-            {
-                foreach (var item in outcome.Issue)
-                {
-                    Console.WriteLine($"Outcome Issue Code: '{item.Details.Coding?.FirstOrDefault()?.Code}', Text: '{item.Details.Text}'");
-                }
-            }
-
-            return !canCue;
+            return OutcomeHelper.PrintOutcomeAndCheckLCVAL(outcome, "LCVAL35");
 
         }
         else
@@ -603,15 +527,7 @@ internal class Test004_Immerdar_BasedOnProposalValidation : Spec
                 Console.WriteLine($"ValidationResult");
             }
 
-            if (outcome != null)
-            {
-                foreach (var item in outcome.Issue)
-                {
-                    Console.WriteLine($"Outcome Issue Code: '{item.Details.Coding?.FirstOrDefault()?.Code}', Text: '{item.Details.Text}'");
-                }
-            }
-
-            return !canCue;
+            return OutcomeHelper.PrintOutcomeAndCheckLCVAL(outcome, "LCVAL36");
 
         }
         else
@@ -639,13 +555,7 @@ internal class Test004_Immerdar_BasedOnProposalValidation : Spec
                 Console.WriteLine($"Create LINCAProposalMedicationRequest failed");
             }
 
-            if (outcome != null)
-            {
-                foreach (var item in outcome.Issue)
-                {
-                    Console.WriteLine($"Outcome Issue Code: '{item.Details.Coding?.FirstOrDefault()?.Code}', Text: '{item.Details.Text}'");
-                }
-            }
+            OutcomeHelper.PrintOutcome(outcome);
 
             return canCue;
 
@@ -673,15 +583,7 @@ internal class Test004_Immerdar_BasedOnProposalValidation : Spec
                 Console.WriteLine($"ValidationResult");
             }
 
-            if (outcome != null)
-            {
-                foreach (var item in outcome.Issue)
-                {
-                    Console.WriteLine($"Outcome Issue Code: '{item.Details.Coding?.FirstOrDefault()?.Code}', Text: '{item.Details.Text}'");
-                }
-            }
-
-            return !canCue;
+            return OutcomeHelper.PrintOutcomeAndCheckLCVAL(outcome, "LCVAL33");
 
         }
         else

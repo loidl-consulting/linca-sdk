@@ -144,3 +144,36 @@ public static class BundleHelper
         }
     }
 }
+
+public class OutcomeHelper
+{
+    public static bool PrintOutcomeAndCheckLCVAL(OperationOutcome? outcome, string lcval)
+    {
+        bool containsLCVAL = false;
+
+        if (outcome != null)
+        {
+            foreach (var item in outcome.Issue)
+            {
+                Console.WriteLine($"Outcome Issue Code: '{item.Details.Coding?.FirstOrDefault()?.Code}', Text: '{item.Details.Text}'");
+                if (item.Details.Coding?.FirstOrDefault()?.Code.Contains(lcval) ?? false)
+                {
+                    containsLCVAL = true;
+                }
+            }
+        }
+
+        return containsLCVAL;
+    }
+
+    public static void PrintOutcome(OperationOutcome? outcome)
+    {
+        if (outcome != null)
+        {
+            foreach (var item in outcome.Issue)
+            {
+                Console.WriteLine($"Outcome Issue Code: '{item.Details.Coding?.FirstOrDefault()?.Code}', Text: '{item.Details.Text}'");
+            }
+        }
+    }
+}

@@ -84,13 +84,7 @@ internal class Test002_Immerdar_CreateRequestOrchestrationValidation : Spec
             Console.WriteLine("Create patient failed");
         }
 
-        if (outcome != null)
-        {
-            foreach (var item in outcome.Issue)
-            {
-                Console.WriteLine($"Outcome Issue Code: '{item.Details.Coding?.FirstOrDefault()?.Code}', Text: '{item.Details.Text}'");
-            }
-        }
+        OutcomeHelper.PrintOutcome(outcome);
 
         return canCue;
     }
@@ -132,15 +126,7 @@ internal class Test002_Immerdar_CreateRequestOrchestrationValidation : Spec
             Console.WriteLine("Validation result:");
         }
 
-        if (outcome != null)
-        {
-            foreach (var item in outcome.Issue)
-            {
-                Console.WriteLine($"Outcome Issue Code: '{item.Details.Coding?.FirstOrDefault()?.Code}', Text: '{item.Details.Text}'");
-            }
-        }
-
-        return !canCue;
+        return OutcomeHelper.PrintOutcomeAndCheckLCVAL(outcome, "LCVAL07");
     }
 
     private bool RequestOrchestrationErrorLCVAL08()
@@ -159,15 +145,7 @@ internal class Test002_Immerdar_CreateRequestOrchestrationValidation : Spec
             Console.WriteLine("Validation result:");
         }
 
-        if (outcome != null)
-        {
-            foreach (var item in outcome.Issue)
-            {
-                Console.WriteLine($"Outcome Issue Code: '{item.Details.Coding?.FirstOrDefault()?.Code}', Text: '{item.Details.Text}'");
-            }
-        }
-
-        return !canCue;
+        return OutcomeHelper.PrintOutcomeAndCheckLCVAL(outcome, "LCVAL08");
     }
 
     private bool RequestOrchestrationErrorLCVAL09()
@@ -188,15 +166,7 @@ internal class Test002_Immerdar_CreateRequestOrchestrationValidation : Spec
             Console.WriteLine("Validation result:");
         }
 
-        if (outcome != null)
-        {
-            foreach (var item in outcome.Issue)
-            {
-                Console.WriteLine($"Outcome Issue Code: '{item.Details.Coding?.FirstOrDefault()?.Code}', Text: '{item.Details.Text}'");
-            }
-        }
-
-        return !canCue;
+        return OutcomeHelper.PrintOutcomeAndCheckLCVAL(outcome, "LCVAL09");
     }
 
     private bool RequestOrchestrationErrorLCVAL10()
@@ -224,15 +194,7 @@ internal class Test002_Immerdar_CreateRequestOrchestrationValidation : Spec
             Console.WriteLine("Validation result:");
         }
 
-        if (outcome != null)
-        {
-            foreach (var item in outcome.Issue)
-            {
-                Console.WriteLine($"Outcome Issue Code: '{item.Details.Coding?.FirstOrDefault()?.Code}', Text: '{item.Details.Text}'");
-            }
-        }
-
-        return !canCue;
+        return OutcomeHelper.PrintOutcomeAndCheckLCVAL(outcome, "LCVAL10");
     }
 
     private bool RequestOrchestrationErrorLCVAL11()
@@ -251,15 +213,7 @@ internal class Test002_Immerdar_CreateRequestOrchestrationValidation : Spec
             Console.WriteLine("Validation result:");
         }
 
-        if (outcome != null)
-        {
-            foreach (var item in outcome.Issue)
-            {
-                Console.WriteLine($"Outcome Issue Code: '{item.Details.Coding?.FirstOrDefault()?.Code}', Text: '{item.Details.Text}'");
-            }
-        }
-
-        return !canCue;
+        return OutcomeHelper.PrintOutcomeAndCheckLCVAL(outcome, "LCVAL11");
     }
 
     private bool RequestOrchestrationErrorLCVAL12()
@@ -287,15 +241,7 @@ internal class Test002_Immerdar_CreateRequestOrchestrationValidation : Spec
             Console.WriteLine("Validation result:");
         }
 
-        if (outcome != null)
-        {
-            foreach (var item in outcome.Issue)
-            {
-                Console.WriteLine($"Outcome Issue Code: '{item.Details.Coding?.FirstOrDefault()?.Code}', Text: '{item.Details.Text}'");
-            }
-        }
-
-        return !canCue;
+        return OutcomeHelper.PrintOutcomeAndCheckLCVAL(outcome, "LCVAL12");
     }
 
     private bool RequestOrchestrationErrorLCVAL13()
@@ -323,15 +269,7 @@ internal class Test002_Immerdar_CreateRequestOrchestrationValidation : Spec
             Console.WriteLine("Validation result:");
         }
 
-        if (outcome != null)
-        {
-            foreach (var item in outcome.Issue)
-            {
-                Console.WriteLine($"Outcome Issue Code: '{item.Details.Coding?.FirstOrDefault()?.Code}', Text: '{item.Details.Text}'");
-            }
-        }
-
-        return !canCue;
+        return OutcomeHelper.PrintOutcomeAndCheckLCVAL(outcome, "LCVAL13");
     }
 
     private bool RequestOrchestrationErrorLCVAL14()
@@ -349,15 +287,7 @@ internal class Test002_Immerdar_CreateRequestOrchestrationValidation : Spec
             Console.WriteLine("Validation result:");
         }
 
-        if (outcome != null)
-        {
-            foreach (var item in outcome.Issue)
-            {
-                Console.WriteLine($"Outcome Issue Code: '{item.Details.Coding?.FirstOrDefault()?.Code}', Text: '{item.Details.Text}'");
-            }
-        }
-
-        return !canCue;
+        return OutcomeHelper.PrintOutcomeAndCheckLCVAL(outcome, "LCVAL14");
     }
 
     private bool RequestOrchestrationErrorLCVAL64()
@@ -377,15 +307,7 @@ internal class Test002_Immerdar_CreateRequestOrchestrationValidation : Spec
             Console.WriteLine("Validation result:");
         }
 
-        if (outcome != null)
-        {
-            foreach (var item in outcome.Issue)
-            {
-                Console.WriteLine($"Outcome Issue Code: '{item.Details.Coding?.FirstOrDefault()?.Code}', Text: '{item.Details.Text}'");
-            }
-        }
-
-        return !canCue;
+        return OutcomeHelper.PrintOutcomeAndCheckLCVAL(outcome, "LCVAL64");
     }
 
     private bool CreateRequestOrchestrationSuccess()
@@ -411,13 +333,7 @@ internal class Test002_Immerdar_CreateRequestOrchestrationValidation : Spec
             Console.WriteLine("Validation failed, result:");
         }
 
-        if (outcome != null)
-        {
-            foreach (var item in outcome.Issue)
-            {
-                Console.WriteLine($"Outcome Issue Code: '{item.Details.Coding?.FirstOrDefault()?.Code}', Text: '{item.Details.Text}'");
-            }
-        }
+        OutcomeHelper.PrintOutcome(outcome);
 
         return canCue;
     }

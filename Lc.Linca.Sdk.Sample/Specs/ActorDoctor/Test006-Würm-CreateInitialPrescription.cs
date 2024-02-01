@@ -35,13 +35,14 @@ internal class Test006_Wuerm_CreateInitialPrescriptionBundle : Spec
             new ("Create initial prescription bundle, LCVAL67, intent originalOrder, but priorPrescription not null", InitialPrescriptionLCVAL67),
             new ("Create initial prescription bundle, LCVAL08, status required", InitialPrescriptionLCVAL08),
             new ("Create initial prescription bundle, LCVAL59, status active required", InitialPrescriptionLCVAL59),
-            new ("Create initial prescription bundle, LCVAL09A, subject required", InitialPrescriptionLCVAL09A),
-            new ("Create initial prescription bundle, LCVAL09B, subject svnr required", InitialPrescriptionLCVAL09B),
+            new ("Create initial prescription bundle, LCVAL09, subject required", InitialPrescriptionLCVAL09A),
+            new ("Create initial prescription bundle, LCVAL09, subject svnr required", InitialPrescriptionLCVAL09B),
             new ("Create initial prescription bundle, LCVAL68, subject cannot differ in Bundle", InitialPrescriptionLCVAL68),
             new ("Create initial prescription bundle, LCVAL69, groupIdentifier cannot differ in Bundle", InitialPrescriptionLCVAL69),
             new ("Create initial prescription bundle, LCVAL70, initial prescription cannot have lc_id", InitialPrescriptionLCVAL70),
             new ("Create initial prescription bundle, LCVAL71, initial prescriptions must be sent in Bundle", InitialPrescriptionLCVAL71),
-            new ("Create Bundle of initial prescriptions successfully", CreateInitialPrescriptionSuccess)
+            new ("Create Bundle of initial prescriptions (groupIdentifier given) successfully", CreateInitialPrescriptionSuccess),
+            // new ("Create Bundle of initial prescriptions (no groupIdentifier given) successfully", CreateInitialPrescriptionWithLcRezeptIdSuccess)
             };
     }
 
@@ -160,15 +161,7 @@ internal class Test006_Wuerm_CreateInitialPrescriptionBundle : Spec
             Console.WriteLine("Validation result:");
         }
 
-        if (outcome != null)
-        {
-            foreach (var item in outcome.Issue)
-            {
-                Console.WriteLine($"Outcome Issue Code: '{item.Details.Coding?.FirstOrDefault()?.Code}', Text: '{item.Details.Text}'");
-            }
-        }
-
-        return ! canCue;
+        return OutcomeHelper.PrintOutcomeAndCheckLCVAL(outcome, "LCVAL29");
     }
 
     private bool InitialPrescriptionLCVAL55()
@@ -205,15 +198,7 @@ internal class Test006_Wuerm_CreateInitialPrescriptionBundle : Spec
             Console.WriteLine("Validation result:");
         }
 
-        if (outcome != null)
-        {
-            foreach (var item in outcome.Issue)
-            {
-                Console.WriteLine($"Outcome Issue Code: '{item.Details.Coding?.FirstOrDefault()?.Code}', Text: '{item.Details.Text}'");
-            }
-        }
-
-        return !canCue;
+        return OutcomeHelper.PrintOutcomeAndCheckLCVAL(outcome, "LCVAL55");
     }
 
     private bool InitialPrescriptionLCVAL66()
@@ -251,15 +236,7 @@ internal class Test006_Wuerm_CreateInitialPrescriptionBundle : Spec
             Console.WriteLine("Validation result:");
         }
 
-        if (outcome != null)
-        {
-            foreach (var item in outcome.Issue)
-            {
-                Console.WriteLine($"Outcome Issue Code: '{item.Details.Coding?.FirstOrDefault()?.Code}', Text: '{item.Details.Text}'");
-            }
-        }
-
-        return !canCue;
+        return OutcomeHelper.PrintOutcomeAndCheckLCVAL(outcome, "LCVAL66");
     }
 
     private bool InitialPrescriptionLCVAL26()
@@ -299,15 +276,7 @@ internal class Test006_Wuerm_CreateInitialPrescriptionBundle : Spec
             Console.WriteLine("Validation result:");
         }
 
-        if (outcome != null)
-        {
-            foreach (var item in outcome.Issue)
-            {
-                Console.WriteLine($"Outcome Issue Code: '{item.Details.Coding?.FirstOrDefault()?.Code}', Text: '{item.Details.Text}'");
-            }
-        }
-
-        return !canCue;
+        return OutcomeHelper.PrintOutcomeAndCheckLCVAL(outcome, "LCVAL26");
     }
 
     private bool InitialPrescriptionLCVAL07()
@@ -352,15 +321,7 @@ internal class Test006_Wuerm_CreateInitialPrescriptionBundle : Spec
             Console.WriteLine("Validation result:");
         }
 
-        if (outcome != null)
-        {
-            foreach (var item in outcome.Issue)
-            {
-                Console.WriteLine($"Outcome Issue Code: '{item.Details.Coding?.FirstOrDefault()?.Code}', Text: '{item.Details.Text}'");
-            }
-        }
-
-        return !canCue;
+        return OutcomeHelper.PrintOutcomeAndCheckLCVAL(outcome, "LCVAL07");
     }
 
     private bool InitialPrescriptionLCVAL67()
@@ -391,15 +352,7 @@ internal class Test006_Wuerm_CreateInitialPrescriptionBundle : Spec
             Console.WriteLine("Validation result:");
         }
 
-        if (outcome != null)
-        {
-            foreach (var item in outcome.Issue)
-            {
-                Console.WriteLine($"Outcome Issue Code: '{item.Details.Coding?.FirstOrDefault()?.Code}', Text: '{item.Details.Text}'");
-            }
-        }
-
-        return !canCue;
+        return OutcomeHelper.PrintOutcomeAndCheckLCVAL(outcome, "LCVAL67");
     }
 
     private bool InitialPrescriptionLCVAL08()
@@ -430,15 +383,7 @@ internal class Test006_Wuerm_CreateInitialPrescriptionBundle : Spec
             Console.WriteLine("Validation result:");
         }
 
-        if (outcome != null)
-        {
-            foreach (var item in outcome.Issue)
-            {
-                Console.WriteLine($"Outcome Issue Code: '{item.Details.Coding?.FirstOrDefault()?.Code}', Text: '{item.Details.Text}'");
-            }
-        }
-
-        return !canCue;
+        return OutcomeHelper.PrintOutcomeAndCheckLCVAL(outcome, "LCVAL08");
     }
 
     private bool InitialPrescriptionLCVAL59()
@@ -467,15 +412,7 @@ internal class Test006_Wuerm_CreateInitialPrescriptionBundle : Spec
             Console.WriteLine("Validation result:");
         }
 
-        if (outcome != null)
-        {
-            foreach (var item in outcome.Issue)
-            {
-                Console.WriteLine($"Outcome Issue Code: '{item.Details.Coding?.FirstOrDefault()?.Code}', Text: '{item.Details.Text}'");
-            }
-        }
-
-        return !canCue;
+        return OutcomeHelper.PrintOutcomeAndCheckLCVAL(outcome, "LCVAL59");
     }
 
     private bool InitialPrescriptionLCVAL09A()
@@ -506,15 +443,7 @@ internal class Test006_Wuerm_CreateInitialPrescriptionBundle : Spec
             Console.WriteLine("Validation result:");
         }
 
-        if (outcome != null)
-        {
-            foreach (var item in outcome.Issue)
-            {
-                Console.WriteLine($"Outcome Issue Code: '{item.Details.Coding?.FirstOrDefault()?.Code}', Text: '{item.Details.Text}'");
-            }
-        }
-
-        return !canCue;
+        return OutcomeHelper.PrintOutcomeAndCheckLCVAL(outcome, "LCVAL09");
     }
 
     private bool InitialPrescriptionLCVAL09B()
@@ -551,15 +480,7 @@ internal class Test006_Wuerm_CreateInitialPrescriptionBundle : Spec
             Console.WriteLine("Validation result:");
         }
 
-        if (outcome != null)
-        {
-            foreach (var item in outcome.Issue)
-            {
-                Console.WriteLine($"Outcome Issue Code: '{item.Details.Coding?.FirstOrDefault()?.Code}', Text: '{item.Details.Text}'");
-            }
-        }
-
-        return !canCue;
+        return OutcomeHelper.PrintOutcomeAndCheckLCVAL(outcome, "LCVAL09");
     }
 
     private bool InitialPrescriptionLCVAL68()
@@ -664,15 +585,7 @@ internal class Test006_Wuerm_CreateInitialPrescriptionBundle : Spec
             Console.WriteLine("Validation result:");
         }
 
-        if (outcome != null)
-        {
-            foreach (var item in outcome.Issue)
-            {
-                Console.WriteLine($"Outcome Issue Code: '{item.Details.Coding?.FirstOrDefault()?.Code}', Text: '{item.Details.Text}'");
-            }
-        }
-
-        return !canCue;
+        return OutcomeHelper.PrintOutcomeAndCheckLCVAL(outcome, "LCVAL68");
     }
 
     private bool InitialPrescriptionLCVAL69()
@@ -691,7 +604,7 @@ internal class Test006_Wuerm_CreateInitialPrescriptionBundle : Spec
         
         initialPresc2.GroupIdentifier = new()
         {
-            Value = "WABI 0001 AAAA",        // eRezeptId different to second prescription in Bundle
+            Value = "WABI 0001 AAAA",        // Error: eRezeptId different to second prescription in Bundle
             System = "urn:oid:1.2.40.0.10.1.4.3.3"       // OID: Rezeptnummer
         };
 
@@ -719,15 +632,7 @@ internal class Test006_Wuerm_CreateInitialPrescriptionBundle : Spec
             Console.WriteLine("Validation result:");
         }
 
-        if (outcome != null)
-        {
-            foreach (var item in outcome.Issue)
-            {
-                Console.WriteLine($"Outcome Issue Code: '{item.Details.Coding?.FirstOrDefault()?.Code}', Text: '{item.Details.Text}'");
-            }
-        }
-
-        return !canCue;
+        return OutcomeHelper.PrintOutcomeAndCheckLCVAL(outcome, "LCVAL69");
     }
 
     private bool InitialPrescriptionLCVAL70()
@@ -764,15 +669,7 @@ internal class Test006_Wuerm_CreateInitialPrescriptionBundle : Spec
             Console.WriteLine("Validation result:");
         }
 
-        if (outcome != null)
-        {
-            foreach (var item in outcome.Issue)
-            {
-                Console.WriteLine($"Outcome Issue Code: '{item.Details.Coding?.FirstOrDefault()?.Code}', Text: '{item.Details.Text}'");
-            }
-        }
-
-        return !canCue;
+        return OutcomeHelper.PrintOutcomeAndCheckLCVAL(outcome, "LCVAL70");
     }
 
     private bool InitialPrescriptionLCVAL71()
@@ -791,15 +688,7 @@ internal class Test006_Wuerm_CreateInitialPrescriptionBundle : Spec
             Console.WriteLine("Validation result:");
         }
 
-        if (outcome != null)
-        {
-            foreach (var item in outcome.Issue)
-            {
-                Console.WriteLine($"Outcome Issue Code: '{item.Details.Coding?.FirstOrDefault()?.Code}', Text: '{item.Details.Text}'");
-            }
-        }
-
-        return !canCue;
+        return OutcomeHelper.PrintOutcomeAndCheckLCVAL(outcome, "LCVAL71");
     }
     private bool CreateInitialPrescriptionSuccess()
     {
@@ -829,13 +718,48 @@ internal class Test006_Wuerm_CreateInitialPrescriptionBundle : Spec
             Console.WriteLine($"Failed to transmit Linca PrescriptionMedicationRequestBundle");
         }
 
-        if (outcome != null)
+        OutcomeHelper.PrintOutcome(outcome);
+
+        return canCue;
+    }
+
+    private bool CreateInitialPrescriptionWithLcRezeptIdSuccess()
+    {
+        // removing the groupIdentifier -> the server will create an eRezept-Id instead
+        initialPresc1.GroupIdentifier = null;
+        initialPresc2.GroupIdentifier = null;
+
+        /***** add the Linca Prescription Medication Requests to a Bundle for transaction ****************/
+        Bundle prescriptions = new()
         {
-            foreach (var item in outcome.Issue)
+            Type = Bundle.BundleType.Transaction,
+            Entry = new()
+        };
+
+        prescriptions.AddResourceEntry(initialPresc1, $"{Connection.ServerBaseUrl}/{LincaEndpoints.LINCAPrescriptionMedicationRequest}");
+        prescriptions.AddResourceEntry(initialPresc2, $"{Connection.ServerBaseUrl}/{LincaEndpoints.LINCAPrescriptionMedicationRequest}");
+
+        (Bundle results, var canCue, var outcome) = LincaDataExchange.CreatePrescriptionBundle(Connection, prescriptions);
+
+        if (canCue)
+        {
+            Console.WriteLine($"Linca PrescriptionMedicationRequestBundle transmitted, created Linca PrescriptionMedicationRequests");
+
+            BundleHelper.ShowOrderChains(results);
+
+            Console.WriteLine("Prescrption Id \t \t \t \t lcRezeptId");
+            foreach (var item in results.Entry)
             {
-                Console.WriteLine($"Outcome Issue Code: '{item.Details.Coding?.FirstOrDefault()?.Code}', Text: '{item.Details.Text}'");
+                var prescr = item.Resource as MedicationRequest;
+                Console.WriteLine($"{prescr?.Id} \t {prescr?.GroupIdentifier.Value}");
             }
         }
+        else
+        {
+            Console.WriteLine($"Failed to transmit Linca PrescriptionMedicationRequestBundle");
+        }
+
+        OutcomeHelper.PrintOutcome(outcome);
 
         return canCue;
     }

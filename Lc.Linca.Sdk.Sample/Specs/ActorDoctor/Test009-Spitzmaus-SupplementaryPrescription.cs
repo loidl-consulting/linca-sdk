@@ -31,7 +31,8 @@ internal class Test009_Spitzmaus_SupplementaryPrescription : Spec
         Steps = new Step[]
         {
             new ("Create a prescription plus supplementary prescription Bundle, LCVAL60, supportingInformation missing", CreateAdhocPrescriptionLCVAL60),
-            new ("Create a prescription plus supplementary prescription Bundle, LCVAL61, supportingInformation wrong", CreateAdhocPrescriptionLCVAL61)
+            new ("Create a prescription plus supplementary prescription Bundle, LCVAL61, supportingInformation wrong", CreateAdhocPrescriptionLCVAL61),
+            new ("Create a prescription plus supplementary prescription Bundle successfully", CreateAdhocPrescriptionSuccess),
         };
     }
 
@@ -219,15 +220,7 @@ internal class Test009_Spitzmaus_SupplementaryPrescription : Spec
                 Console.WriteLine("Validation result:");
             }
 
-            if (outcome != null)
-            {
-                foreach (var item in outcome.Issue)
-                {
-                    Console.WriteLine($"Outcome Issue Code: '{item.Details.Coding?.FirstOrDefault()?.Code}', Text: '{item.Details.Text}'");
-                }
-            }
-
-            return !canCue;
+            return OutcomeHelper.PrintOutcomeAndCheckLCVAL(outcome, "LCVAL60");
         }
         else
         {
@@ -270,14 +263,42 @@ internal class Test009_Spitzmaus_SupplementaryPrescription : Spec
             Console.WriteLine("Validation result:");
         }
 
-        if (outcome != null)
+        return OutcomeHelper.PrintOutcomeAndCheckLCVAL(outcome, "LCVAL61");
+    }
+
+    private bool CreateAdhocPrescriptionSuccess()
+    {
+        LinkedCareSampleClient.CareInformationSystemScaffold.PseudoDatabaseRetrieve();
+
+        /****** Create Adhoc prescription ******/
+        adhoc.SupportingInformation.Clear();
+        adhoc.SupportingInformation = prescription.SupportingInformation;
+
+        /***** Add both to one Bundle ******/
+        Bundle prescriptions = new()
         {
-            foreach (var item in outcome.Issue)
-            {
-                Console.WriteLine($"Outcome Issue Code: '{item.Details.Coding?.FirstOrDefault()?.Code}', Text: '{item.Details.Text}'");
-            }
+            Type = Bundle.BundleType.Transaction,
+            Entry = new()
+        };
+
+        prescriptions.AddResourceEntry(prescription, $"{Connection.ServerBaseUrl}/{LincaEndpoints.LINCAPrescriptionMedicationRequest}");
+        prescriptions.AddResourceEntry(adhoc, $"{Connection.ServerBaseUrl}/{LincaEndpoints.LINCAPrescriptionMedicationRequest}");
+
+        (Bundle results, var canCue, var outcome) = LincaDataExchange.CreatePrescriptionBundle(Connection, prescriptions);
+
+        if (canCue)
+        {
+            Console.WriteLine("Prescription and adhoc prescription successfully transmitted:");
+
+            BundleHelper.ShowOrderChains(results);
+        }
+        else
+        {
+            Console.WriteLine("Failed to transmit prescription and achoc prescription");
         }
 
-        return !canCue;
+        OutcomeHelper.PrintOutcome(outcome);
+
+        return canCue;
     }
 }

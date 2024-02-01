@@ -167,15 +167,7 @@ internal class Test007_Spitzmaus_CreateBasedOnPrescriptionWithChanges : Spec
                 Console.WriteLine("Validation result:");
             }
 
-            if (outcome != null)
-            {
-                foreach (var item in outcome.Issue)
-                {
-                    Console.WriteLine($"Outcome Issue Code: '{item.Details.Coding?.FirstOrDefault()?.Code}', Text: '{item.Details.Text}'");
-                }
-            }
-
-            return !canCue;
+            return OutcomeHelper.PrintOutcomeAndCheckLCVAL(outcome, "LCVAL37");
         }
         else
         {
@@ -215,15 +207,7 @@ internal class Test007_Spitzmaus_CreateBasedOnPrescriptionWithChanges : Spec
             Console.WriteLine("Validation result:");
         }
 
-        if (outcome != null)
-        {
-            foreach (var item in outcome.Issue)
-            {
-                Console.WriteLine($"Outcome Issue Code: '{item.Details.Coding?.FirstOrDefault()?.Code}', Text: '{item.Details.Text}'");
-            }
-        }
-
-        return !canCue;
+        return OutcomeHelper.PrintOutcomeAndCheckLCVAL(outcome, "LCVAL31");
     }
 
     private bool PrescriptionRecordLCVAL32()
@@ -256,15 +240,7 @@ internal class Test007_Spitzmaus_CreateBasedOnPrescriptionWithChanges : Spec
             Console.WriteLine("Validation result:");
         }
 
-        if (outcome != null)
-        {
-            foreach (var item in outcome.Issue)
-            {
-                Console.WriteLine($"Outcome Issue Code: '{item.Details.Coding?.FirstOrDefault()?.Code}', Text: '{item.Details.Text}'");
-            }
-        }
-
-        return !canCue;
+        return OutcomeHelper.PrintOutcomeAndCheckLCVAL(outcome, "LCVAL32");
     }
 
     private bool PrescriptionRecordLCVAL09()
@@ -299,15 +275,7 @@ internal class Test007_Spitzmaus_CreateBasedOnPrescriptionWithChanges : Spec
             Console.WriteLine("Validation result:");
         }
 
-        if (outcome != null)
-        {
-            foreach (var item in outcome.Issue)
-            {
-                Console.WriteLine($"Outcome Issue Code: '{item.Details.Coding?.FirstOrDefault()?.Code}', Text: '{item.Details.Text}'");
-            }
-        }
-
-        return !canCue;
+        return OutcomeHelper.PrintOutcomeAndCheckLCVAL(outcome, "LCVAL09");
     }
 
     private bool PrescriptionRecordLCVAL45()
@@ -340,15 +308,7 @@ internal class Test007_Spitzmaus_CreateBasedOnPrescriptionWithChanges : Spec
             Console.WriteLine("Validation result:");
         }
 
-        if (outcome != null)
-        {
-            foreach (var item in outcome.Issue)
-            {
-                Console.WriteLine($"Outcome Issue Code: '{item.Details.Coding?.FirstOrDefault()?.Code}', Text: '{item.Details.Text}'");
-            }
-        }
-
-        return !canCue;
+        return OutcomeHelper.PrintOutcomeAndCheckLCVAL(outcome, "LCVAL45");
     }
 
     private bool PrescriptionRecordLCVAL46()
@@ -391,15 +351,7 @@ internal class Test007_Spitzmaus_CreateBasedOnPrescriptionWithChanges : Spec
             Console.WriteLine("Validation result:");
         }
 
-        if (outcome != null)
-        {
-            foreach (var item in outcome.Issue)
-            {
-                Console.WriteLine($"Outcome Issue Code: '{item.Details.Coding?.FirstOrDefault()?.Code}', Text: '{item.Details.Text}'");
-            }
-        }
-
-        return !canCue;
+        return OutcomeHelper.PrintOutcomeAndCheckLCVAL(outcome, "LCVAL46");
     }
 
     private bool PrescriptionRecordLCVAL42()
@@ -446,15 +398,7 @@ internal class Test007_Spitzmaus_CreateBasedOnPrescriptionWithChanges : Spec
             Console.WriteLine("Validation result:");
         }
 
-        if (outcome != null)
-        {
-            foreach (var item in outcome.Issue)
-            {
-                Console.WriteLine($"Outcome Issue Code: '{item.Details.Coding?.FirstOrDefault()?.Code}', Text: '{item.Details.Text}'");
-            }
-        }
-
-        return !canCue;
+        return OutcomeHelper.PrintOutcomeAndCheckLCVAL(outcome, "LCVAL42");
     }
 
     private bool PrescriptionRecordLCVAL34()
@@ -491,15 +435,7 @@ internal class Test007_Spitzmaus_CreateBasedOnPrescriptionWithChanges : Spec
             Console.WriteLine("Validation result:");
         }
 
-        if (outcome != null)
-        {
-            foreach (var item in outcome.Issue)
-            {
-                Console.WriteLine($"Outcome Issue Code: '{item.Details.Coding?.FirstOrDefault()?.Code}', Text: '{item.Details.Text}'");
-            }
-        }
-
-        return !canCue;
+        return OutcomeHelper.PrintOutcomeAndCheckLCVAL(outcome, "LCVAL34");
     }
 
     private bool PrescriptionRecordLCVAL43()
@@ -538,15 +474,7 @@ internal class Test007_Spitzmaus_CreateBasedOnPrescriptionWithChanges : Spec
             Console.WriteLine("Validation result:");
         }
 
-        if (outcome != null)
-        {
-            foreach (var item in outcome.Issue)
-            {
-                Console.WriteLine($"Outcome Issue Code: '{item.Details.Coding?.FirstOrDefault()?.Code}', Text: '{item.Details.Text}'");
-            }
-        }
-
-        return !canCue;
+        return OutcomeHelper.PrintOutcomeAndCheckLCVAL(outcome, "LCVAL43");
     }
 
     private bool PrescriptionRecordLCVAL44()
@@ -588,15 +516,7 @@ internal class Test007_Spitzmaus_CreateBasedOnPrescriptionWithChanges : Spec
             Console.WriteLine("Validation result:");
         }
 
-        if (outcome != null)
-        {
-            foreach (var item in outcome.Issue)
-            {
-                Console.WriteLine($"Outcome Issue Code: '{item.Details.Coding?.FirstOrDefault()?.Code}', Text: '{item.Details.Text}'");
-            }
-        }
-
-        return !canCue;
+        return OutcomeHelper.PrintOutcomeAndCheckLCVAL(outcome, "LCVAL44");
     }
 
     private bool PrescriptionRecordLCVAL07()
@@ -626,15 +546,7 @@ internal class Test007_Spitzmaus_CreateBasedOnPrescriptionWithChanges : Spec
             Console.WriteLine("Validation result:");
         }
 
-        if (outcome != null)
-        {
-            foreach (var item in outcome.Issue)
-            {
-                Console.WriteLine($"Outcome Issue Code: '{item.Details.Coding?.FirstOrDefault()?.Code}', Text: '{item.Details.Text}'");
-            }
-        }
-
-        return !canCue;
+        return OutcomeHelper.PrintOutcomeAndCheckLCVAL(outcome, "LCVAL07");
     }
 
     private bool PrescriptionRecordLCVAL47()
@@ -662,15 +574,7 @@ internal class Test007_Spitzmaus_CreateBasedOnPrescriptionWithChanges : Spec
             Console.WriteLine("Validation result:");
         }
 
-        if (outcome != null)
-        {
-            foreach (var item in outcome.Issue)
-            {
-                Console.WriteLine($"Outcome Issue Code: '{item.Details.Coding?.FirstOrDefault()?.Code}', Text: '{item.Details.Text}'");
-            }
-        }
-
-        return !canCue;
+        return OutcomeHelper.PrintOutcomeAndCheckLCVAL(outcome, "LCVAL47");
     }
 
     private bool PrescriptionRecordLCVAL08()
@@ -699,15 +603,7 @@ internal class Test007_Spitzmaus_CreateBasedOnPrescriptionWithChanges : Spec
             Console.WriteLine("Validation result:");
         }
 
-        if (outcome != null)
-        {
-            foreach (var item in outcome.Issue)
-            {
-                Console.WriteLine($"Outcome Issue Code: '{item.Details.Coding?.FirstOrDefault()?.Code}', Text: '{item.Details.Text}'");
-            }
-        }
-
-        return !canCue;
+        return OutcomeHelper.PrintOutcomeAndCheckLCVAL(outcome, "LCVAL08");
     }
 
     private bool PrescriptionRecordLCVAL48()
@@ -735,15 +631,7 @@ internal class Test007_Spitzmaus_CreateBasedOnPrescriptionWithChanges : Spec
             Console.WriteLine("Validation result:");
         }
 
-        if (outcome != null)
-        {
-            foreach (var item in outcome.Issue)
-            {
-                Console.WriteLine($"Outcome Issue Code: '{item.Details.Coding?.FirstOrDefault()?.Code}', Text: '{item.Details.Text}'");
-            }
-        }
-
-        return !canCue;
+        return OutcomeHelper.PrintOutcomeAndCheckLCVAL(outcome, "LCVAL48");
     }
 
     private bool PrescriptionRecordLCVAL36()
@@ -773,15 +661,7 @@ internal class Test007_Spitzmaus_CreateBasedOnPrescriptionWithChanges : Spec
             Console.WriteLine("Validation result:");
         }
 
-        if (outcome != null)
-        {
-            foreach (var item in outcome.Issue)
-            {
-                Console.WriteLine($"Outcome Issue Code: '{item.Details.Coding?.FirstOrDefault()?.Code}', Text: '{item.Details.Text}'");
-            }
-        }
-
-        return !canCue;
+        return OutcomeHelper.PrintOutcomeAndCheckLCVAL(outcome, "LCVAL36");
     }
 
     private bool CreatePrescriptionRecordSuccess()
@@ -812,13 +692,7 @@ internal class Test007_Spitzmaus_CreateBasedOnPrescriptionWithChanges : Spec
                 Console.WriteLine($"Failed to transmit Linca PrescriptionMedicationRequest");
             }
 
-            if (outcome != null)
-            {
-                foreach (var item in outcome.Issue)
-                {
-                    Console.WriteLine($"Outcome Issue Code: '{item.Details.Coding?.FirstOrDefault()?.Code}', Text: '{item.Details.Text}'");
-                }
-            }
+            OutcomeHelper.PrintOutcome(outcome);
 
             return canCue;
     }
@@ -846,14 +720,6 @@ internal class Test007_Spitzmaus_CreateBasedOnPrescriptionWithChanges : Spec
             Console.WriteLine("Validation result:");
         }
 
-        if (outcome != null)
-        {
-            foreach (var item in outcome.Issue)
-            {
-                Console.WriteLine($"Outcome Issue Code: '{item.Details.Coding?.FirstOrDefault()?.Code}', Text: '{item.Details.Text}'");
-            }
-        }
-
-        return !canCue;
+        return OutcomeHelper.PrintOutcomeAndCheckLCVAL(outcome, "LCVAL33");
     }
 }
