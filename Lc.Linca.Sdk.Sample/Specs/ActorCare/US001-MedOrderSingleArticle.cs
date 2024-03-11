@@ -158,6 +158,20 @@ internal class US001_MedOrderSingleArticle : Spec
             },
             Display = "Dr. Wibke Würm"   // optional
         });
+
+        medReq.DispenseRequest = new()
+        {
+            Dispenser = new()
+            {
+                Identifier = new()
+                {
+                    Value = "2.999.40.0.34.5.1.2",  // OID of designated pharmacy
+                    System = "urn:oid:1.2.40.0.34.5.2"  // Code-System: eHVD
+                },
+                Display = "Apotheke 'Zum frühen Vogel'"
+            }, 
+            Quantity = new() { Value = 2 }
+        };
     }
 
     private bool CreateRequestOrchestrationRecord ()
@@ -188,7 +202,7 @@ internal class US001_MedOrderSingleArticle : Spec
             Resource = new ResourceReference($"#{medReq.Id}")
         };
 
-        action.Type.Coding.Add(new() { Code = "create" });
+        action.Type.Coding.Add(new() { Code = "create", System = "http://terminology.hl7.org/CodeSystem/action-type" });
         ro.Action.Add( action );
 
         (var createdRO, var canCue, var outcome) = LincaDataExchange.CreateRequestOrchestrationWithOutcome(Connection, ro);

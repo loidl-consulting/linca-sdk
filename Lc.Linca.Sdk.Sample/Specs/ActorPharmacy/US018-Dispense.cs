@@ -40,13 +40,13 @@ internal class US018_Dispense : Spec
     {
         LinkedCareSampleClient.CareInformationSystemScaffold.PseudoDatabaseRetrieve();
 
-        (Bundle orders, bool received) = LincaDataExchange.GetPrescriptionToDispense(Connection, "ASDF GHJ4 KL34");
+        (Bundle orders, bool received) = LincaDataExchange.GetPrescriptionToDispense(Connection, "666PQCXPN5SC");
 
         if (received)
         {
             List<MedicationRequest> prescriptionsToDispense = BundleHelper.FilterPrescriptionsToDispense(orders);
 
-            MedicationRequest? prescriptionRenateLasix = prescriptionsToDispense.Find(x => x.Medication.Concept.Coding.First().Display.Contains("Lasix"));
+            MedicationRequest? prescriptionRenateLasix = prescriptionsToDispense.Find(x => x.Medication.Concept.Coding.First().Display.Contains("LASIX"));
 
             if (prescriptionRenateLasix != null)
             {
@@ -62,7 +62,7 @@ internal class US018_Dispense : Spec
 
             dispense.AuthorizingPrescription.Add(new()
             {
-                Reference = $"LINCAPrescriptionMedicationRequest/{LinkedCareSampleClient.CareInformationSystemScaffold.Data.PrescriptionIdRenateLasix}"
+                Reference = $"LINCAPrescriptionMedicationRequest/{prescriptionRenateLasix.Id}"
             });
 
             dispense.Status = MedicationDispense.MedicationDispenseStatusCodes.Completed;
@@ -79,28 +79,14 @@ internal class US018_Dispense : Spec
                             System = "https://termgit.elga.gv.at/CodeSystem/asp-liste",
                             Display = "Lasix 40 mg Tabletten"
                         }
-                    }
+                    },
+                    Text = "alternatives Textfeld"
                 }
             };
 
             dispense.DosageInstruction.Add(new Dosage()
             {
-                Sequence = 1,
-                Text = "1 Tablette täglich",
-                Timing = new Timing()
-                {
-                    Repeat = new()
-                    {
-                        Bounds = new Duration
-                        {
-                            Value = 1,
-                            Code = "d"
-                        },
-                        Frequency = 1,
-                        Period = 1,
-                        PeriodUnit = Timing.UnitsOfTime.D
-                    }
-                }
+                Text = "1 \\ - \\ 1 \\ 1",
             });
 
             dispense.Performer.Add(new()

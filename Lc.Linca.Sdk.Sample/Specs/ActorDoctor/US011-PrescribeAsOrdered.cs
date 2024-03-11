@@ -80,7 +80,8 @@ internal class US011_PrescribeAsOrdered : Spec
                             System = "https://termgit.elga.gv.at/CodeSystem/asp-liste",
                             Display = "Lasix 40 mg Tabletten"
                         }
-                    }
+                    },
+                    Text = "Space for magistralia description"
                 }
             };
 
@@ -134,8 +135,17 @@ internal class US011_PrescribeAsOrdered : Spec
 
             prescription.GroupIdentifier = new()
             {
-                Value = "ASDF GHJ4 KL34",
-                System = "urn:oid:1.2.40.0.10.1.4.3.3"       // OID: Rezeptnummer
+                Value = "ASDFGHJ4KL34",
+                System = "urn:oid:1.2.40.0.10.1.4.3.3",       // OID: Rezeptnummer
+                Type = new() { Text = "eRez^11^"}                // eRezept codestring for datamatrix representation  
+            };
+
+            prescription.DispenseRequest = new()
+            {
+                Quantity = new()
+                {
+                    Value = 2
+                }
             };
 
             Bundle prescriptions = new()

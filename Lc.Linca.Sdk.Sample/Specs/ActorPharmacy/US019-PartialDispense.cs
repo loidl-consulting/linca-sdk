@@ -38,7 +38,7 @@ internal class US019_PartialDispense : Spec
 
     private bool CreatePartialDispense()
     {
-        (Bundle results, bool received) = LincaDataExchange.GetPrescriptionToDispense(Connection, "WABI 0001 VVCC");
+        (Bundle results, bool received) = LincaDataExchange.GetPrescriptionsToDispense(Connection);
 
         if (received)
         {
@@ -56,8 +56,6 @@ internal class US019_PartialDispense : Spec
 
                 return false;
             }
-
-
 
             if (!string.IsNullOrEmpty(LinkedCareSampleClient.CareInformationSystemScaffold.Data.PrescriptionIdRenateLuxerm))
             {
@@ -115,7 +113,7 @@ internal class US019_PartialDispense : Spec
                 {
                     Coding = new()
                     {
-                        new Coding(system: "http://terminology.hl7.org/CodeSystem/v3-ActCode", code: "FFP")
+                        new Coding(system: "http://terminology.hl7.org/CodeSystem/v3-ActCode", code: "RFC")
                     }
                 };
 

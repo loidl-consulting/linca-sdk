@@ -72,8 +72,7 @@ public static class BundleHelper
 
         foreach (var item in prescriptions)
         {
-            if(prescriptions.Find(x => x.PriorPrescription != null && x.PriorPrescription.Reference.Contains(item.Id)) == null 
-               && dispenses.Find(x => !x.AuthorizingPrescription.IsNullOrEmpty() && x.AuthorizingPrescription.First().Reference.Contains(item.Id)) == null)
+            if(prescriptions.Find(x => x.PriorPrescription != null && x.PriorPrescription.Reference.Contains(item.Id)) == null)
             {
                 openPrescriptions.Add(item);
             }

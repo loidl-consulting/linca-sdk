@@ -40,10 +40,12 @@ internal class US007_GetOrderStatus : Spec
         Bundle results = new();
         bool received = false;  
 
-        if (! string.IsNullOrEmpty(LinkedCareSampleClient.CareInformationSystemScaffold.Data.LcIdVogelsang)) 
+        if (! string.IsNullOrEmpty(LinkedCareSampleClient.CareInformationSystemScaffold.Data.LcIdImmerdar001)) 
         {
-            (results, received) = LincaDataExchange.GetProposalStatus(Connection, $"{LinkedCareSampleClient.CareInformationSystemScaffold.Data.LcIdVogelsang}");
+            //(results, received) = LincaDataExchange.GetProposalStatus(Connection, $"{LinkedCareSampleClient.CareInformationSystemScaffold.Data.LcIdImmerdar001}");
+           
         }
+        (results, received) = LincaDataExchange.GetProposalStatus(Connection, "59b49ec72cf74fa9ba2a9525d734680a");
 
         if (received)
         {
