@@ -22,7 +22,8 @@ public static class LincaEndpoints
     /// <summary>
     /// The name of the patient resource as defined in the IG profile
     /// </summary>
-    public const string HL7ATCorePatient = "HL7ATCorePatient";
+    // public const string HL7ATCorePatient = "HL7ATCorePatient";
+    public const string HL7ATCorePatient = "at-core-patient";
 
     /// <summary>
     /// The name of the request orchestration resource as defined in the IG profile
@@ -97,7 +98,8 @@ public static class LincaEndpoints
     {
         if(resource is Patient)
         {
-            return "HL7ATCorePatient";
+            //return "HL7ATCorePatient";
+            return "at-core-patient";
         }
 
         if(resource is RequestOrchestration) 
