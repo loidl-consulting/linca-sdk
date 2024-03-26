@@ -121,20 +121,20 @@ internal class US011_PrescribeAsOrdered : Spec
                 Identifier = new()
                 {
                     Value = "2.999.40.0.34.3.1.1",  // OID of designated practitioner 
-                    System = "urn:oid:1.2.40.0.34.5.2"  // Code-System: eHVD
+                    System = "urn:ietf:rfc:3986"  // Code-System: eHVD
                 },
                 Display = "Dr. Wibke Würm"   // optional
             });
 
             prescription.Identifier.Add(new Identifier()
             {
-                Value = "XYZ1 ABC2 UVW3",
+                Value = "XYZ1ABC2UVW3",
                 System = "urn:oid:1.2.40.0.10.1.4.3.4.2.1"    // OID: eMed-Id
             });
 
             prescription.GroupIdentifier = new()
             {
-                Value = "ASDF GHJ4 KL34",
+                Value = "ASDFGHJ4KL34",
                 System = "urn:oid:1.2.40.0.10.1.4.3.3"       // OID: Rezeptnummer
             };
 

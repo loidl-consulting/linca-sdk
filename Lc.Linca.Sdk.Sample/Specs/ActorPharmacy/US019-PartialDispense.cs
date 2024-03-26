@@ -38,7 +38,7 @@ internal class US019_PartialDispense : Spec
 
     private bool CreatePartialDispense()
     {
-        (Bundle results, bool received) = LincaDataExchange.GetPrescriptionToDispense(Connection, "WABI 0001 VVCC");
+        (Bundle results, bool received) = LincaDataExchange.GetPrescriptionToDispense(Connection, "WABI0001VVCC");
 
         if (received)
         {
@@ -105,7 +105,7 @@ internal class US019_PartialDispense : Spec
                         Identifier = new()
                         {
                             Value = "2.999.40.0.34.5.1.2",  // OID of dispensing pharmacy
-                            System = "urn:oid:1.2.40.0.34.5.2"  // Code-System: eHVD
+                            System = "urn:ietf:rfc:3986"  // Code-System: eHVD
                         },
                         Display = "Apotheke 'Zum frühen Vogel'"
                     }

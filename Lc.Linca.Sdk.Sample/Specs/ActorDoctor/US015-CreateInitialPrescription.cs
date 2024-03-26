@@ -96,7 +96,7 @@ internal class US015_CreateInitialPrescription : Spec
             Identifier = new()
             {
                 Value = "2.999.40.0.34.3.1.1",  // OID of designated practitioner 
-                System = "urn:oid:1.2.40.0.34"  // Code-System: eHVD
+                System = "urn:ietf:rfc:3986"  // Code-System: eHVD
             },
             Display = "Dr. Wibke Würm"   // optional
         });
@@ -106,7 +106,7 @@ internal class US015_CreateInitialPrescription : Spec
             Identifier = new()
             {
                 Value = "2.999.40.0.34.3.1.1",  // OID of designated practitioner 
-                System = "urn:oid:1.2.40.0.34"  // Code-System: eHVD
+                System = "urn:ietf:rfc:3986"  // Code-System: eHVD
             },
             Display = "Dr. Wibke Würm"   // optional
         });
@@ -162,7 +162,7 @@ internal class US015_CreateInitialPrescription : Spec
             Identifier = new()
             {
                 Value = "2.999.40.0.34.3.1.1",  // OID of designated practitioner 
-                System = "urn:oid:1.2.40.0.34"  // Code-System: eHVD
+                System = "urn:ietf:rfc:3986"  // Code-System: eHVD
             },
             Display = "Dr. Wibke Würm"   // optional
         });
@@ -172,20 +172,20 @@ internal class US015_CreateInitialPrescription : Spec
             Identifier = new()
             {
                 Value = "2.999.40.0.34.3.1.1",  // OID of designated practitioner 
-                System = "urn:oid:1.2.40.0.34"  // Code-System: eHVD
+                System = "urn:ietf:rfc:3986"  // Code-System: eHVD
             },
             Display = "Dr. Wibke Würm"   // optional
         });
 
         initialPresc2.Identifier.Add(new Identifier()
         {
-            Value = "1231 RSTO 345G",
+            Value = "1231RSTO345G",
             System = "urn:oid:1.2.40.0.10.1.4.3.4.2.1"    // OID: eMed-Id
         });
 
         initialPresc2.GroupIdentifier = new()
         {
-            Value = "WABI 0001 VVCC",
+            Value = "WABI0001VVCC",
             System = "urn:oid:1.2.40.0.10.1.4.3.3"       // OID: Rezeptnummer
         };
 

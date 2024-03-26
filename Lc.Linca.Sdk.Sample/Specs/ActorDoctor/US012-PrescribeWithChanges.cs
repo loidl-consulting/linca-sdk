@@ -104,20 +104,20 @@ internal class US012_PrescribeWithChanges : Spec
                 Identifier = new()
                 {
                     Value = "2.999.40.0.34.3.1.3",  // OID of designated practitioner 
-                    System = "urn:oid:1.2.40.0.34.5.2"  // Code-System: eHVD
+                    System = "urn:ietf:rfc:3986"  // Code-System: eHVD
                 },
                 Display = "Dr. Silvia Spitzmaus"   // optional
             });
 
             prescription.Identifier.Add(new Identifier()
             {
-                Value = "CVF1 23ER USW1",
+                Value = "CVF123ERUSW1",
                 System = "urn:oid:1.2.40.0.10.1.4.3.4.2.1"     // OID: eMed-Id
             });
 
             prescription.GroupIdentifier = new()
             {
-                Value = "ABCD 1234 EFGH",
+                Value = "ABCD1234EFGH",
                 System = "urn:oid:1.2.40.0.10.1.4.3.3"        // OID: Rezeptnummer
             };
 

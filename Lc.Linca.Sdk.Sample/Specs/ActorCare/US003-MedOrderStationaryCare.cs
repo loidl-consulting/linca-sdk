@@ -140,7 +140,7 @@ internal class US003_MedOrderStationaryCare : Spec
                 Identifier = new()
                 {
                     Value = "2.999.40.0.34.1.1.1",  // OID of the ordering care organization from certificate
-                    System = "urn:oid:1.2.40.0.34.5.2"  // Code-System: eHVD
+                    System = "urn:ietf:rfc:3986"  // Code-System: eHVD
                 },
                 Display = "Haus Vogelsang"   // optional
             }
@@ -219,7 +219,7 @@ internal class US003_MedOrderStationaryCare : Spec
             Identifier = new()
             {
                 Value = "2.999.40.0.34.1.1.1",  // OID of the ordering care organization
-                System = "urn:oid:1.2.40.0.34.5.2"  // Code-System: eHVD
+                System = "urn:ietf:rfc:3986"  // Code-System: eHVD
             },
             Display = "Haus Vogelsang"   // optional
         });
@@ -239,7 +239,7 @@ internal class US003_MedOrderStationaryCare : Spec
             Identifier = new()
             {
                 Value = "2.999.40.0.34.3.1.3",  // OID of designated practitioner 
-                System = "urn:oid:1.2.40.0.34.5.2"  // Code-System: eHVD
+                System = "urn:ietf:rfc:3986"  // Code-System: eHVD
             },
             Display = "Dr. Silvia Spitzmaus"   // optional
         });
@@ -251,7 +251,7 @@ internal class US003_MedOrderStationaryCare : Spec
                 Identifier = new()
                 {
                     Value = "2.999.40.0.34.5.1.2",  // OID of designated pharmacy
-                    System = "urn:oid:1.2.40.0.34.5.2"  // Code-System: eHVD
+                    System = "urn:ietf:rfc:3986"  // Code-System: eHVD
                 },
                 Display = "Apotheke 'Zum frühen Vogel'"
             }
@@ -287,7 +287,7 @@ internal class US003_MedOrderStationaryCare : Spec
             Identifier = new()
             {
                 Value = "2.999.40.0.34.1.1.1",  // OID of the ordering care organization
-                System = "urn:oid:1.2.40.0.34.5.2"  // Code-System: eHVD
+                System = "urn:ietf:rfc:3986"  // Code-System: eHVD
             },
             Display = "Haus Vogelsang"   // optional
         });
@@ -307,7 +307,7 @@ internal class US003_MedOrderStationaryCare : Spec
             Identifier = new()
             {
                 Value = "2.999.40.0.34.3.1.3",  // OID of designated practitioner 
-                System = "urn:oid:1.2.40.0.34.5.2"  // Code-System: eHVD
+                System = "urn:ietf:rfc:3986"  // Code-System: eHVD
             },
             Display = "Dr. Silvia Spitzmaus"   // optional
         });
@@ -319,7 +319,7 @@ internal class US003_MedOrderStationaryCare : Spec
                 Identifier = new()
                 {
                     Value = "2.999.40.0.34.5.1.2",  // OID of designated pharmacy
-                    System = "urn:oid:1.2.40.0.34.5.2"  // Code-System: eHVD
+                    System = "urn:ietf:rfc:3986"  // Code-System: eHVD
                 },
                 Display = "Apotheke 'Zum frühen Vogel'"
             }
@@ -357,7 +357,7 @@ internal class US003_MedOrderStationaryCare : Spec
             Identifier = new()
             {
                 Value = "2.999.40.0.34.1.1.1",  // OID of the ordering care organization
-                System = "urn:oid:1.2.40.0.34.5.2"  // Code-System: eHVD
+                System = "urn:ietf:rfc:3986"  // Code-System: eHVD
             },
             Display = "Haus Vogelsang"   // optional
         });
@@ -377,7 +377,7 @@ internal class US003_MedOrderStationaryCare : Spec
             Identifier = new()
             {
                 Value = "2.999.40.0.34.3.1.2",  // OID of designated practitioner 
-                System = "urn:oid:1.2.40.0.34.5.2"  // Code-System: eHVD
+                System = "urn:ietf:rfc:3986"  // Code-System: eHVD
             },
             Display = "Dr. Kunibert Kreuzotter"   // optional
         });
@@ -389,7 +389,7 @@ internal class US003_MedOrderStationaryCare : Spec
                 Identifier = new()
                 {
                     Value = "2.999.40.0.34.5.1.2",  // OID of designated pharmacy
-                    System = "urn:oid:1.2.40.0.34.5.2"  // Code-System: eHVD
+                    System = "urn:ietf:rfc:3986"  // Code-System: eHVD
                 },
                 Display = "Apotheke 'Zum frühen Vogel'"
             }

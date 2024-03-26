@@ -40,7 +40,7 @@ internal class US018_Dispense : Spec
     {
         LinkedCareSampleClient.CareInformationSystemScaffold.PseudoDatabaseRetrieve();
 
-        (Bundle orders, bool received) = LincaDataExchange.GetPrescriptionToDispense(Connection, "ASDF GHJ4 KL34");
+        (Bundle orders, bool received) = LincaDataExchange.GetPrescriptionToDispense(Connection, "ASDFGHJ4KL34");
 
         if (received)
         {
@@ -110,7 +110,7 @@ internal class US018_Dispense : Spec
                     Identifier = new()
                     {
                         Value = "2.999.40.0.34.5.1.1",  // OID of dispensing pharmacy
-                        System = "urn:oid:1.2.40.0.34.5.2"  // Code-System: eHVD
+                        System = "urn:ietf:rfc:3986"  // Code-System: eHVD
                     },
                     Display = "Apotheke 'Klappernder Storch'"
                 }

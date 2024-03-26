@@ -111,7 +111,7 @@ internal class US014_PrescribeSupplementaryArticle : Spec
                 Identifier = new()
                 {
                     Value = "2.999.40.0.34.3.1.3",  // OID of designated practitioner 
-                    System = "urn:oid:1.2.40.0.34.5.2"  // Code-System: eHVD
+                    System = "urn:ietf:rfc:3986"  // Code-System: eHVD
                 },
                 Display = "Dr. Silvia Spitzmaus"   // optional
             });
@@ -123,7 +123,7 @@ internal class US014_PrescribeSupplementaryArticle : Spec
                     Identifier = new()
                     {
                         Value = "2.999.40.0.34.5.1.2",  // OID of designated pharmacy
-                        System = "urn:oid:1.2.40.0.34.5.2"  // Code-System: eHVD
+                        System = "urn:ietf:rfc:3986"  // Code-System: eHVD
                     },
                     Display = "Apotheke 'Zum frühen Vogel'"
                 }
@@ -131,13 +131,13 @@ internal class US014_PrescribeSupplementaryArticle : Spec
 
             prescription.Identifier.Add(new Identifier()
             {
-                Value = "CVF1 23ER 12VV",
+                Value = "CVF123ER12VV",
                 System = "urn:oid:1.2.40.0.10.1.4.3.4.2.1"     // OID: eMed-Id
             });
 
             prescription.GroupIdentifier = new()
             {
-                Value = "1A2B 3C4D 5E6F",
+                Value = "1A2B3C4D5E6F",
                 System = "urn:oid:1.2.40.0.10.1.4.3.3"        // OID: Rezeptnummer
             };
 
@@ -178,7 +178,7 @@ internal class US014_PrescribeSupplementaryArticle : Spec
                 Identifier = new()
                 {
                     Value = "2.999.40.0.34.3.1.3",  // OID of designated practitioner 
-                    System = "urn:oid:1.2.40.0.34.5.2"  // Code-System: eHVD
+                    System = "urn:ietf:rfc:3986"  // Code-System: eHVD
                 },
                 Display = "Dr. Silvia Spitzmaus"   // optional
             });
@@ -188,20 +188,20 @@ internal class US014_PrescribeSupplementaryArticle : Spec
                 Identifier = new()
                 {
                     Value = "2.999.40.0.34.3.1.3",  // OID of designated practitioner 
-                    System = "urn:oid:1.2.40.0.34.5.2"  // Code-System: eHVD
+                    System = "urn:ietf:rfc:3986"  // Code-System: eHVD
                 },
                 Display = "Dr. Silvia Spitzmaus"   // optional
             });
 
             adhoc.Identifier.Add(new Identifier()
             {
-                Value = "CVF1 23ER 12VV",
+                Value = "CVF123ER12VV",
                 System = "urn:oid:1.2.40.0.10.1.4.3.4.2.1"     // OID: eMed-Id
             });
 
             adhoc.GroupIdentifier = new()
             {
-                Value = "1A2B 3C4D 5E6F",
+                Value = "1A2B3C4D5E6F",
                 System = "urn:oid:1.2.40.0.10.1.4.3.3"        // OID: Rezeptnummer
             };
 
