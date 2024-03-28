@@ -35,7 +35,7 @@ internal class US017_GetOrderPositionInfo : Spec
 
     private bool GetPrescriptionToDispense()
     {
-        (Bundle results, bool received) = LincaDataExchange.GetPrescriptionToDispense(Connection, "ABCD1234EFGH");
+        (Bundle results, bool received) = LincaDataExchange.GetPrescriptionToDispense(Connection, "LDLLTQ3825WF");
 
         if (received)
         {
