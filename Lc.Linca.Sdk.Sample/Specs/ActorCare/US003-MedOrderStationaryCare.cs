@@ -234,6 +234,11 @@ internal class US003_MedOrderStationaryCare : Spec
             Display = "DGKP Walter Specht"
         };
 
+        medReq1.Note = new()
+        {
+            new() { Text = "Station Vogelgezwitscher im Grünen" }
+        };
+
         medReq1.Performer.Add(new ResourceReference()   // REQUIRED, cardinality 1..1 in LINCA
         {
             Identifier = new()

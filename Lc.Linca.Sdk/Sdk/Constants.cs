@@ -24,6 +24,12 @@ public class Constants
     public static readonly MediaTypeWithQualityHeaderValue FhirJson = new("application/fhir+json");
 
     /// <summary>
+    /// Xml as alternative FHIR resource content type
+    /// </summary>
+    public static readonly MediaTypeWithQualityHeaderValue FhirXml = new("application/fhir+xml");
+
+
+    /// <summary>
     /// First part of the colored Linked Care FHIR Server product name
     /// </summary>
     public static readonly string ServerProductLead = ServerProduct[..4];

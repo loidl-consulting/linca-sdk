@@ -124,6 +124,11 @@ internal class US018_Dispense : Spec
                 }
             };
 
+            dispense.Note = new()
+            {
+                new() { Text = "Anmerkungen der Apotheke, zB. nach Rücksprachen mit dem Arzt wurde vereinbart..."}
+            };
+
             (var postedMD, var canCue, var outcome) = LincaDataExchange.CreateMedicationDispense(Connection, dispense);
 
             if (canCue)

@@ -129,6 +129,11 @@ internal class US001_MedOrderSingleArticle : Spec
             }
         };
 
+        medReq.Reason = new()
+        {
+            new() { Concept = new() { Text = "Die Patientin ist manchmal dehydriert" } }
+        };
+
         medReq.InformationSource.Add(new ResourceReference()  // REQUIRED, cardinality 1..1 in LINCA
         {
             Identifier = new()

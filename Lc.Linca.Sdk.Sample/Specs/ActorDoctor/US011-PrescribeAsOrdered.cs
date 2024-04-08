@@ -84,6 +84,14 @@ internal class US011_PrescribeAsOrdered : Spec
                 }
             };
 
+            prescription.Reason = new()
+            {
+                new()
+                {
+                    Concept = new() { Text = "Dosis beibehalten, mehr Flüssigkeit verabreichen"}
+                }
+            };
+
             prescription.DosageInstruction.Add(new Dosage()
             {
                 Sequence = 1,
@@ -136,6 +144,12 @@ internal class US011_PrescribeAsOrdered : Spec
             {
                 Value = "ASDFGHJ4KL34",
                 System = "urn:oid:1.2.40.0.10.1.4.3.3"       // OID: Rezeptnummer
+            };
+
+            prescription.DispenseRequest = new()
+            {
+                Quantity = new() { Value = 1 },
+                DispenserInstruction = new() { new() { Text = "Information für den Apotheker"} }
             };
 
             Bundle prescriptions = new()

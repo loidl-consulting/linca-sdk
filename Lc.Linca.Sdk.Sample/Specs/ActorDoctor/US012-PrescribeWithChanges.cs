@@ -28,7 +28,7 @@ internal class US012_PrescribeWithChanges : Spec
           and the ordering care giver organization Haus Vogelsang will be informed that the order position has been 
           prescribed with modified medication/quantity";
 
-    public US012_PrescribeWithChanges(LincaConnection conn) : base(conn) 
+    public US012_PrescribeWithChanges(LincaConnection conn) : base(conn)
     {
         Steps = new Step[]
         {
@@ -47,8 +47,8 @@ internal class US012_PrescribeWithChanges : Spec
             List<MedicationRequest> proposals = BundleHelper.FilterProposalsToPrescribe(orders);
 
 
-            MedicationRequest? proposalsGuenterNotGranpidam = proposals.Find(x => x.Subject.Reference.Contains($"{LinkedCareSampleClient.CareInformationSystemScaffold.Data.ClientIdGuenter}") 
-                                                                                        && ! x.Medication.Concept.Coding.First().Display.Contains("Granpidam"));
+            MedicationRequest? proposalsGuenterNotGranpidam = proposals.Find(x => x.Subject.Reference.Contains($"{LinkedCareSampleClient.CareInformationSystemScaffold.Data.ClientIdGuenter}")
+                                                                                        && !x.Medication.Concept.Coding.First().Display.Contains("Granpidam"));
 
             if (proposalsGuenterNotGranpidam != null)
             {
@@ -119,6 +119,14 @@ internal class US012_PrescribeWithChanges : Spec
             {
                 Value = "ABCD1234EFGH",
                 System = "urn:oid:1.2.40.0.10.1.4.3.3"        // OID: Rezeptnummer
+            };
+
+            prescription.DispenseRequest = new()
+            {
+                Quantity = new()
+                {
+                    Value = 2
+                }
             };
 
             Bundle prescriptions = new()

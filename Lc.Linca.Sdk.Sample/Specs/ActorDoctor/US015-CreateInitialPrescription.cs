@@ -123,6 +123,14 @@ internal class US015_CreateInitialPrescription : Spec
             System = "urn:oid:1.2.40.0.10.1.4.3.3"       // OID: Rezeptnummer
         };
 
+        initialPresc1.DispenseRequest = new()
+        {
+            Quantity = new()
+            {
+                Value = 1
+            }
+        };
+
         // Linca Prescription Medication Request for drug 2
         initialPresc2.Status = MedicationRequest.MedicationrequestStatus.Active;             // REQUIRED
         initialPresc2.Intent = MedicationRequest.MedicationRequestIntent.OriginalOrder;      // REQUIRED
@@ -189,6 +197,13 @@ internal class US015_CreateInitialPrescription : Spec
             System = "urn:oid:1.2.40.0.10.1.4.3.3"       // OID: Rezeptnummer
         };
 
+        initialPresc2.DispenseRequest = new()
+        {
+            Quantity = new()
+            {
+                Value = 2
+            }
+        };
 
         /***** add the Linca Prescription Medication Requests to a Bundle for transaction ****************/
         Bundle prescriptions = new()

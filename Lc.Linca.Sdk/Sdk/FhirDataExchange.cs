@@ -372,4 +372,55 @@ internal static class FhirDataExchange<T> where T : Resource, new()
 
         throw new TimeoutException($"Failed to reconnect after {maxReconnectRetries} attempts");
     }
+
+    private static HttpResponseMessage? SendAsXml(LincaConnection connection, HttpMethod method, T resource, string overwriteResourceName)
+    {
+        for (var attempt = 0; attempt < maxReconnectRetries; ++attempt)
+        {
+            using var http = connection.GetAuthenticatedClient();
+            HttpRequestMessage request;
+
+            if (string.IsNullOrEmpty(resource.Id))
+            {
+                request = new HttpRequestMessage
+                (
+                    method,
+                    $"{connection.ServerBaseUrl}/{overwriteResourceName}"
+                );
+            }
+            else
+            {
+                request = new HttpRequestMessage
+                (
+                    method,
+                    $"{connection.ServerBaseUrl}/{overwriteResourceName}/{resource.Id}"
+                );
+            }
+
+            //var fhirJson = resource.ToJson();
+            var fhirXml = resource.ToXml();
+
+            string dtdString = "<!DOCTYPE foo [ <!ENTITY xxe SYSTEM \"C:\\temp\"> ]>" + fhirXml;
+
+            request.Content = new StringContent(dtdString);
+            //request.Content = new StringContent(fhirXml);
+            request.Content.Headers.ContentType = Constants.FhirXml;
+            request.Headers.Accept.Add(Constants.FhirXml);
+            request.Headers.Accept.Add(Constants.FhirJson);
+            var response = http.Send(request);
+
+            if (response.StatusCode == HttpStatusCode.Unauthorized)
+            {
+                /* token may be expired or may have been revoked.
+                 * retry once with certificate reauthentication */
+                connection.Reauthenticate();
+
+                continue;
+            }
+
+            return response;
+        }
+
+        throw new TimeoutException($"Failed to reconnect after {maxReconnectRetries} attempts");
+    }
 }

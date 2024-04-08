@@ -115,7 +115,7 @@ internal class US019_PartialDispense : Spec
                 {
                     Coding = new()
                     {
-                        new Coding(system: "http://terminology.hl7.org/CodeSystem/v3-ActCode", code: "FFP")
+                        new Coding(system: "http://terminology.hl7.org/CodeSystem/v3-ActCode", code: "RFP")
                     }
                 };
 
