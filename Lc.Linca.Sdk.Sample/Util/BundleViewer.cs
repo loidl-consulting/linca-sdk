@@ -114,7 +114,15 @@ public static class BundleHelper
 
         foreach (var item in dispenses)
         {
-            Console.WriteLine($"Dispense Id: {item.Id} --> authorizingPrescription: {item.AuthorizingPrescription.First().Reference}");
+            if (item.AuthorizingPrescription.Count > 0) 
+            {
+                Console.WriteLine($"Dispense Id: {item.Id} --> authorizingPrescription: {item.AuthorizingPrescription.First().Reference}");
+            }
+            else
+            {
+                Console.WriteLine($"Dispense Id: {item.Id} is an uncoupled dispense");
+            }
+            
         }
 
         foreach (var item in prescriptions)
