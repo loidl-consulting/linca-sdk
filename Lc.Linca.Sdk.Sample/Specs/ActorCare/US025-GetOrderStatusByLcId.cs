@@ -34,7 +34,7 @@ internal class US025_GetOrderStatus : Spec
         Bundle results = new();
         bool received = false;  
 
-        (results, received) = LincaDataExchange.GetProposalStatus(Connection, "174e917018cc4305a8708807dd9bfb3d");
+        (results, received) = LincaDataExchange.GetProposalStatus(Connection, "44149d6e5f9048e8b4ca4bb926857b8e");
 
 
         if (received)

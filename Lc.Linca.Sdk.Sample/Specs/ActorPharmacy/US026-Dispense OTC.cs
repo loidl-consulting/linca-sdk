@@ -42,8 +42,6 @@ internal class US026_DispenseOTC : Spec
 
         dispense.Subject = new()
         {
-            Reference = "anyRefstring",
-            
             Identifier = new()
             {
                 System = Constants.WellknownOidSocialInsuranceNr,

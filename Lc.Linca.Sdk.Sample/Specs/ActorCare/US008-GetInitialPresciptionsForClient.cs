@@ -36,7 +36,9 @@ internal class US008_GetInitialPrescriptionsForClient : Spec
     {
         LinkedCareSampleClient.CareInformationSystemScaffold.PseudoDatabaseRetrieve();
 
-        (Bundle results, bool received) = LincaDataExchange.GetInitialPrescription(Connection, $"{new CareInformationSystem.Client().SocInsNumber}");
+        //(Bundle results, bool received) = LincaDataExchange.GetInitialPrescription(Connection, $"{new CareInformationSystem.Client().SocInsNumber}");
+        (Bundle results, bool received) = LincaDataExchange.GetInitialPrescription(Connection, "1238100866");
+
 
         if (received)
         {

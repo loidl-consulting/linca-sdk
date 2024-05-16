@@ -42,7 +42,8 @@ internal class US007_GetOrderStatus : Spec
 
         if (! string.IsNullOrEmpty(LinkedCareSampleClient.CareInformationSystemScaffold.Data.LcIdVogelsang)) 
         {
-            (results, received) = LincaDataExchange.GetProposalStatus(Connection, $"{LinkedCareSampleClient.CareInformationSystemScaffold.Data.LcIdVogelsang}");
+            //(results, received) = LincaDataExchange.GetProposalStatus(Connection, $"{LinkedCareSampleClient.CareInformationSystemScaffold.Data.LcIdVogelsang}");
+            (results, received) = LincaDataExchange.GetProposalStatus(Connection, $"94bc7=ed51124f63a4cdc9da8337940d");
         }
 
         if (received)
