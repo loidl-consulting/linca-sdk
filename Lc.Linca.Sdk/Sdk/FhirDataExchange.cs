@@ -236,6 +236,7 @@ internal static class FhirDataExchange<T> where T : Resource, new()
     public static (Bundle received, bool canCue) GetResource(LincaConnection connection, string operationQuery)
     {
         using var getResponse = Receive(connection, operationQuery);
+        
 
         if (getResponse != null && getResponse.StatusCode == HttpStatusCode.OK)
         {
@@ -248,10 +249,17 @@ internal static class FhirDataExchange<T> where T : Resource, new()
             (
                 receivedResourceRaw,
                 out Resource? parsedResource,
-                out var _
-            ) && parsedResource is Bundle receivedResource)
+                out var issues
+            ))
             {
-                return (receivedResource, true);
+                if (parsedResource is Bundle receivedResource)
+                {
+                    return (receivedResource, true);
+                }
+            }
+            else
+            {
+                Console.WriteLine("Issues", issues);
             }
         }
         

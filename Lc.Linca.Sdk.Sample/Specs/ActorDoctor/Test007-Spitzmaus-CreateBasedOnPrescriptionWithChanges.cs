@@ -123,6 +123,7 @@ internal class Test007_Spitzmaus_CreateBasedOnPrescriptionWithChanges : Spec
                 Start = DateTime.Today.ToFhirDate(),
                 End = DateTime.Today.AddMonths(1).ToFhirDate()
             };
+            //prescription.DispenseRequest.Quantity = new() { Value = 1 };
 
             prescription.Performer.Add(new ResourceReference()   // REQUIRED, cardinality 1..1 in LINCA
             {
@@ -171,7 +172,7 @@ internal class Test007_Spitzmaus_CreateBasedOnPrescriptionWithChanges : Spec
         }
         else
         {
-            Console.WriteLine($"Failed to receive Linca ProposalMedicationRequest for Guenter, run US003 first");
+            Console.WriteLine($"Failed to receive Linca ProposalMedicationRequest for Guenter, run Test000 first");
 
             return false;
         }

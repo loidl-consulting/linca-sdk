@@ -125,7 +125,7 @@ internal class Test006_Wuerm_CreateInitialPrescriptionBundle : Spec
             },
             Display = "Dr. Wibke Würm"   // optional
         });
-        */ 
+        */
 
         initialPresc1.Identifier.Add(new Identifier()
         {
@@ -138,6 +138,8 @@ internal class Test006_Wuerm_CreateInitialPrescriptionBundle : Spec
             Value = "WABI 0001 VVCC",
             System = "urn:oid:1.2.40.0.10.1.4.3.3"       // OID: Rezeptnummer
         };
+
+        initialPresc1.DispenseRequest = new() { Quantity = new() { Value = 3} };
 
         /***** add the Linca Prescription Medication Request to a Bundle for transaction ****************/
         Bundle prescriptions = new()
@@ -561,6 +563,7 @@ internal class Test006_Wuerm_CreateInitialPrescriptionBundle : Spec
             System = "urn:oid:1.2.40.0.10.1.4.3.3"       // OID: Rezeptnummer
         };
 
+        initialPresc2.DispenseRequest = new() { Quantity = new() { Value = 1 } };
 
         /***** add the Linca Prescription Medication Requests to a Bundle for transaction ****************/
         Bundle prescriptions = new()
@@ -601,13 +604,14 @@ internal class Test006_Wuerm_CreateInitialPrescriptionBundle : Spec
         };
 
         // Linca Prescription Medication Request for drug 2
-        
-        initialPresc2.GroupIdentifier = new()
+
+        initialPresc2.GroupIdentifier = null;
+            /*new()
         {
             Value = "WABI 0001 AAAA",        // Error: eRezeptId different to second prescription in Bundle
             System = "urn:oid:1.2.40.0.10.1.4.3.3"       // OID: Rezeptnummer
         };
-
+            */
 
         /***** add the Linca Prescription Medication Requests to a Bundle for transaction ****************/
         Bundle prescriptions = new()
