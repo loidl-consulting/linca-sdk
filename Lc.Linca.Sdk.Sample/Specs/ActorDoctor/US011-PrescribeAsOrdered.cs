@@ -138,6 +138,8 @@ internal class US011_PrescribeAsOrdered : Spec
                 System = "urn:oid:1.2.40.0.10.1.4.3.3"       // OID: Rezeptnummer
             };
 
+            prescription.DispenseRequest = new() { Quantity = new() { Value = 3 } };
+
             Bundle prescriptions = new()
             {
                 Type = Bundle.BundleType.Transaction,

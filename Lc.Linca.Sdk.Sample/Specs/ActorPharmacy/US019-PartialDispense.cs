@@ -26,13 +26,16 @@ internal class US019_PartialDispense : Spec
           and his software will send that to the LINCA server,
           and notify the ordering organization, Pflegedienst Immerdar, about the partial dispense.";
 
-    protected MedicationDispense dispense = new();
+    protected MedicationDispense dispenseP = new();
+    protected MedicationDispense dispenseC = new();
+
 
     public US019_PartialDispense(LincaConnection conn) : base(conn)
     {
         Steps = new Step[]
         {
-            new ("Dispense prescription partially", CreatePartialDispense)
+            new ("Dispense prescription partially", CreatePartialDispense),
+            new ("Complete the partial dispense", CreateCompleteDispense)
         };
     }
 
@@ -61,13 +64,13 @@ internal class US019_PartialDispense : Spec
 
             if (!string.IsNullOrEmpty(LinkedCareSampleClient.CareInformationSystemScaffold.Data.PrescriptionIdRenateLuxerm))
             {
-                dispense.AuthorizingPrescription.Add(new()
+                dispenseP.AuthorizingPrescription.Add(new()
                 {
                     Reference = $"LINCAPrescriptionMedicationRequest/{LinkedCareSampleClient.CareInformationSystemScaffold.Data.PrescriptionIdRenateLuxerm}"
                 });
 
-                dispense.Status = MedicationDispense.MedicationDispenseStatusCodes.Completed;
-                dispense.Subject = new ResourceReference()
+                dispenseP.Status = MedicationDispense.MedicationDispenseStatusCodes.Completed;
+                dispenseP.Subject = new ResourceReference()
                 {
                     Identifier = new Identifier()
                     {
@@ -77,7 +80,7 @@ internal class US019_PartialDispense : Spec
                     Display = "Renate Rüssel-Olifant"
                 };
 
-                dispense.Medication = new()
+                dispenseP.Medication = new()
                 {
                     Concept = new()
                     {
@@ -93,12 +96,14 @@ internal class US019_PartialDispense : Spec
                     }
                 };
 
-                dispense.DosageInstruction.Add(new Dosage()
+                dispenseP.Quantity = new() { Value = 1 };
+
+                dispenseP.DosageInstruction.Add(new Dosage()
                 {
                     Text = "morgens und abends auf die betroffene Stelle auftragen",
                 });
 
-                dispense.Performer.Add(new()
+                dispenseP.Performer.Add(new()
                 {
                     Actor = new()
                     {
@@ -111,7 +116,7 @@ internal class US019_PartialDispense : Spec
                     }
                 });
 
-                dispense.Type = new()
+                dispenseP.Type = new()
                 {
                     Coding = new()
                     {
@@ -119,15 +124,130 @@ internal class US019_PartialDispense : Spec
                     }
                 };
 
-                (var postedMD, var canCue, var outcome) = LincaDataExchange.CreateMedicationDispense(Connection, dispense);
+                (var postedMD, var canCue, var outcome) = LincaDataExchange.CreateMedicationDispense(Connection, dispenseP);
 
                 if (canCue)
                 {
-                    Console.WriteLine($"Linca MedicationDispense (type partial dispense) transmitted, id {postedMD.Id}");
+                    Console.WriteLine($"Linca MedicationDispense (type FFP) transmitted, id {postedMD.Id}");
                 }
                 else
                 {
                     Console.WriteLine($"Failed to transmit Linca MedicationDispense");
+                }
+
+                if (outcome != null)
+                {
+                    foreach (var item in outcome.Issue)
+                    {
+                        Console.WriteLine($"Outcome Issue Code: '{item.Details.Coding?.FirstOrDefault()?.Code}', Text: '{item.Details.Text}'");
+                    }
+                }
+
+                return canCue;
+            }
+            else
+            {
+                Console.WriteLine($"Initial prescription (Luxerm for Renate Rüssel-Oilfant) not found");
+
+                return false;
+            }
+        }
+        else
+        {
+            Console.WriteLine($"Get prescription-to-dispense failed");
+
+            return false;
+        }
+    }
+
+    private bool CreateCompleteDispense()
+    {
+        (Bundle results, bool received) = LincaDataExchange.GetPrescriptionToDispense(Connection, "WABI0001VVCC");
+
+        if (received)
+        {
+            List<MedicationRequest> prescriptions = BundleHelper.FilterPrescriptionsToDispense(results);
+            MedicationRequest? prescription = prescriptions.Find(x => x.Id == LinkedCareSampleClient.CareInformationSystemScaffold.Data.PrescriptionIdRenateLuxerm);
+
+            // Check if the partially dispensed prescription is still in the result list
+            if (prescription == null)
+            {
+                Console.WriteLine("Prescription for Renate Rüssel-Olifant not found any more, cannot complete dispense");
+
+                return false;
+            }
+
+            if (!string.IsNullOrEmpty(LinkedCareSampleClient.CareInformationSystemScaffold.Data.PrescriptionIdRenateLuxerm))
+            {
+                dispenseC.AuthorizingPrescription.Add(new()
+                {
+                    Reference = $"LINCAPrescriptionMedicationRequest/{LinkedCareSampleClient.CareInformationSystemScaffold.Data.PrescriptionIdRenateLuxerm}"
+                });
+
+                dispenseC.Status = MedicationDispense.MedicationDispenseStatusCodes.Completed;
+                dispenseC.Subject = new ResourceReference()
+                {
+                    Identifier = new Identifier()
+                    {
+                        Value = "1238100866",
+                        System = Constants.WellknownOidSocialInsuranceNr
+                    },
+                    Display = "Renate Rüssel-Olifant"
+                };
+
+                dispenseC.Medication = new()
+                {
+                    Concept = new()
+                    {
+                        Coding = new()
+                        {
+                            new Coding()
+                            {
+                                Code = "4450562",
+                                System = "https://termgit.elga.gv.at/CodeSystem/asp-liste",
+                                Display = "Luxerm 160 mg/g Creme"
+                            }
+                        }
+                    }
+                };
+
+                dispenseC.Quantity = new() { Value = 1 };  // 1 remaining package
+
+                dispenseC.DosageInstruction.Add(new Dosage()
+                {
+                    Text = "morgens und abends auf die betroffene Stelle auftragen",
+                });
+
+                dispenseC.Performer.Add(new()
+                {
+                    Actor = new()
+                    {
+                        Identifier = new()
+                        {
+                            Value = "2.999.40.0.34.5.1.2",  // OID of dispensing pharmacy
+                            System = "urn:ietf:rfc:3986"  // Code-System: eHVD
+                        },
+                        Display = "Apotheke 'Zum frühen Vogel'"
+                    }
+                });
+
+                dispenseC.Type = new()
+                {
+                    Coding = new()
+                    {
+                        new Coding(system: "http://terminology.hl7.org/CodeSystem/v3-ActCode", code: "RFC")
+                    }
+                };
+
+                (var postedMD, var canCue, var outcome) = LincaDataExchange.CreateMedicationDispense(Connection, dispenseC);
+
+                if (canCue)
+                {
+                    Console.WriteLine($"Linca MedicationDispense (type RFC) transmitted, id {postedMD.Id}");
+                }
+                else
+                {
+                    Console.WriteLine($"Failed to transmit Linca MedicationDispense (type partial dispense)");
                 }
 
                 if (outcome != null)

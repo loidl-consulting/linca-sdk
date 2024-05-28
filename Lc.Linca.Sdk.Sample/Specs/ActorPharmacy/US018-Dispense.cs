@@ -83,6 +83,8 @@ internal class US018_Dispense : Spec
                 }
             };
 
+            dispense.Quantity = new() { Value = 1 };
+
             dispense.DosageInstruction.Add(new Dosage()
             {
                 Sequence = 1,

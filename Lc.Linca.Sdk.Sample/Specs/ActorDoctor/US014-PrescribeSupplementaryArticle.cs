@@ -126,7 +126,8 @@ internal class US014_PrescribeSupplementaryArticle : Spec
                         System = "urn:ietf:rfc:3986"  // Code-System: eHVD
                     },
                     Display = "Apotheke 'Zum frühen Vogel'"
-                }
+                },
+                Quantity = new() { Value = 1 }
             };
 
             prescription.Identifier.Add(new Identifier()
@@ -204,6 +205,8 @@ internal class US014_PrescribeSupplementaryArticle : Spec
                 Value = "1A2B3C4D5E6F",
                 System = "urn:oid:1.2.40.0.10.1.4.3.3"        // OID: Rezeptnummer
             };
+
+            adhoc.DispenseRequest = new() { Quantity = new() { Value = 1 } }; 
 
             /***** Add both to one Bundle ******/
 
