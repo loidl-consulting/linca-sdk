@@ -211,7 +211,7 @@ internal class US019_PartialDispense : Spec
                     }
                 };
 
-                dispenseC.Quantity = new() { Value = 1 };  // 1 remaining package
+                dispenseC.Quantity = new() { Value = 2 };  // 2 remaining packages
 
                 dispenseC.DosageInstruction.Add(new Dosage()
                 {
