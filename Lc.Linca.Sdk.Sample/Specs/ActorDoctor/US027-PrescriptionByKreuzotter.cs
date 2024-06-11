@@ -58,14 +58,14 @@ internal class US027_PrescriptionByKreuzotter : Spec
 
             prescription.BasedOn.Add(new()
             {
-                Reference = $"LINCAProposalMedicationRequest/6c00ff1eaf414531ac37ff2472eaaf2f"
+                Reference = $"LINCAProposalMedicationRequest/7646f5bb482446f9975dfb9e051d1761"
             });
 
             prescription.Status = MedicationRequest.MedicationrequestStatus.Active;    // REQUIRED
             prescription.Intent = MedicationRequest.MedicationRequestIntent.Order;     // REQUIRED
 
             //prescription.Subject = orderProposalRenate!.Subject;
-            prescription.Subject = new() { Reference = "HL7ATCorePatient/4210ab40f90b406b83434d5d64e19152" };
+            prescription.Subject = new() { Reference = "HL7ATCorePatient/073a032a25934f88bccfb16a5c5af709" };
 
 
             prescription.Medication = new()
@@ -76,9 +76,9 @@ internal class US027_PrescriptionByKreuzotter : Spec
                     {
                         new Coding()
                         {
-                            Code = "1313741",
+                            Code = "0031130",
                             System = "https://termgit.elga.gv.at/CodeSystem/asp-liste",
-                            Display = "FUROHEXAL TBL 40MG"
+                            Display = "Lasix 40 mg Tabletten"
                         }
                     }
                 }
@@ -96,7 +96,7 @@ internal class US027_PrescriptionByKreuzotter : Spec
 
             prescription.DosageInstruction.Add(new Dosage()
             {
-                Text = "1-1-0-0",
+                Text = "1-0-0-1",
             });
 
             // prescription.InformationSource will be copied from resource in basedOn by the Fhir server
@@ -112,6 +112,7 @@ internal class US027_PrescriptionByKreuzotter : Spec
                 },
             });
 
+            /*
             prescription.Identifier.Add(new Identifier()
             {
                 Value = "XYZ1ABC2UVW3",
@@ -123,10 +124,11 @@ internal class US027_PrescriptionByKreuzotter : Spec
                 Value = "ASDFGHJ4KL98",
                 System = "urn:oid:1.2.40.0.10.1.4.3.3"       // OID: Rezeptnummer
             };
+            */
 
             prescription.DispenseRequest = new()
             {
-                Quantity = new() { Value = 4 },
+                Quantity = new() { Value = 3 },
                 //DispenserInstruction = new() { new() { Text = "Information für den Apotheker"} }
             };
 

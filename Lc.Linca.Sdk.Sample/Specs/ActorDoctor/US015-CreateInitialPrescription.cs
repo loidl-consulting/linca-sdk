@@ -152,11 +152,12 @@ internal class US015_CreateInitialPrescription : Spec
                 {
                     new Coding()
                     {
-                        Code = "4450562",
-                        System = "https://termgit.elga.gv.at/CodeSystem/asp-liste",
-                        Display = "Luxerm 160 mg/g Creme"
+                        Code = "9999927",                        // internal dvppzn of magistralium 
+                        System = "urn:oid:2.999.40.0.34.3.1.1",  // OID of prescribing practitioner ",
+                        Display = "*Bayer_chro086_Ad_Milch_100"
                     }
-                }
+                },
+                Text = "Advantan Salbe 30,0; Ultraphil 14,0; Thesit 5,0; Paraff. liqu. 34,0; Aqua pur. ad 100,0; _; Ekzemmilch, fett, juckreizstillend;"
             }
         };
 
@@ -201,7 +202,7 @@ internal class US015_CreateInitialPrescription : Spec
         {
             Quantity = new()
             {
-                Value = 2
+                Value = 1
             }
         };
 

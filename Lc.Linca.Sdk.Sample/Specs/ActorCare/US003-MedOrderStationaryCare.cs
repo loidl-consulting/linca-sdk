@@ -12,6 +12,7 @@
 using Hl7.Fhir.Model;
 using Hl7.Fhir.Support;
 using Lc.Linca.Sdk.Client;
+using Lc.Linca.Sdk.Scaffolds;
 using System.Globalization;
 
 namespace Lc.Linca.Sdk.Specs.ActorCare;
@@ -29,9 +30,12 @@ internal class US003_MedOrderStationaryCare : Spec
 
     protected Patient createdGuenter = new();
     protected Patient createdPatrizia = new();
+    protected Patient createdRentate = new();
     protected MedicationRequest medReq1 = new();
     protected MedicationRequest medReq2 = new();
     protected MedicationRequest medReq3 = new();
+    protected MedicationRequest medReq4 = new();
+    protected MedicationRequest medReq5 = new();
 
     public US003_MedOrderStationaryCare(LincaConnection conn) : base(conn) 
     {
@@ -39,6 +43,7 @@ internal class US003_MedOrderStationaryCare : Spec
         {
             new("Create client record Günter Gürtelthier", CreateClientRecord1),
             new("Create client record Patrizia Platypus", CreateClientRecord2),
+            new("Create client record Renate Rüssel-Olifant", CreateClientRecord3),
             new("Place orders for two patients with pharmacy specified", CreateRequestOrchestrationRecord)
         };
     }
@@ -127,6 +132,58 @@ internal class US003_MedOrderStationaryCare : Spec
         return canCue;
     }
 
+    private bool CreateClientRecord3()
+    {
+        LinkedCareSampleClient.CareInformationSystemScaffold.PseudoDatabaseRetrieve();
+        var client = new CareInformationSystem.Client();
+        var patient = new Patient
+        {
+            BirthDate = DateTime.ParseExact(
+                client.DoB,
+                Constants.DobFormat,
+                CultureInfo.InvariantCulture
+            ).ToFhirDate()
+        };
+
+        patient.Name.Add(new()
+        {
+            Family = client.Lastname,
+            Given = new[] { client.Firstname },
+            Text = client.Firstname + " " + client.Lastname
+        });
+
+        patient.Identifier.Add(new Identifier(
+            system: Constants.WellknownOidSocialInsuranceNr,
+            value: client.SocInsNumber
+        ));
+
+        patient.Gender = AdministrativeGender.Female;
+
+        (var createdPatient, var canCue, var outcome) = LincaDataExchange.CreatePatientWithOutcome(Connection, patient);
+
+        if (canCue)
+        {
+            LinkedCareSampleClient.CareInformationSystemScaffold.Data.ClientIdRenate = createdPatient.Id;
+            LinkedCareSampleClient.CareInformationSystemScaffold.PseudoDatabaseStore();
+
+            Console.WriteLine($"Client information transmitted, id {createdPatient.Id}");
+        }
+        else
+        {
+            Console.WriteLine($"Failed to transmit client information");
+        }
+
+        if (outcome != null)
+        {
+            foreach (var item in outcome.Issue)
+            {
+                Console.WriteLine($"Outcome Issue Code: '{item.Details.Coding?.FirstOrDefault()?.Code}', Text: '{item.Details.Text}'");
+            }
+        }
+
+        return canCue;
+    }
+
     private bool CreateRequestOrchestrationRecord() 
     {  
         PrepareMedicationRequests();
@@ -148,7 +205,9 @@ internal class US003_MedOrderStationaryCare : Spec
 
         ro.Contained.Add(medReq1);
         ro.Contained.Add(medReq2);
-        ro.Contained.Add(medReq3);  
+        ro.Contained.Add(medReq3); 
+        ro.Contained.Add(medReq4);
+        ro.Contained.Add(medReq5);
 
         foreach (var item in ro.Contained)
         {
@@ -234,10 +293,12 @@ internal class US003_MedOrderStationaryCare : Spec
             Display = "DGKP Walter Specht"
         };
 
+        /*
         medReq1.Note = new()
         {
             new() { Text = "Station Vogelgezwitscher im Grünen" }
         };
+        */
 
         medReq1.Performer.Add(new ResourceReference()   // REQUIRED, cardinality 1..1 in LINCA
         {
@@ -259,7 +320,8 @@ internal class US003_MedOrderStationaryCare : Spec
                     System = "urn:ietf:rfc:3986"  // Code-System: eHVD
                 },
                 Display = "Apotheke 'Zum frühen Vogel'"
-            }
+            },
+            Quantity = new() { Value = 1 }
         };
 
         // medication request 2 for Günter Gürtelthier
@@ -327,12 +389,13 @@ internal class US003_MedOrderStationaryCare : Spec
                     System = "urn:ietf:rfc:3986"  // Code-System: eHVD
                 },
                 Display = "Apotheke 'Zum frühen Vogel'"
-            }
+            },
+            Quantity = new() { Value = 2}
         };
 
         /***********************************************************************************/
 
-        // medication request for Patricia Platypus
+        // medication request 3 for Patricia Platypus
         medReq3.Id = Guid.NewGuid().ToFhirId();                                  // REQUIRED
         medReq3.Status = MedicationRequest.MedicationrequestStatus.Unknown;      // REQUIRED
         medReq3.Intent = MedicationRequest.MedicationRequestIntent.Proposal;     // REQUIRED
@@ -397,7 +460,150 @@ internal class US003_MedOrderStationaryCare : Spec
                     System = "urn:ietf:rfc:3986"  // Code-System: eHVD
                 },
                 Display = "Apotheke 'Zum frühen Vogel'"
+            },
+            Quantity = new() { Value = 2}
+        };
+
+        /***********************************************************************************/
+
+        // medication request 4 for Patricia Platypus
+        medReq4.Id = Guid.NewGuid().ToFhirId();                                  // REQUIRED
+        medReq4.Status = MedicationRequest.MedicationrequestStatus.Unknown;      // REQUIRED
+        medReq4.Intent = MedicationRequest.MedicationRequestIntent.Proposal;     // REQUIRED
+        medReq4.Subject = new ResourceReference()                                // REQUIRED
+        {
+            Reference = $"HL7ATCorePatient/{LinkedCareSampleClient.CareInformationSystemScaffold.Data.ClientIdPatrizia}"     // relative path to Linca Fhir patient resource
+        };
+
+        medReq4.Medication = new()
+        {
+            Concept = new()
+            {
+                Coding = new()
+                {
+                    new Coding()
+                    {
+                        Code = "0015680",
+                        System = "https://termgit.elga.gv.at/CodeSystem/asp-liste",
+                        Display = "DIAMOX TBL 250MG"
+                    }
+                }
             }
+        };
+
+        medReq4.InformationSource.Add(new ResourceReference()  // REQUIRED, cardinality 1..1 in LINCA
+        {
+            Identifier = new()
+            {
+                Value = "2.999.40.0.34.1.1.1",  // OID of the ordering care organization
+                System = "urn:ietf:rfc:3986"  // Code-System: eHVD
+            },
+            Display = "Haus Vogelsang"   // optional
+        });
+
+        medReq4.Requester = new ResourceReference()  // REQUIRED
+        {
+            Identifier = new()
+            {
+                Value = "ECHT_SPECHT",               // e.g., org internal username or handsign of Susanne Allzeit
+                System = "urn:oid:2.999.40.0.34.1.1.1"  // Code-System: Care-Org Pflegedienst Immerdar
+            },
+            Display = "DGKP Walter Specht"
+        };
+
+        medReq4.Performer.Add(new ResourceReference()   // REQUIRED, cardinality 1..1 in LINCA
+        {
+            Identifier = new()
+            {
+                Value = "2.999.40.0.34.3.1.2",  // OID of designated practitioner 
+                System = "urn:ietf:rfc:3986"  // Code-System: eHVD
+            },
+            Display = "Dr. Kunibert Kreuzotter"   // optional
+        });
+
+        medReq4.DispenseRequest = new()
+        {
+            Dispenser = new()
+            {
+                Identifier = new()
+                {
+                    Value = "2.999.40.0.34.5.1.2",  // OID of designated pharmacy
+                    System = "urn:ietf:rfc:3986"  // Code-System: eHVD
+                },
+                Display = "Apotheke 'Zum frühen Vogel'"
+            },
+            Quantity = new() { Value = 1 }
+        };
+
+        /***********************************************************************************/
+
+        // medication request 5 for Renate Rüssel-Olifant
+        medReq5.Id = Guid.NewGuid().ToFhirId();                                  // REQUIRED
+        medReq5.Status = MedicationRequest.MedicationrequestStatus.Unknown;      // REQUIRED
+        medReq5.Intent = MedicationRequest.MedicationRequestIntent.Proposal;     // REQUIRED
+        medReq5.Subject = new ResourceReference()                                // REQUIRED
+        {
+            Reference = $"HL7ATCorePatient/{LinkedCareSampleClient.CareInformationSystemScaffold.Data.ClientIdRenate}"     // relative path to Linca Fhir patient resource
+        };
+
+        medReq5.Medication = new()
+        {
+            Concept = new()
+            {
+                Coding = new()
+                {
+                    new Coding()
+                    {
+                        Code = "0031130",
+                        System = "https://termgit.elga.gv.at/CodeSystem/asp-liste",
+                        Display = "Lasix 40 mg Tabletten"
+                    }
+                }
+            }
+        };
+
+        medReq5.InformationSource.Add(new ResourceReference()  // REQUIRED, cardinality 1..1 in LINCA
+        {
+            Identifier = new()
+            {
+                Value = "2.999.40.0.34.1.1.1",  // OID of the ordering care organization
+                System = "urn:ietf:rfc:3986"  // Code-System: eHVD
+            },
+            Display = "Haus Vogelsang"   // optional
+        });
+
+        medReq5.Requester = new ResourceReference()  // REQUIRED
+        {
+            Identifier = new()
+            {
+                Value = "ECHT_SPECHT",               // e.g., org internal username or handsign of Susanne Allzeit
+                System = "urn:oid:2.999.40.0.34.1.1.1"  // Code-System: Care-Org Pflegedienst Immerdar
+            },
+            Display = "DGKP Walter Specht"
+        };
+
+        medReq5.Performer.Add(new ResourceReference()   // REQUIRED, cardinality 1..1 in LINCA
+        {
+            Identifier = new()
+            {
+                Value = "2.999.40.0.34.3.1.2",  // OID of designated practitioner 
+                System = "urn:ietf:rfc:3986"  // Code-System: eHVD
+            },
+            Display = "Dr. Kunibert Kreuzotter"   // optional
+        });
+
+        medReq5.DispenseRequest = new()
+        {
+            Dispenser = new()
+            {
+                Identifier = new()
+                {
+                    Value = "2.999.40.0.34.5.1.2",  // OID of designated pharmacy
+                    System = "urn:ietf:rfc:3986"  // Code-System: eHVD
+                },
+                Display = "Apotheke 'Zum frühen Vogel'"
+            },
+            Quantity = new() { Value = 3 }
         };
     }
 }
