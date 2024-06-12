@@ -146,6 +146,15 @@ public static class LincaDataExchange
     }
 
     /// <summary>
+    /// Cancellation of a Linked Care Medication Dispense:
+    /// sets the status of the dispense to 'entered-in-error'
+    /// </summary>
+    public static (OperationOutcome oo, bool deleted) DeleteMedicationDispense(LincaConnection connection, string id)
+    {
+        return FhirDataExchange<MedicationDispense>.DeleteResource(connection, id, LincaEndpoints.LINCAMedicationDispense);
+    }
+
+    /// <summary>
     /// Get a all order chain links (proposal order positions, prescriptions, and dispenses) for the given lc_id
     /// </summary>
     public static (Bundle results, bool canCue) GetProposalStatus(LincaConnection connection, string id)

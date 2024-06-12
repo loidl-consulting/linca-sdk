@@ -17,6 +17,7 @@ namespace Lc.Linca.Sdk.Specs.ActorPharmacy;
 internal class US018_Dispense : Spec
 {
     protected MedicationDispense dispense = new();
+    protected string dispenseId;
 
     public const string UserStory = @"
         Pharmacist Mag. Franziska Fröschl, owner of the pharmacy Apotheke 'Klappernder Storch' has 
@@ -31,7 +32,8 @@ internal class US018_Dispense : Spec
     {
         Steps = new Step[]
         {
-            new("Create MedicationDispense", CreateMedicationDispenseRecord)
+            new("Create MedicationDispense", CreateMedicationDispenseRecord),
+            new("Cancel MedicationDispense", CancelMedicationDispenseRecord)
         };
 
     }
@@ -131,6 +133,7 @@ internal class US018_Dispense : Spec
             if (canCue)
             {
                 Console.WriteLine($"Linca MedicationDispense transmitted, id {postedMD.Id}");
+                dispenseId = postedMD.Id;
             }
             else
             {
@@ -150,6 +153,32 @@ internal class US018_Dispense : Spec
         else
         {
             Console.WriteLine($"Failed to receive Linca Prescription Medication Requests");
+
+            return false;
+        }
+    }
+
+    private bool CancelMedicationDispenseRecord()
+    {
+        (var outcome, var deleted) = LincaDataExchange.DeleteMedicationDispense(Connection, dispenseId);
+        
+        if (deleted)
+        {
+            Console.WriteLine($"LINCA Medication Dispense id '{dispenseId}' successfully cancelled");
+
+            return true;
+        }
+        else 
+        {
+            Console.WriteLine("Failed to delete LINCA Medication Dispense");
+
+            if (outcome != null)
+            {
+                foreach (var item in outcome.Issue)
+                {
+                    Console.WriteLine($"Outcome Issue Code: '{item.Details.Coding?.FirstOrDefault()?.Code}', Text: '{item.Details.Text}'");
+                }
+            }
 
             return false;
         }
