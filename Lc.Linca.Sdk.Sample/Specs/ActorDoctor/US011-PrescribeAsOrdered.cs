@@ -88,28 +88,6 @@ internal class US011_PrescribeAsOrdered : Spec
             {
                 Sequence = 1,
                 Text = "1 Tablette täglich",
-                Timing = new Timing()
-                {
-                    Repeat = new()
-                    {
-                        Bounds = new Duration
-                        {
-                            Value = 1,
-                            Code = "d",
-
-                        },
-                        Frequency = 1,
-                        Period = 1,
-                        PeriodUnit = Timing.UnitsOfTime.D
-                    }
-                },
-                DoseAndRate = new()
-                {
-                    new Dosage.DoseAndRateComponent()
-                    {
-                        Dose = new Quantity(value: 1, unit: "St")
-                    }
-                }
             });
 
             // prescription.InformationSource will be copied from resource in basedOn by the Fhir server

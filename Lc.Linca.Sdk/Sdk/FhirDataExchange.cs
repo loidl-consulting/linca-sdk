@@ -209,12 +209,14 @@ internal static class FhirDataExchange<T> where T : Resource, new()
                 response.Content.ReadAsStream()
             ).ReadToEnd();
 
-            if (new FhirJsonPocoDeserializer().TryDeserializeResource
-            (
-                receivedResourceRaw,
-                out Resource? parsedResource,
-                out var _
-            ) && parsedResource is OperationOutcome receivedResource)
+            if (! string.IsNullOrWhiteSpace(receivedResourceRaw) 
+                && new FhirJsonPocoDeserializer().TryDeserializeResource
+                (
+                    receivedResourceRaw,
+                    out Resource? parsedResource,
+                    out var _
+                ) 
+                && parsedResource is OperationOutcome receivedResource)
             {
                 if (response?.StatusCode == HttpStatusCode.OK)
                 {

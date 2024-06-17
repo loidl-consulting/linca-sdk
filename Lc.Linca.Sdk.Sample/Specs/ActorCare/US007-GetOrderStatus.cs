@@ -45,6 +45,9 @@ internal class US007_GetOrderStatus : Spec
             (results, received) = LincaDataExchange.GetProposalStatus(Connection, $"{LinkedCareSampleClient.CareInformationSystemScaffold.Data.LcIdVogelsang}");
         }
 
+        // use the following line to run the sequence [01] Immerdar -> [11] Würm -> [18] Klappernder Storch -> [07] Immerdar
+        // (results, received) = LincaDataExchange.GetProposalStatus(Connection, $"{LinkedCareSampleClient.CareInformationSystemScaffold.Data.LcIdImmerdar001}");
+
         if (received)
         {
             Console.WriteLine("Get proposal-status succeeded");

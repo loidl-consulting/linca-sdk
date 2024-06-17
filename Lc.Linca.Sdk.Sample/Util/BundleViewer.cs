@@ -75,7 +75,8 @@ public static class BundleHelper
             if (prescriptions.Find(x => x.PriorPrescription != null && x.PriorPrescription.Reference.Contains(item.Id)) == null
                && dispenses.Find(x => !x.AuthorizingPrescription.IsNullOrEmpty()
                                         && x.AuthorizingPrescription.First().Reference.Contains(item.Id)
-                                        && x.Type.Coding.First().Code.EndsWith("C")) == null)
+                                        && x.Type.Coding.First().Code.EndsWith("C")
+                                        && x.Status == MedicationDispense.MedicationDispenseStatusCodes.Completed) == null)
             {
                 openPrescriptions.Add(item);
             }

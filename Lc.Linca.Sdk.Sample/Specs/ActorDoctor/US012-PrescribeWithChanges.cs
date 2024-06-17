@@ -48,7 +48,8 @@ internal class US012_PrescribeWithChanges : Spec
 
 
             MedicationRequest? proposalsGuenterNotGranpidam = proposals.Find(x => x.Subject.Reference.Contains($"{LinkedCareSampleClient.CareInformationSystemScaffold.Data.ClientIdGuenter}") 
-                                                                                        && ! x.Medication.Concept.Coding.First().Display.Contains("Granpidam"));
+                                                                                        && ((x.Medication.Concept.Coding.Count == 0 
+                                                                                            && x.Medication.Concept.Text.Contains("Salbe")) || ! x.Medication.Concept.Coding.First().Display.Contains("Granpidam")));
 
             if (proposalsGuenterNotGranpidam != null)
             {
