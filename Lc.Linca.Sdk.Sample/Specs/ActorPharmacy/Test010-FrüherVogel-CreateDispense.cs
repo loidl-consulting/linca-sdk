@@ -30,18 +30,17 @@ internal class Test010_FrueherVogel_CreateDispense : Spec
         Steps = new Step[]
         {
             new("Create MedicationDispense, LCVAL49, cast failed", CreateMedicationDispenseLCVAL49),
-            new("Create MedicationDispense, LCVAL50, authorizingPrescription is missing", CreateMedicationDispenseLCVAL50A),
-            new("Create MedicationDispense, LCVAL50, authorizingPrescription is not unique", CreateMedicationDispenseLCVAL50B),
+            new("Create MedicationDispense, LCVAL50, authorizingPrescription is not unique", CreateMedicationDispenseLCVAL50),
             new("Create MedicationDispense, LCVAL51, refstring in authorizingPrescription not valid", CreateMedicationDispenseLCVAL51),
             new("Create MedicationDispense, LCVAL52, reference in authorizingPrescription not found", CreateMedicationDispenseLCVAL52),
-            new("Create MedicationDispense, LCVAL54, status invallid", CreateMedicationDispenseLCVAL54),
+            new("Create MedicationDispense, LCVAL54, status invalid", CreateMedicationDispenseLCVAL54),
             new("Create MedicationDispense, LCVAL29, performer missing", CreateMedicationDispenseLCVAL29),
             new("Create MedicationDispense, LCVAL57, performer.actor.value missing", CreateMedicationDispenseLCVAL57),
             new("Create MedicationDispense, LCVAL66, performer OID wrong", CreateMedicationDispenseLCVAL66),
             new("Create MedicationDispense, LCVAL26, medication missing", CreateMedicationDispenseLCVAL26),
             new("Create MedicationDispense, LCVAL45, subject invalid", CreateMedicationDispenseLCVAL45),
             new("Create MedicationDispense successfully", CreateMedicationDispenseSuccess),
-            new("Create MedicationDispense, LCVAL53, authorizingPrescription is not latest", CreateMedicationDispenseLCVAL53)
+            new("Create MedicationDispense, LCVAL73, order of partial dispense types incorrect", CreateMedicationDispenseLCVAL73)
         };
     }
 
@@ -64,7 +63,7 @@ internal class Test010_FrueherVogel_CreateDispense : Spec
         return OutcomeHelper.PrintOutcomeAndCheckLCVAL(outcome, "LCVAL49");
     }
 
-    private bool CreateMedicationDispenseLCVAL50A()
+    private bool CreateMedicationDispenseLCVAL50()
     {
         (Bundle orders, bool received) = LincaDataExchange.GetPrescriptionsToDispense(Connection);
 
@@ -101,16 +100,25 @@ internal class Test010_FrueherVogel_CreateDispense : Spec
                         Identifier = new()
                         {
                             Value = "2.999.40.0.34.5.1.2",  // OID of dispensing pharmacy
-                            System = "urn:oid:1.2.40.0.34.5.2"  // Code-System: eHVD
+                            System = "urn:ietf:rfc:3986"  // Code-System: eHVD
                         }
                     }
+                });
+
+                dispense.AuthorizingPrescription.Add(new()
+                {
+                    Reference = $"LINCAPrescriptionMedicationRequest/{prescriptionGuenterUltralan!.Id}"
+                });
+                dispense.AuthorizingPrescription.Add(new()
+                {
+                    Reference = $"LINCAPrescriptionMedicationRequest/{Guid.NewGuid().ToFhirId()}"
                 });
 
                 dispense.Type = new()
                 {
                     Coding = new()
                 {
-                    new Coding(system: "http://terminology.hl7.org/CodeSystem/v3-ActCode", code: "FFC")
+                    new Coding(system: "http://terminology.hl7.org/CodeSystem/v3-ActCode", code: "FFP")
                 }
                 };
             }
@@ -143,31 +151,6 @@ internal class Test010_FrueherVogel_CreateDispense : Spec
         }
     }
 
-    private bool CreateMedicationDispenseLCVAL50B()
-    {
-        dispense.AuthorizingPrescription.Add(new()
-        {
-            Reference = $"LINCAPrescriptionMedicationRequest/{prescriptionGuenterUltralan!.Id}"
-        });
-        dispense.AuthorizingPrescription.Add(new()
-        {
-            Reference = $"LINCAPrescriptionMedicationRequest/{Guid.NewGuid().ToFhirId()}"
-        });
-
-        (var postedMD, var canCue, var outcome) = LincaDataExchange.CreateMedicationDispense(Connection, dispense);
-
-        if (canCue)
-        {
-            Console.WriteLine("Validation did not work properly: OperationOutcome excpected");
-            Console.WriteLine($"Created Linca MedicationDispense with id {postedMD.Id}");
-        }
-        else
-        {
-            Console.WriteLine("Validation result:");
-        }
-
-        return OutcomeHelper.PrintOutcomeAndCheckLCVAL(outcome, "LCVAL50");
-    }
 
     private bool CreateMedicationDispenseLCVAL51()
     {
@@ -271,7 +254,7 @@ internal class Test010_FrueherVogel_CreateDispense : Spec
                 Identifier = new()
                 {
                     // missing OID of dispensing  pharmacy in Value
-                    System = "urn:oid:1.2.40.0.34.5.2"  // Code-System: eHVD
+                    System = "urn:ietf:rfc:3986"  // Code-System: eHVD
                 }
             }
         });
@@ -301,7 +284,7 @@ internal class Test010_FrueherVogel_CreateDispense : Spec
                 Identifier = new()
                 {
                     Value = "2.999.40.0.34.5.1.1",  // wrong OID of dispensing pharmacy
-                    System = "urn:oid:1.2.40.0.34.5.2"  // Code-System: eHVD
+                    System = "urn:ietf:rfc:3986"  // Code-System: eHVD
                 }
             }
         });
@@ -331,7 +314,7 @@ internal class Test010_FrueherVogel_CreateDispense : Spec
                 Identifier = new()
                 {
                     Value = "2.999.40.0.34.5.1.2",  // wrong OID of dispensing pharmacy
-                    System = "urn:oid:1.2.40.0.34.5.2"  // Code-System: eHVD
+                    System = "urn:ietf:rfc:3986"  // Code-System: eHVD
                 }
             }
         });
@@ -409,8 +392,16 @@ internal class Test010_FrueherVogel_CreateDispense : Spec
         return canCue;
     }
 
-    private bool CreateMedicationDispenseLCVAL53()
+    private bool CreateMedicationDispenseLCVAL73()
     {
+        dispense.Type = new()
+        {
+            Coding = new()
+                {
+                    new Coding(system: "http://terminology.hl7.org/CodeSystem/v3-ActCode", code: "FFC")
+                }
+        };
+
         (var postedMD, var canCue, var outcome) = LincaDataExchange.CreateMedicationDispense(Connection, dispense);
 
         if (canCue)
@@ -423,7 +414,7 @@ internal class Test010_FrueherVogel_CreateDispense : Spec
             Console.WriteLine("Validation result:");
         }
 
-        return OutcomeHelper.PrintOutcomeAndCheckLCVAL(outcome, "LCVAL53");
+        return OutcomeHelper.PrintOutcomeAndCheckLCVAL(outcome, "LCVAL73");
     }
 
 }

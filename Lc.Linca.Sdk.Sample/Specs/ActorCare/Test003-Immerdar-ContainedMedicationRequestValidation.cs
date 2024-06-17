@@ -108,7 +108,7 @@ internal class Test003_Immerdar_ContainedProposalMedicationRequestValidation : S
             Identifier = new()
             {
                 Value = "2.999.40.0.34.1.1.3",  // OID of the ordering care organization from certificate
-                System = "urn:oid:1.2.40.0.34.5.2"  // Code-System: eHVD
+                System = "urn:ietf:rfc:3986"  // Code-System: eHVD
             },
             Display = "Pflegedienst Immerdar"   // optional
         };
@@ -354,7 +354,7 @@ internal class Test003_Immerdar_ContainedProposalMedicationRequestValidation : S
             Identifier = new()
             {
                 Value = "2.999.40.0.34.1.1.1",  // WRONG OID 
-                System = "urn:oid:1.2.40.0.34.5.2"  // Code-System: eHVD
+                System = "urn:ietf:rfc:3986"  // Code-System: eHVD
             },
             Display = "Pflegedienst Immerdar"   // optional
         });
@@ -383,7 +383,7 @@ internal class Test003_Immerdar_ContainedProposalMedicationRequestValidation : S
             Identifier = new()
             {
                 Value = "2.999.40.0.34.1.1.3",  // correct OID 
-                System = "urn:oid:1.2.40.0.34.5.2"  // Code-System: eHVD
+                System = "urn:ietf:rfc:3986"  // Code-System: eHVD
             },
             Display = "Pflegedienst Immerdar"   // optional
         });
@@ -521,7 +521,7 @@ internal class Test003_Immerdar_ContainedProposalMedicationRequestValidation : S
             Identifier = new()
             {
                 Value = "2.999.40.0.34.1.1.2",  // OID of caregiver
-                System = "urn:oid:1.2.40.0.34.5.2"  // Code-System: eHVD
+                System = "urn:ietf:rfc:3986"  // Code-System: eHVD
             },
             Display = "Haus Sonnenschein"   // optional
         });
@@ -550,7 +550,7 @@ internal class Test003_Immerdar_ContainedProposalMedicationRequestValidation : S
             Identifier = new()
             {
                 Value = "2.999.40.0.34.3.1.2",  // OID of designated practitioner 
-                System = "urn:oid:1.2.40.0.34.5.2"  // Code-System: eHVD
+                System = "urn:ietf:rfc:3986"  // Code-System: eHVD
             },
             Display = "Dr. Kunibert Kreuzotter"   // optional
         });
@@ -581,7 +581,7 @@ internal class Test003_Immerdar_ContainedProposalMedicationRequestValidation : S
             Identifier = new()
             {
                 Value = "2.999.40.0.34.3.1.2",  // OID of designated practitioner 
-                System = "urn:oid:1.2.40.0.34.5.2"  // Code-System: eHVD
+                System = "urn:ietf:rfc:3986"  // Code-System: eHVD
             },
             Display = "Dr. Kunibert Kreuzotter"   // optional
         });
@@ -657,7 +657,7 @@ internal class Test003_Immerdar_ContainedProposalMedicationRequestValidation : S
             Identifier = new()
             {
                 Value = "2.999.40.0.34.1.1.3",  // OID of the ordering care organization
-                System = "urn:oid:1.2.40.0.34.5.2"  // Code-System: eHVD
+                System = "urn:ietf:rfc:3986"  // Code-System: eHVD
             },
             Display = "Pflegedienst Immerdar"   // optional
         });
@@ -677,7 +677,7 @@ internal class Test003_Immerdar_ContainedProposalMedicationRequestValidation : S
             Identifier = new()
             {
                 Value = "2.999.40.0.34.3.1.2",  // OID of designated practitioner 
-                System = "urn:oid:1.2.40.0.34.5.2"  // Code-System: eHVD
+                System = "urn:ietf:rfc:3986"  // Code-System: eHVD
             },
             Display = "Dr. Kunibert Kreuzotter"   // optional
         });
@@ -689,7 +689,7 @@ internal class Test003_Immerdar_ContainedProposalMedicationRequestValidation : S
                 Identifier = new()
                 {
                     Value = "2.999.40.0.34.5.1.1",  // OID of designated pharmacy
-                    System = "urn:oid:1.2.40.0.34.5.2"  // Code-System: eHVD
+                    System = "urn:ietf:rfc:3986"  // Code-System: eHVD
                 },
                 Display = "Apotheke 'Klappernder Storch'"
             },

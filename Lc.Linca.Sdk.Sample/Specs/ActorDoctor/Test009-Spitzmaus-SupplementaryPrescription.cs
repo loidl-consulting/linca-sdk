@@ -103,7 +103,7 @@ internal class Test009_Spitzmaus_SupplementaryPrescription : Spec
                 Identifier = new()
                 {
                     Value = "2.999.40.0.34.3.1.3",  // OID of designated practitioner 
-                    System = "urn:oid:1.2.40.0.34.5.2"  // Code-System: eHVD
+                    System = "urn:ietf:rfc:3986"  // Code-System: eHVD
                 },
                 Display = "Dr. Silvia Spitzmaus"   // optional
             });
@@ -115,7 +115,7 @@ internal class Test009_Spitzmaus_SupplementaryPrescription : Spec
                     Identifier = new()
                     {
                         Value = "2.999.40.0.34.5.1.2",  // OID of designated pharmacy
-                        System = "urn:oid:1.2.40.0.34.5.2"  // Code-System: eHVD
+                        System = "urn:ietf:rfc:3986"  // Code-System: eHVD
                     },
                     Display = "Apotheke 'Zum frühen Vogel'"
                 }
@@ -169,7 +169,7 @@ internal class Test009_Spitzmaus_SupplementaryPrescription : Spec
                 Identifier = new()
                 {
                     Value = "2.999.40.0.34.3.1.3",  // OID of designated practitioner 
-                    System = "urn:oid:1.2.40.0.34.5.2"  // Code-System: eHVD
+                    System = "urn:ietf:rfc:3986"  // Code-System: eHVD
                 },
                 Display = "Dr. Silvia Spitzmaus"   // optional
             });
@@ -179,7 +179,7 @@ internal class Test009_Spitzmaus_SupplementaryPrescription : Spec
                 Identifier = new()
                 {
                     Value = "2.999.40.0.34.3.1.3",  // OID of designated practitioner 
-                    System = "urn:oid:1.2.40.0.34.5.2"  // Code-System: eHVD
+                    System = "urn:ietf:rfc:3986"  // Code-System: eHVD
                 },
                 Display = "Dr. Silvia Spitzmaus"   // optional
             });

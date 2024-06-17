@@ -250,16 +250,13 @@ internal static class FhirDataExchange<T> where T : Resource, new()
                 receivedResourceRaw,
                 out Resource? parsedResource,
                 out var issues
-            ))
+            ) && parsedResource is Bundle receivedResource)
             {
-                if (parsedResource is Bundle receivedResource)
-                {
-                    return (receivedResource, true);
-                }
+                 return (receivedResource, true);
             }
             else
             {
-                Console.WriteLine("Issues", issues);
+                Console.WriteLine("Issues: " + issues);
             }
         }
         

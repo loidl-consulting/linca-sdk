@@ -43,6 +43,7 @@ internal class Test007_Spitzmaus_CreateBasedOnPrescriptionWithChanges : Spec
             new("Create PrescriptionMedicationRequest based on proposal, LCVAL08, status required", PrescriptionRecordLCVAL08),
             new("Create PrescriptionMedicationRequest based on proposal, LCVAL48, status invalid", PrescriptionRecordLCVAL48),
             new("Create PrescriptionMedicationRequest based on proposal, LCVAL36, supportingInformation inconsistent", PrescriptionRecordLCVAL36),
+            new("Create PrescriptionMedicationRequest based on proposal, LCVAL75, DispenseRequest Quantity is missing", PrescriptionRecordLCVAL75),
             new("Create PrescriptionMedicationRequest based on proposal successfully", CreatePrescriptionRecordSuccess),
             new("Create PrescriptionMedicationRequest based on proposal, LCVAL33, reference in basedOn not latest", PrescriptionRecordLCVAL33)
         };
@@ -123,14 +124,14 @@ internal class Test007_Spitzmaus_CreateBasedOnPrescriptionWithChanges : Spec
                 Start = DateTime.Today.ToFhirDate(),
                 End = DateTime.Today.AddMonths(1).ToFhirDate()
             };
-            //prescription.DispenseRequest.Quantity = new() { Value = 1 };
+            prescription.DispenseRequest.Quantity = new() { Value = 1 };
 
             prescription.Performer.Add(new ResourceReference()   // REQUIRED, cardinality 1..1 in LINCA
             {
                 Identifier = new()
                 {
                     Value = "2.999.40.0.34.3.1.3",  // OID of designated practitioner 
-                    System = "urn:oid:1.2.40.0.34.5.2"  // Code-System: eHVD
+                    System = "urn:ietf:rfc:3986"  // Code-System: eHVD
                 },
                 Display = "Dr. Silvia Spitzmaus"   // optional
             });
@@ -325,8 +326,8 @@ internal class Test007_Spitzmaus_CreateBasedOnPrescriptionWithChanges : Spec
         {
             Identifier = new()
             {
-                Value = "2.999.40.0.34.3.1.3",  // OID of designated practitioner 
-                System = "urn:oid:1.2.40.0.34.5."  // Validation Error
+                Value = "2.999.40.0.34.3.1.2",  // OID of designated practitioner 
+                System = "urn:ietf:rfc:3986"  // Validation Error
             },
             Display = "Vertretung von Dr. Silvia Spitzmaus"   
         });
@@ -363,7 +364,7 @@ internal class Test007_Spitzmaus_CreateBasedOnPrescriptionWithChanges : Spec
             Identifier = new()
             {
                 Value = "2.999.40.0.34.3.1.3",  // OID of designated practitioner 
-                System = "urn:oid:1.2.40.0.34.5.2"  // Code-System: eHVD
+                System = "urn:ietf:rfc:3986"  // Code-System: eHVD
             },
             Display = "Dr. Silvia Spitzmaus"   // 
         });
@@ -373,7 +374,7 @@ internal class Test007_Spitzmaus_CreateBasedOnPrescriptionWithChanges : Spec
             Identifier = new()
             {
                 Value = "2.999.40.0.34.3.1.3",  // OID of designated practitioner 
-                System = "urn:oid:1.2.40.0.34.5.2"  // Code-System: eHVD
+                System = "urn:ietf:rfc:3986"  // Code-System: eHVD
             },
             Display = "Dr. Silvia Spitzmaus"   // Validation Error
         });
@@ -410,7 +411,7 @@ internal class Test007_Spitzmaus_CreateBasedOnPrescriptionWithChanges : Spec
             Identifier = new()
             {
                 Value = "2.999.40.0.34.1.1.1",  // OID of the ordering care organization
-                System = "urn:oid:1.2.40.0.34.5.2"  // Code-System: eHVD
+                System = "urn:ietf:rfc:3986"  // Code-System: eHVD
             },
             Display = "Haus Vogelsang"   // optional
         });
@@ -489,10 +490,11 @@ internal class Test007_Spitzmaus_CreateBasedOnPrescriptionWithChanges : Spec
                 Identifier = new()
                 {
                     Value = "2.999.40.0.34.5.1.3",  // OID of designated pharmacy
-                    System = "urn:oid:1.2.40.0.34.5.2"  // Code-System: eHVD
+                    System = "urn:ietf:rfc:3986"  // Code-System: eHVD
                 },
                 Display = "Die andere Apotheke"
-            }
+            },
+            Quantity = new() { Value = 1}
         };
 
 
@@ -523,6 +525,7 @@ internal class Test007_Spitzmaus_CreateBasedOnPrescriptionWithChanges : Spec
     private bool PrescriptionRecordLCVAL07()
     {
         prescription.DispenseRequest = null; // will be copied from basedOn if available
+        prescription.DispenseRequest = new() { Quantity = new() { Value = 1} };
 
         prescription.Intent = null;
 
@@ -665,10 +668,40 @@ internal class Test007_Spitzmaus_CreateBasedOnPrescriptionWithChanges : Spec
         return OutcomeHelper.PrintOutcomeAndCheckLCVAL(outcome, "LCVAL36");
     }
 
+    private bool PrescriptionRecordLCVAL75()
+    {
+        prescription.SupportingInformation.Clear();
+        prescription.Performer.First().Display = "";
+
+        prescription.DispenseRequest.Quantity.Value = null;
+
+        Bundle prescriptions = new()
+        {
+            Type = Bundle.BundleType.Transaction,
+            Entry = new()
+        };
+
+        prescriptions.AddResourceEntry(prescription, $"{Connection.ServerBaseUrl}/{LincaEndpoints.LINCAPrescriptionMedicationRequest}");
+
+        (Bundle results, var canCue, var outcome) = LincaDataExchange.CreatePrescriptionBundle(Connection, prescriptions);
+
+        if (canCue)
+        {
+            Console.WriteLine("Validation did not work properly: OperationOutcome excpected");
+
+            BundleHelper.ShowOrderChains(results);
+        }
+        else
+        {
+            Console.WriteLine("Validation result:");
+        }
+
+        return OutcomeHelper.PrintOutcomeAndCheckLCVAL(outcome, "LCVAL75");
+    }
+
     private bool CreatePrescriptionRecordSuccess()
     {
-            prescription.SupportingInformation.Clear();
-            prescription.Performer.First().Display = "";
+            prescription.DispenseRequest.Quantity = new() { Value = 2 };
 
             Bundle prescriptions = new()
             {

@@ -96,7 +96,7 @@ internal class Test008_Spitzmaus_CreatePrescriptionToPriorPrescription : Spec
                 Identifier = new()
                 {
                     Value = "2.999.40.0.34.3.1.3",  // OID of designated practitioner 
-                    System = "urn:oid:1.2.40.0.34.5.2"  // Code-System: eHVD
+                    System = "urn:ietf:rfc:3986"  // Code-System: eHVD
                 },
                 Display = "Dr. Silvia Spitzmaus"   // optional
             });
@@ -112,6 +112,8 @@ internal class Test008_Spitzmaus_CreatePrescriptionToPriorPrescription : Spec
                 Value = "ABCD 1234 EFGH",
                 System = "urn:oid:1.2.40.0.10.1.4.3.3"        // OID: Rezeptnummer
             };
+
+            prescription.DispenseRequest = new() { Quantity = new() { Value = 1 } };
 
             (var postedPMR, var canCue, var outcome) = LincaDataExchange.CreatePrescriptionMedicationRequest(Connection, prescription);
 
@@ -263,7 +265,11 @@ internal class Test008_Spitzmaus_CreatePrescriptionToPriorPrescription : Spec
         LinkedCareSampleClient.CareInformationSystemScaffold.PseudoDatabaseRetrieve();
 
         prescription.Requester = null;
-        prescription.DispenseRequest = new() { Dispenser = new() { Identifier = new() { Value = "Meine Hausapotheke" } } };
+        prescription.DispenseRequest = new() 
+        { 
+            Dispenser = new() { Identifier = new() { Value = "Meine Hausapotheke" } },
+            Quantity = new() { Value = 1}
+        };
 
         (var postedPMR, var canCue, var outcome) = LincaDataExchange.CreatePrescriptionMedicationRequest(Connection, prescription);
 
@@ -286,6 +292,8 @@ internal class Test008_Spitzmaus_CreatePrescriptionToPriorPrescription : Spec
         LinkedCareSampleClient.CareInformationSystemScaffold.PseudoDatabaseRetrieve();
 
         prescription.DispenseRequest.Dispenser = null;
+        prescription.DispenseRequest = new() { Quantity = new() { Value = 1 } };
+
         prescription.Subject = new ResourceReference()                             // REQUIRED
         {
             Reference = $"HL7ATCorePatient/{Guid.NewGuid().ToFhirId()}"     
@@ -322,7 +330,7 @@ internal class Test008_Spitzmaus_CreatePrescriptionToPriorPrescription : Spec
             Identifier = new()
             {
                 Value = "2.999.40.0.34.3.1.1",  // OID of designated practitioner 
-                System = "urn:oid:1.2.40.0.34.5.2"  // Code-System: eHVD
+                System = "urn:ietf:rfc:3986"  // Code-System: eHVD
             },
             Display = " "   // optional
         });
@@ -353,7 +361,7 @@ internal class Test008_Spitzmaus_CreatePrescriptionToPriorPrescription : Spec
             Identifier = new()
             {
                 Value = "2.999.40.0.34.3.1.3",  // OID of designated practitioner 
-                System = "urn:oid:1.2.40.0.34.5.2"  // Code-System: eHVD
+                System = "urn:ietf:rfc:3986"  // Code-System: eHVD
             },
             Display = "Dr. Silvia Spitzmaus"   // optional
         });

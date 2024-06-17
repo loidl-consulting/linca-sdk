@@ -110,7 +110,7 @@ internal class Test006_Wuerm_CreateInitialPrescriptionBundle : Spec
             Identifier = new()
             {
                 Value = "2.999.40.0.34.3.1.1",  // OID of designated practitioner 
-                System = "urn:oid:1.2.40.0.34"  // Code-System: eHVD
+                System = "urn:ietf:rfc:3986"  // Code-System: eHVD
             },
             Display = "Dr. Wibke Würm"   // optional
         });
@@ -121,7 +121,7 @@ internal class Test006_Wuerm_CreateInitialPrescriptionBundle : Spec
             Identifier = new()
             {
                 Value = "2.999.40.0.34.3.1.1",  // OID of designated practitioner 
-                System = "urn:oid:1.2.40.0.34"  // Code-System: eHVD
+                System = "urn:ietf:rfc:3986"  // Code-System: eHVD
             },
             Display = "Dr. Wibke Würm"   // optional
         });
@@ -173,7 +173,7 @@ internal class Test006_Wuerm_CreateInitialPrescriptionBundle : Spec
             Identifier = new()
             {
                 // Value = "2.999.40.0.34.3.1.1",  // OID of designated practitioner 
-                System = "urn:oid:1.2.40.0.34"  // Code-System: eHVD
+                System = "urn:ietf:rfc:3986"  // Code-System: eHVD
             },
             Display = "Dr. Wibke Würm"   // optional
         });
@@ -211,7 +211,7 @@ internal class Test006_Wuerm_CreateInitialPrescriptionBundle : Spec
             Identifier = new()
             {
                 Value = "2.999.40.0.34.3.1.2",  // a doctors OID, but the wrong one
-                System = "urn:oid:1.2.40.0.34"  // Code-System: eHVD
+                System = "urn:ietf:rfc:3986"  // Code-System: eHVD
             },
             Display = "Dr. Wibke Würm"   // optional
         });
@@ -249,7 +249,7 @@ internal class Test006_Wuerm_CreateInitialPrescriptionBundle : Spec
             Identifier = new()
             {
                 Value = "2.999.40.0.34.3.1.1",  // OID of Wibke Würm
-                System = "urn:oid:1.2.40.0.34"  // Code-System: eHVD
+                System = "urn:ietf:rfc:3986"  // Code-System: eHVD
             },
             Display = "Dr. Wibke Würm"   // optional
         });
@@ -536,7 +536,7 @@ internal class Test006_Wuerm_CreateInitialPrescriptionBundle : Spec
             Identifier = new()
             {
                 Value = "2.999.40.0.34.3.1.1",  // OID of designated practitioner 
-                System = "urn:oid:1.2.40.0.34"  // Code-System: eHVD
+                System = "urn:ietf:rfc:3986"  // Code-System: eHVD
             },
             Display = "Dr. Wibke Würm"   // optional
         });
@@ -546,7 +546,7 @@ internal class Test006_Wuerm_CreateInitialPrescriptionBundle : Spec
             Identifier = new()
             {
                 Value = "2.999.40.0.34.3.1.1",  // OID of designated practitioner 
-                System = "urn:oid:1.2.40.0.34"  // Code-System: eHVD
+                System = "urn:ietf:rfc:3986"  // Code-System: eHVD
             },
             Display = "Dr. Wibke Würm"   // optional
         });
