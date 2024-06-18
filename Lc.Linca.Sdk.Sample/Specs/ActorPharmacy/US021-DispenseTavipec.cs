@@ -14,20 +14,19 @@ using Lc.Linca.Sdk.Client;
 
 namespace Lc.Linca.Sdk.Specs.ActorPharmacy;
 
-internal class US018_Dispense : Spec
+internal class US021_DispenseTavipec : Spec
 {
     protected MedicationDispense dispense1 = new();
 
     public const string UserStory = @"
         Pharmacist Mag. Franziska Fröschl, owner of the pharmacy Apotheke 'Klappernder Storch' has 
         access to and permission in a pharmacist role in the LINCA system. 
-        When she is expected to fullfil medication orders for a customer, e.g., Renate Rüssel-Olifant, 
-        and she has a LINCA order Id to go with a purchase her care giver Susanne Allzeit just made for her, 
+        When she is expected to fullfil medication orders for a customer, e.g., Peter Kainrath, 
+        and she has a LINCA order Id to go with a purchase his care giver just made for him, 
         then Mag. Fröschl submits a dispense record for the order position in question
-          and her software will send that to the LINCA server,
-          and notify the ordering organization, Pflegedienst Immerdar, about the thus completed order position.";
+          and her software will send that to the LINCA server.";
 
-    public US018_Dispense(LincaConnection conn) : base(conn)
+    public US021_DispenseTavipec(LincaConnection conn) : base(conn)
     {
         Steps = new Step[]
         {
@@ -40,33 +39,31 @@ internal class US018_Dispense : Spec
     {
         LinkedCareSampleClient.CareInformationSystemScaffold.PseudoDatabaseRetrieve();
 
-        (Bundle orders, bool received) = LincaDataExchange.GetPrescriptionToDispense(Connection, "ASDFGHJ4KL34");
+        (Bundle orders, bool received) = LincaDataExchange.GetPrescriptionToDispense(Connection, "   ");  // ADD LC REZEPT ID HERE
 
         if (received)
         {
             List<MedicationRequest> prescriptionsToDispense = BundleHelper.FilterPrescriptionsToDispense(orders);
 
-            MedicationRequest? prescriptionRenateLasix = prescriptionsToDispense.Find(x => x.Medication.Concept.Coding.First().Display.Contains("Lasix"));
+            MedicationRequest? prescriptionTavipec = prescriptionsToDispense.FirstOrDefault();
 
-            if (prescriptionRenateLasix != null)
+            if (prescriptionTavipec == null)
             {
-                LinkedCareSampleClient.CareInformationSystemScaffold.Data.PrescriptionIdRenateLasix = prescriptionRenateLasix.Id;
-                LinkedCareSampleClient.CareInformationSystemScaffold.PseudoDatabaseStore();
-            }
-            else
-            {
-                Console.WriteLine("Linca PrescriptionMedicationRequest for Renate Rüssel-Olifant not found, LINCAMedicationDispense cannot be created");
+                Console.WriteLine("Linca PrescriptionMedicationRequest for Peter Kainrath not found, LINCAMedicationDispense cannot be created");
 
                 return (false);
             }
 
             dispense1.AuthorizingPrescription.Add(new()
             {
-                Reference = $"LINCAPrescriptionMedicationRequest/{LinkedCareSampleClient.CareInformationSystemScaffold.Data.PrescriptionIdRenateLasix}"
+                Reference = $"LINCAPrescriptionMedicationRequest/{prescriptionTavipec.Id}"
             });
 
             dispense1.Status = MedicationDispense.MedicationDispenseStatusCodes.Completed;
-            dispense1.Subject = prescriptionRenateLasix!.Subject;
+            dispense1.Subject = prescriptionTavipec.Subject;
+            dispense1.Medication = prescriptionTavipec.Medication;
+
+            /*
             dispense1.Medication = new()
             {
                 Concept = new()
@@ -75,21 +72,18 @@ internal class US018_Dispense : Spec
                     {
                         new Coding()
                         {
-                            Code = "0031130",
+                            Code = "2453007",
                             System = "https://termgit.elga.gv.at/CodeSystem/asp-liste",
-                            Display = "Lasix 40 mg Tabletten"
+                            Display = "TAVIPEC KPS"
                         }
                     }
                 }
             };
+            */
 
-            dispense1.Quantity = new() { Value = 3 };
+            dispense1.Quantity = new() { Value = 1 };
 
-            dispense1.DosageInstruction.Add(new Dosage()
-            {
-                Sequence = 1,
-                Text = "1 Tablette täglich",
-            });
+            dispense1.DosageInstruction = prescriptionTavipec.DosageInstruction;
 
             dispense1.Performer.Add(new()
             {
@@ -108,7 +102,7 @@ internal class US018_Dispense : Spec
             {
                 Coding = new()
                 {
-                    new Coding(system: "http://terminology.hl7.org/CodeSystem/v3-ActCode", code: "FFC")
+                    new Coding(system: "http://terminology.hl7.org/CodeSystem/v3-ActCode", code: "FFC") // complete the dispense
                 }
             };
 

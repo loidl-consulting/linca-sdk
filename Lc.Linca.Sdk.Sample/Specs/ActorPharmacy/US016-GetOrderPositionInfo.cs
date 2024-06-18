@@ -13,7 +13,7 @@ using Hl7.Fhir.Model;
 
 namespace Lc.Linca.Sdk.Specs.ActorPharmacy;
 
-internal class US017_GetOrderPositionInfo : Spec
+internal class US016_GetOrderPositionInfo : Spec
 { 
     public const string UserStory = @"
         Pharmacist Mag. Andreas Amsel, owner of the pharmacy Apotheke 'Zum frühen Vogel' has 
@@ -25,7 +25,7 @@ internal class US017_GetOrderPositionInfo : Spec
           and interpret the returned LINCA order position chains
           and visually present and import the positions included in that prescription for Renate Rüssel-Olifant";
 
-    public US017_GetOrderPositionInfo(LincaConnection conn) : base(conn)
+    public US016_GetOrderPositionInfo(LincaConnection conn) : base(conn)
     {
         Steps = new Step[]
         {

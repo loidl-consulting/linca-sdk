@@ -14,7 +14,7 @@ using Lc.Linca.Sdk.Client;
 
 namespace Lc.Linca.Sdk.Specs.ActorPharmacy;
 
-internal class US020_DispenseCancelResendDispense : Spec
+internal class US020_DispenseSIMVASTATINCancelResend : Spec
 {
     protected MedicationDispense dispense1 = new();
     protected MedicationDispense dispense2 = new();
@@ -23,20 +23,19 @@ internal class US020_DispenseCancelResendDispense : Spec
     public const string UserStory = @"
         Pharmacist Mag. Franziska Fröschl, owner of the pharmacy Apotheke 'Klappernder Storch' has 
         access to and permission in a pharmacist role in the LINCA system. 
-        When she is expected to fullfil medication orders for a customer, e.g., Renate Rüssel-Olifant, 
-        and she has a LINCA order Id to go with a purchase her care giver Susanne Allzeit just made for her, 
+        When she is expected to fullfil medication orders for a customer, e.g., Gertrude Steinmaier, 
+        and she has a LINCA order Id to go with a purchase her care giver just made for her, 
         then Mag. Fröschl submits a dispense record for the order position in question. She recognizes a mistake, 
-        cancels the created medication dispense and submit another dispense with adjusted medication, quantity and note, 
-          and her software will send that to the LINCA server,
-          and notify the ordering organization, Pflegedienst Immerdar, about the thus completed order position.";
+        cancels the created medication dispense and submit another dispense with adjused quantity, 
+          and her software will send that to the LINCA server.";
 
-    public US020_DispenseCancelResendDispense(LincaConnection conn) : base(conn)
+    public US020_DispenseSIMVASTATINCancelResend(LincaConnection conn) : base(conn)
     {
         Steps = new Step[]
         {
             new("Create MedicationDispense", CreateMedicationDispenseRecord),
-            new("Cancel MedicationDispense", CancelMedicationDispenseRecord),
-            new("Create replacement MedicationDispense", CreateReplacementMedicationDispenseRecord),
+            //new("Cancel MedicationDispense", CancelMedicationDispenseRecord),
+            //new("Create replacement MedicationDispense", CreateReplacementMedicationDispenseRecord),
         };
 
     }
@@ -45,33 +44,30 @@ internal class US020_DispenseCancelResendDispense : Spec
     {
         LinkedCareSampleClient.CareInformationSystemScaffold.PseudoDatabaseRetrieve();
 
-        (Bundle orders, bool received) = LincaDataExchange.GetPrescriptionToDispense(Connection, "ASDFGHJ4KL34");
+        (Bundle orders, bool received) = LincaDataExchange.GetPrescriptionToDispense(Connection, "ZZZZXXXXYYYY");
 
         if (received)
         {
             List<MedicationRequest> prescriptionsToDispense = BundleHelper.FilterPrescriptionsToDispense(orders);
 
-            MedicationRequest? prescriptionRenateLasix = prescriptionsToDispense.Find(x => x.Medication.Concept.Coding.First().Display.Contains("Lasix"));
+            MedicationRequest? prescriptionSimvastatin = prescriptionsToDispense.Find(x => x.Medication.Concept.Coding.First().Code.Equals("3517502"));
 
-            if (prescriptionRenateLasix != null)
-            {
-                LinkedCareSampleClient.CareInformationSystemScaffold.Data.PrescriptionIdRenateLasix = prescriptionRenateLasix.Id;
-                LinkedCareSampleClient.CareInformationSystemScaffold.PseudoDatabaseStore();
-            }
-            else
-            {
-                Console.WriteLine("Linca PrescriptionMedicationRequest for Renate Rüssel-Olifant not found, LINCAMedicationDispense cannot be created");
+            if (prescriptionSimvastatin == null)
+            { 
+                Console.WriteLine("Linca PrescriptionMedicationRequest for Gertrude Steinmaier not found, LINCAMedicationDispense cannot be created");
 
                 return (false);
             }
 
             dispense1.AuthorizingPrescription.Add(new()
             {
-                Reference = $"LINCAPrescriptionMedicationRequest/{LinkedCareSampleClient.CareInformationSystemScaffold.Data.PrescriptionIdRenateLasix}"
+                Reference = $"LINCAPrescriptionMedicationRequest/{prescriptionSimvastatin.Id}"
             });
 
             dispense1.Status = MedicationDispense.MedicationDispenseStatusCodes.Completed;
-            dispense1.Subject = prescriptionRenateLasix!.Subject;
+            dispense1.Subject = prescriptionSimvastatin.Subject;
+            dispense1.Medication = prescriptionSimvastatin.Medication;
+            /*
             dispense1.Medication = new()
             {
                 Concept = new()
@@ -80,21 +76,18 @@ internal class US020_DispenseCancelResendDispense : Spec
                     {
                         new Coding()
                         {
-                            Code = "0031130",
+                            Code = "3517502",
                             System = "https://termgit.elga.gv.at/CodeSystem/asp-liste",
-                            Display = "Lasix 40 mg Tabletten"
+                            Display = "SIMVASTATIN ACT FTBL 80MG"
                         }
                     }
                 }
             };
+            */
 
             dispense1.Quantity = new() { Value = 3 };
 
-            dispense1.DosageInstruction.Add(new Dosage()
-            {
-                Sequence = 1,
-                Text = "1 Tablette täglich",
-            });
+            dispense1.DosageInstruction = prescriptionSimvastatin.DosageInstruction;
 
             dispense1.Performer.Add(new()
             {
@@ -177,33 +170,30 @@ internal class US020_DispenseCancelResendDispense : Spec
     {
         LinkedCareSampleClient.CareInformationSystemScaffold.PseudoDatabaseRetrieve();
 
-        (Bundle orders, bool received) = LincaDataExchange.GetPrescriptionToDispense(Connection, "ASDFGHJ4KL34");
+        (Bundle orders, bool received) = LincaDataExchange.GetPrescriptionToDispense(Connection, "ZZZZXXXXYYYY");
 
         if (received)
         {
             List<MedicationRequest> prescriptionsToDispense = BundleHelper.FilterPrescriptionsToDispense(orders);
 
-            MedicationRequest? prescriptionRenateLasix = prescriptionsToDispense.Find(x => x.Medication.Concept.Coding.First().Display.Contains("Lasix"));
+            MedicationRequest? prescriptionSimvastatin = prescriptionsToDispense.Find(x => x.Medication.Concept.Coding.First().Code.Equals("3517502"));
 
-            if (prescriptionRenateLasix != null)
+            if (prescriptionSimvastatin == null)
             {
-                LinkedCareSampleClient.CareInformationSystemScaffold.Data.PrescriptionIdRenateLasix = prescriptionRenateLasix.Id;
-                LinkedCareSampleClient.CareInformationSystemScaffold.PseudoDatabaseStore();
-            }
-            else
-            {
-                Console.WriteLine("Linca PrescriptionMedicationRequest for Renate Rüssel-Olifant not found, replacement-LINCAMedicationDispense cannot be created");
+                Console.WriteLine("Linca PrescriptionMedicationRequest for Gertrude Steinmaier not found, LINCAMedicationDispense cannot be created");
 
                 return (false);
             }
 
             dispense2.AuthorizingPrescription.Add(new()
             {
-                Reference = $"LINCAPrescriptionMedicationRequest/{LinkedCareSampleClient.CareInformationSystemScaffold.Data.PrescriptionIdRenateLasix}"
+                Reference = $"LINCAPrescriptionMedicationRequest/{prescriptionSimvastatin.Id}"
             });
 
             dispense2.Status = MedicationDispense.MedicationDispenseStatusCodes.Completed;
-            dispense2.Subject = prescriptionRenateLasix!.Subject;
+            dispense2.Subject = prescriptionSimvastatin.Subject;
+            dispense2.Medication = prescriptionSimvastatin.Medication;
+            /*
             dispense2.Medication = new()
             {
                 Concept = new()
@@ -212,18 +202,16 @@ internal class US020_DispenseCancelResendDispense : Spec
                     {
                         new Coding()
                         {
-                            Code = "1336328",
+                            Code = "3517502",
                             System = "https://termgit.elga.gv.at/CodeSystem/asp-liste",
-                            Display = "Lasix 80 mg Tabletten"
+                            Display = "SIMVASTATIN ACT FTBL 80MG"
                         }
                     }
                 }
             };
+            */
 
-            dispense2.Quantity = new() { Value = 2 };
-
-            dispense2.Note = new();
-            dispense2.Note.Add(new() { Text = "Änderung Wirkstoffgehalt: nur 1/2 Tablette täglich" });
+            dispense2.Quantity = new() { Value = 1 };
 
             dispense2.Performer.Add(new()
             {

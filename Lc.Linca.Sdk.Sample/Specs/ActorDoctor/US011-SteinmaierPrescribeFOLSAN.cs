@@ -15,20 +15,18 @@ using Lc.Linca.Sdk.Client;
 
 namespace Lc.Linca.Sdk.Specs.ActorDoctor;
 
-internal class US011_PrescribeAsOrdered : Spec
+internal class US011_SteinmaierPrescribeFolsan : Spec
 {
     public const string UserStory = @"
-        Practitioner Dr. Wibke Würm is responsible for the LINCA registered mobile caregiver client Renate Rüssel-Olifant. 
-        She has received a LINCA order position requesting medication prescription for her.
-        She decides to issue a prescription for the medication for Renate Rüssel-Olifant intended by that order position. 
-        Hence, she submits a prescription for that position with the eMedId and eRezeptId she got
-          and her software will send that to the LINCA server,
-          and the ordering mobile caregiver organization Pflegedienst Immerdar will be informed that the order position has been prescribed as ordered,
-          and they will inform DGKP Susanne Allzeit.";
+        Practitioner Dr. Kunibert Kreuzotter is responsible for the LINCA registered mobile caregiver client Gertrude Steinmaier. 
+        He has received a LINCA order position requesting medication prescription for her.
+        He decides to issue a prescription for the medication for Gertrude Steinmaier intended by that order position. 
+        Hence, he submits a prescription for that position with the eMedId and eRezeptId he got
+          and her software will send that to the LINCA server.";
 
     protected MedicationRequest prescription = new();
 
-    public US011_PrescribeAsOrdered(LincaConnection conn) : base(conn) 
+    public US011_SteinmaierPrescribeFolsan(LincaConnection conn) : base(conn) 
     {
         Steps = new Step[]
             {
@@ -38,36 +36,31 @@ internal class US011_PrescribeAsOrdered : Spec
 
     private bool CreatePrescriptionRecord()
     {
-        LinkedCareSampleClient.CareInformationSystemScaffold.PseudoDatabaseRetrieve();
-
         (Bundle orders, bool received) = LincaDataExchange.GetProposalsToPrescribe(Connection);
 
         if (received)
         {
             List<MedicationRequest> proposalsToPrescribe = BundleHelper.FilterProposalsToPrescribe(orders);
 
-            MedicationRequest? orderProposalRenate = proposalsToPrescribe.Find(x => x.Subject.Display.Contains("Renate") && x.Medication.Concept.Coding.First().Display.Contains("Lasix"));
+            MedicationRequest? orderProposalFolsan = proposalsToPrescribe.Find(x => x.Id.Equals("   "));  // ENTER ID STRING HERE
             
-            if (orderProposalRenate != null)
+            if (orderProposalFolsan == null)
             {
-                LinkedCareSampleClient.CareInformationSystemScaffold.Data.OrderProposalIdRenateLasix = orderProposalRenate.Id;
-                LinkedCareSampleClient.CareInformationSystemScaffold.PseudoDatabaseStore();
-            }
-            else
-            {
-                Console.WriteLine($"Linca ProposalMedicationRequest for Renate Rüssel-Olifant not found, or it was already processed, prescription cannot be created");
+                Console.WriteLine($"Linca ProposalMedicationRequest for Gertrude Steinmaier not found, or it was already processed, prescription cannot be created");
 
                 return false;
             }
 
             prescription.BasedOn.Add(new()
             {
-                Reference = $"LINCAProposalMedicationRequest/{LinkedCareSampleClient.CareInformationSystemScaffold.Data.OrderProposalIdRenateLasix}"
+                Reference = $"LINCAProposalMedicationRequest/{orderProposalFolsan.Id}"
             });
 
             prescription.Status = MedicationRequest.MedicationrequestStatus.Active;    // REQUIRED
             prescription.Intent = MedicationRequest.MedicationRequestIntent.Order;     // REQUIRED
-            prescription.Subject = orderProposalRenate!.Subject;
+            prescription.Subject = orderProposalFolsan!.Subject;
+            prescription.Medication = orderProposalFolsan!.Medication;
+            /*
             prescription.Medication = new()
             {
                 Concept = new()
@@ -76,18 +69,19 @@ internal class US011_PrescribeAsOrdered : Spec
                     {
                         new Coding()
                         {
-                            Code = "0031130",
+                            Code = "0713987",
                             System = "https://termgit.elga.gv.at/CodeSystem/asp-liste",
-                            Display = "Lasix 40 mg Tabletten"
+                            Display = "FOLSAN TBL 5MG"
                         }
                     }
                 }
             };
+            */
 
             prescription.DosageInstruction.Add(new Dosage()
             {
                 Sequence = 1,
-                Text = "1 Tablette täglich",
+                Text = "1-0-0-0",
             });
 
             // prescription.InformationSource will be copied from resource in basedOn by the Fhir server
@@ -98,10 +92,10 @@ internal class US011_PrescribeAsOrdered : Spec
             {
                 Identifier = new()
                 {
-                    Value = "2.999.40.0.34.3.1.1",  // OID of designated practitioner 
+                    Value = "2.999.40.0.34.3.1.2",  // OID of designated practitioner 
                     System = "urn:ietf:rfc:3986"  // Code-System: eHVD
                 },
-                Display = "Dr. Wibke Würm"   // optional
+                Display = "Dr. Kunibert Kreuzotter"   // optional
             });
 
             prescription.Identifier.Add(new Identifier()
@@ -112,11 +106,11 @@ internal class US011_PrescribeAsOrdered : Spec
 
             prescription.GroupIdentifier = new()
             {
-                Value = "ASDFGHJ4KL34",
+                Value = "AAAABBBBCCCC",
                 System = "urn:oid:1.2.40.0.10.1.4.3.3"       // OID: Rezeptnummer
             };
 
-            prescription.DispenseRequest = new() { Quantity = new() { Value = 3 } };
+            prescription.DispenseRequest = new() { Quantity = new() { Value = 4 } };
 
             Bundle prescriptions = new()
             {
