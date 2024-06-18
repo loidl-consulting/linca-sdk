@@ -118,7 +118,8 @@ internal class Test009_Spitzmaus_SupplementaryPrescription : Spec
                         System = "urn:ietf:rfc:3986"  // Code-System: eHVD
                     },
                     Display = "Apotheke 'Zum frühen Vogel'"
-                }
+                },
+                Quantity = new() { Value = 2}
             };
 
             prescription.Identifier.Add(new Identifier()
@@ -194,6 +195,11 @@ internal class Test009_Spitzmaus_SupplementaryPrescription : Spec
             {
                 Value = "1A2B 3C4D 5E6F",
                 System = "urn:oid:1.2.40.0.10.1.4.3.3"        // OID: Rezeptnummer
+            };
+
+            adhoc.DispenseRequest = new()
+            {
+                Quantity = new() { Value = 1 }
             };
 
             /***** Add both to one Bundle ******/

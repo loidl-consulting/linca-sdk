@@ -20,6 +20,8 @@ internal class Test010_FrueherVogel_CreateDispense : Spec
 {
     protected MedicationDispense dispense = new();
     protected MedicationRequest? prescriptionGuenterUltralan;
+    protected string? createdDispenseId1;
+    protected string? createdDispenseId2;
 
     public const string UserStory = @"
         First, run Test007 and Test008 with the certificate of Dr. Spitzmaus. 
@@ -39,8 +41,14 @@ internal class Test010_FrueherVogel_CreateDispense : Spec
             new("Create MedicationDispense, LCVAL66, performer OID wrong", CreateMedicationDispenseLCVAL66),
             new("Create MedicationDispense, LCVAL26, medication missing", CreateMedicationDispenseLCVAL26),
             new("Create MedicationDispense, LCVAL45, subject invalid", CreateMedicationDispenseLCVAL45),
-            new("Create MedicationDispense successfully", CreateMedicationDispenseSuccess),
-            new("Create MedicationDispense, LCVAL73, order of partial dispense types incorrect", CreateMedicationDispenseLCVAL73)
+            new("Create MedicationDispense, LCVAL72, dispense type missing", CreateMedicationDispenseLCVAL72),
+            new("Create partial MedicationDispense FFP successfully", CreateMedicationDispenseSuccess),
+            new("Create MedicationDispense, LCVAL73, order of partial dispense types incorrect", CreateMedicationDispenseLCVAL73),
+            new("Create partial MedicationDispense RFC successfully", CreatePartialMedicationDispenseSuccess),
+            new("Cancel MedicationDispense, LCVAL78, dispense not latest chain link", CancelMedicationDispenseLCVAL78),
+            new("Cancel latest MedicationDispense (2) successfully", CancelMedicationDispense2Success),
+            new("Cancel MedicationDispense, LCVAL77, dispense already deleted", CancelMedicationDispenseLCVAL77),
+            new("Cancel MedicationDispense (1) successfully", CancelMedicationDispense1Success),
         };
     }
 
@@ -207,6 +215,13 @@ internal class Test010_FrueherVogel_CreateDispense : Spec
         });
 
         dispense.Status = MedicationDispense.MedicationDispenseStatusCodes.InProgress;
+        dispense.Type = new()
+        {
+            Coding = new()
+                {
+                    new Coding(system: "http://terminology.hl7.org/CodeSystem/v3-ActCode", code: "FFP")
+                }
+        };
 
         (var postedMD, var canCue, var outcome) = LincaDataExchange.CreateMedicationDispense(Connection, dispense);
 
@@ -371,15 +386,42 @@ internal class Test010_FrueherVogel_CreateDispense : Spec
         return OutcomeHelper.PrintOutcomeAndCheckLCVAL(outcome, "LCVAL45");
     }
 
-    private bool CreateMedicationDispenseSuccess()
+    private bool CreateMedicationDispenseLCVAL72()
     {
         dispense.Subject = prescriptionGuenterUltralan!.Subject;
+
+        dispense.Type = null;
 
         (var postedMD, var canCue, var outcome) = LincaDataExchange.CreateMedicationDispense(Connection, dispense);
 
         if (canCue)
         {
-            // Console.WriteLine("Validation did not work properly: OperationOutcome excpected");
+            Console.WriteLine("Validation did not work properly: OperationOutcome excpected");
+            Console.WriteLine($"Created Linca MedicationDispense with id {postedMD.Id}");
+        }
+        else
+        {
+            Console.WriteLine("Validation result:");
+        }
+
+        return OutcomeHelper.PrintOutcomeAndCheckLCVAL(outcome, "LCVAL72");
+    }
+
+    private bool CreateMedicationDispenseSuccess()
+    {
+        dispense.Type = new()
+        {
+            Coding = new()
+                {
+                    new Coding(system: "http://terminology.hl7.org/CodeSystem/v3-ActCode", code: "FFP")
+                }
+        };
+
+        (var postedMD, var canCue, var outcome) = LincaDataExchange.CreateMedicationDispense(Connection, dispense);
+
+        if (canCue)
+        {
+            createdDispenseId1 = postedMD.Id;
             Console.WriteLine($"Created Linca MedicationDispense with id {postedMD.Id}");
         }
         else
@@ -417,4 +459,101 @@ internal class Test010_FrueherVogel_CreateDispense : Spec
         return OutcomeHelper.PrintOutcomeAndCheckLCVAL(outcome, "LCVAL73");
     }
 
+    private bool CreatePartialMedicationDispenseSuccess()
+    {
+        dispense.Type = new()
+        {
+            Coding = new()
+                {
+                    new Coding(system: "http://terminology.hl7.org/CodeSystem/v3-ActCode", code: "RFC")
+                }
+        };
+
+        (var postedMD, var canCue, var outcome) = LincaDataExchange.CreateMedicationDispense(Connection, dispense);
+
+        if (canCue)
+        {
+            createdDispenseId2 = postedMD.Id;
+            Console.WriteLine($"Created Linca MedicationDispense with id {postedMD.Id}");
+        }
+        else
+        {
+            Console.WriteLine("Failed to create MedicationDispense");
+        }
+
+        OutcomeHelper.PrintOutcome(outcome);
+
+        return canCue;
+    }
+
+    private bool CancelMedicationDispenseLCVAL78()
+    {
+        (var outcome, var deleted) = LincaDataExchange.DeleteMedicationDispense(Connection, createdDispenseId1!);
+
+        if (deleted)
+        {
+            Console.WriteLine("Validation did not work properly: OperationOutcome excpected");
+            Console.WriteLine($"Cancelled Linca MedicationDispense with id {createdDispenseId1}");
+        }
+        else
+        {
+            Console.WriteLine("Validation result:");
+        }
+
+        return OutcomeHelper.PrintOutcomeAndCheckLCVAL(outcome, "LCVAL78");
+    }
+
+    private bool CancelMedicationDispense2Success()
+    {
+        (var outcome, var deleted) = LincaDataExchange.DeleteMedicationDispense(Connection, createdDispenseId2!);
+
+        if (deleted)
+        {
+            Console.WriteLine($"Cancelled Linca MedicationDispense with id {createdDispenseId2}");
+        }
+        else
+        {
+            Console.WriteLine($"Failed to cancel MedicationDispense with id {createdDispenseId2}");
+            Console.WriteLine("Validation result:");
+        }
+        OutcomeHelper.PrintOutcome(outcome);
+
+        return deleted;
+    }
+
+    private bool CancelMedicationDispenseLCVAL77()
+    {
+        (var outcome, var deleted) = LincaDataExchange.DeleteMedicationDispense(Connection, createdDispenseId2!);
+
+        if (deleted)
+        {
+            Console.WriteLine("Validation did not work properly: OperationOutcome excpected");
+            Console.WriteLine($"Cancelled Linca MedicationDispense with id {createdDispenseId2}");
+        }
+        else
+        {
+            Console.WriteLine("Validation result:");
+        }
+
+        return OutcomeHelper.PrintOutcomeAndCheckLCVAL(outcome, "LCVAL77");
+    }
+
+    private bool CancelMedicationDispense1Success()
+    {
+        (var outcome, var deleted) = LincaDataExchange.DeleteMedicationDispense(Connection, createdDispenseId1!);
+
+        if (deleted)
+        {
+            Console.WriteLine($"Cancelled Linca MedicationDispense with id {createdDispenseId1}");
+        }
+        else
+        {
+            Console.WriteLine($"Failed to cancel MedicationDispense with id {createdDispenseId1}");
+            Console.WriteLine("Validation result:");
+        }
+
+        OutcomeHelper.PrintOutcome(outcome);
+
+        return deleted;
+    }
 }

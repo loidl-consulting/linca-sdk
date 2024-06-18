@@ -192,7 +192,7 @@ internal static class FhirDataExchange<T> where T : Resource, new()
     {
         using var response = Send(connection, HttpMethod.Post, resource, operation);
 
-        if (response != null)
+        if (response != null && response.Content.Headers.ContentLength > 0)
         {
             var createdResourceRaw = new StreamReader
             (
@@ -215,16 +215,16 @@ internal static class FhirDataExchange<T> where T : Resource, new()
                     return (new(), false, outcome);
                 }
             }
-            else
+        }
+        else if (response != null)
+        {
+            OperationOutcome exceptionOutcome = new() { Issue = new() };
+            exceptionOutcome.Issue.Add(new OperationOutcome.IssueComponent()
             {
-                OperationOutcome exceptionOutcome = new() { Issue = new() };
-                exceptionOutcome.Issue.Add(new OperationOutcome.IssueComponent()
-                {
-                    Details = new CodeableConcept(null, response.StatusCode.ToString(), response.RequestMessage?.ToString())
-                });
+                Details = new CodeableConcept(null, response.StatusCode.ToString(), response.RequestMessage?.ToString())
+            });
 
-                return (new(), false, exceptionOutcome);
-            }
+            return (new(), false, exceptionOutcome);
         }
 
         return (new(), false, null);

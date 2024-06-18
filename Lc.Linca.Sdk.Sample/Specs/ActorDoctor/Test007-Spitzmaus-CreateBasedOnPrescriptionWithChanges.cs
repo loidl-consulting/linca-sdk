@@ -43,7 +43,7 @@ internal class Test007_Spitzmaus_CreateBasedOnPrescriptionWithChanges : Spec
             new("Create PrescriptionMedicationRequest based on proposal, LCVAL08, status required", PrescriptionRecordLCVAL08),
             new("Create PrescriptionMedicationRequest based on proposal, LCVAL48, status invalid", PrescriptionRecordLCVAL48),
             new("Create PrescriptionMedicationRequest based on proposal, LCVAL36, supportingInformation inconsistent", PrescriptionRecordLCVAL36),
-            new("Create PrescriptionMedicationRequest based on proposal, LCVAL75, DispenseRequest Quantity is missing", PrescriptionRecordLCVAL75),
+            new("Create PrescriptionMedicationRequest based on proposal, LCVAL75, dispenseRequest quantity is missing", PrescriptionRecordLCVAL75),
             new("Create PrescriptionMedicationRequest based on proposal successfully", CreatePrescriptionRecordSuccess),
             new("Create PrescriptionMedicationRequest based on proposal, LCVAL33, reference in basedOn not latest", PrescriptionRecordLCVAL33)
         };

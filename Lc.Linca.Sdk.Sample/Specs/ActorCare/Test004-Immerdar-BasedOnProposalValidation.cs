@@ -208,7 +208,7 @@ internal class Test004_Immerdar_BasedOnProposalValidation : Spec
             
             // fetch the created ProposalMedicationRequest
             (var results, var received) = LincaDataExchange.GetProposalStatus(Connection, $"{createdRO.Id}");
-            if (received && results.Entry.Count > 1)
+            if (received && results.Entry.Count == 1)
             {
                 createdMedReq = results.Entry.First().Resource as MedicationRequest;
 
