@@ -20,8 +20,8 @@ internal static class LinkedCareSampleClient
     /// <summary>
     /// In SDK, this always points to the development system
     /// </summary>
-    internal const string FhirServerBaseUrl = "https://fhir5-d.linkedcare.at";
-    //internal const string FhirServerBaseUrl = "https://localhost:8084";
+    //internal const string FhirServerBaseUrl = "https://fhir5-d.linkedcare.at";
+    internal const string FhirServerBaseUrl = "https://localhost:8084";
 
     internal static CareInformationSystem CareInformationSystemScaffold = new();
     internal static PractitionerInformationSystem PractitionerInformationSystemScaffold = new();
@@ -230,6 +230,7 @@ internal static class LinkedCareSampleClient
     {
         Console.WriteLine("Aufeinander abgestimmte Sequenzen von [User Stories] und (Testzertifikaten):");
         Console.WriteLine("[01](Pflege Immerdar) ->[11](Dr. Würm)        ->[18](Apo 'Klappernder Storch)");
+        Console.WriteLine("[01](Pflege Immerdar) ->[11](Dr. Würm)        ->[20](Apo 'Klappernder Storch)");
         Console.WriteLine("[00](Pflege Immerdar) ->[02](Pflege Immerdar) ->[10](Dr. Kreuzotter)");
         Console.WriteLine("[15](Dr. Würm)        ->[08](Pflege Immerdar) ->[19](Apotheke 'Zum frühen Vogel') ->[08](Pflege Immerdar)");
         Console.WriteLine("[03](Haus Vogelsang)  ->[04](Haus Vogelsang)  ->[12](Ordination Dr. Spitzmaus)    ->[13](Dr. Spitzmaus) ->[17](Apo 'Zum frühen Vogel') ->[07](Haus Vogelsang)");

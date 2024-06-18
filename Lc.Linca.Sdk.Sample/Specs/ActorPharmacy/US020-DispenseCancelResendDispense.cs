@@ -14,7 +14,7 @@ using Lc.Linca.Sdk.Client;
 
 namespace Lc.Linca.Sdk.Specs.ActorPharmacy;
 
-internal class US018_DispenseCancelResendDispense : Spec
+internal class US020_DispenseCancelResendDispense : Spec
 {
     protected MedicationDispense dispense1 = new();
     protected MedicationDispense dispense2 = new();
@@ -30,7 +30,7 @@ internal class US018_DispenseCancelResendDispense : Spec
           and her software will send that to the LINCA server,
           and notify the ordering organization, Pflegedienst Immerdar, about the thus completed order position.";
 
-    public US018_DispenseCancelResendDispense(LincaConnection conn) : base(conn)
+    public US020_DispenseCancelResendDispense(LincaConnection conn) : base(conn)
     {
         Steps = new Step[]
         {
@@ -149,7 +149,7 @@ internal class US018_DispenseCancelResendDispense : Spec
 
     private bool CancelMedicationDispenseRecord()
     {
-        (var outcome, var deleted) = LincaDataExchange.DeleteMedicationDispense(Connection, dispenseId);
+        (var outcome, var deleted) = LincaDataExchange.DeleteMedicationDispense(Connection, dispenseId!);
         
         if (deleted)
         {
